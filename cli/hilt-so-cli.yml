@@ -1,0 +1,87 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/developers/cli; tarball https://www.hilt.so/downloads/hilt-cli-latest.tgz (package.json
+  inspected)
+name: Hilt CLI
+binary: hilt
+package: '@hilt/cli'
+version: 1.0.0
+language: TypeScript (Node, commander)
+official: true
+install:
+- method: npm (provider-hosted tarball, latest)
+  command: npm install -g https://www.hilt.so/downloads/hilt-cli-latest.tgz
+- method: npm (pinned)
+  command: npm install -g https://www.hilt.so/downloads/hilt-cli-1.0.0.tgz
+- method: checksum verification
+  command: curl -O https://www.hilt.so/downloads/hilt-cli-1.0.0.tgz && curl -O https://www.hilt.so/downloads/hilt-cli-1.0.0.tgz.sha256
+    && sha256sum -c hilt-cli-1.0.0.tgz.sha256
+not_on_registry: package.json is private:true; there is no npm listing. Distribution is the tarball above only.
+auth:
+  login: hilt login | hilt login --email <email> | hilt login --token EXISTING_TOKEN
+  whoami: hilt whoami
+  logout: hilt logout
+global_flags:
+- --json (raw JSON output)
+- -h, --help
+- -v, --version
+commands:
+- group: keys
+  description: API key management
+  commands:
+  - hilt keys list
+  - hilt keys create --name "Production integration"
+  - hilt keys create --name "Sandbox checks" --sandbox
+  - hilt keys revoke KEY_ID
+- group: webhooks
+  description: Endpoints, signed test events, deliveries, replay, timeline
+  commands:
+  - hilt webhooks list
+  - hilt webhooks create --label "Prod endpoint" --url https://example.com/hilt --event payment.confirmed
+  - hilt webhooks test ENDPOINT_ID --event payment.confirmed
+  - hilt webhooks deliveries --status dead_letter
+  - hilt webhooks replay DELIVERY_ID
+  - hilt webhooks events --type receipt.created
+  - hilt webhooks timeline --payment PAYMENT_ID
+- group: testing
+  description: Sandbox scenarios and sessions
+  commands:
+  - hilt testing scenarios
+  - hilt testing run --scenario confirmed_access --product PRODUCT_ID
+  - hilt testing list
+  - hilt testing get SESSION_ID
+- group: pay products
+  description: Workspace products
+  commands:
+  - hilt pay products list
+  - hilt pay products list --status ACTIVE
+  - hilt pay products get PRODUCT_ID
+  - hilt pay products archive PRODUCT_ID
+- group: pay members
+  description: Memberships and delivery recovery
+  commands:
+  - hilt pay members list
+  - hilt pay members lookup --wallet WALLET_ADDRESS
+  - hilt pay members lookup --identity @buyer
+  - hilt pay members get MEMBERSHIP_ID
+  - hilt pay members renewal-intelligence --window-days 14
+  - hilt pay members retry-delivery MEMBERSHIP_ID
+  - hilt pay members delivery-diagnostics MEMBERSHIP_ID
+  - hilt pay members delivery-support-ticket MEMBERSHIP_ID
+- group: pay receipts
+  description: Receipts and proof
+  commands:
+  - hilt pay receipts list
+  - hilt pay receipts list --product PRODUCT_ID --query invoice
+  - hilt pay receipts get RECEIPT_ID
+  - hilt pay receipts send-proof RECEIPT_ID --email buyer@example.com
+key_flows:
+- name: Buyer delivery problem to action
+  steps:
+  - hilt pay members lookup --identity @buyer
+  - hilt pay members delivery-diagnostics MEMBERSHIP_ID
+  - hilt pay members retry-delivery MEMBERSHIP_ID
+  - hilt pay receipts send-proof RECEIPT_ID --email buyer@example.com
+scope_note: The CLI covers Workspace merchant operations (keys, webhooks, testing, products, members, receipts).
+  It does not wrap the Hilt Pay API /v1/access routes or the MPP channel routes; those are SDK/REST only.
+docs: https://docs.hilt.so/developers/cli

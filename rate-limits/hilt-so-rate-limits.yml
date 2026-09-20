@@ -1,0 +1,40 @@
+generated: '2026-09-19'
+method: probed
+source: Live unauthenticated responses from https://api.hilt.so (GET /v1/account/me and POST /v1/access/entitlements/consume,
+  both 401, 2026-09-20T00:37:58Z) carrying X-RateLimit-* headers; https://docs.hilt.so/developers/errors (rate_limited
+  / Retry-After); access-control-expose-headers on every api.hilt.so response
+description: 'Hilt publishes no numeric limits in its docs. The runtime signal exists and was observed live: a 120-request
+  budget with a reset stamped exactly 60 seconds after the request, decrementing per request (117 -> 116). The window
+  is inferred from that single reset observation; per-key vs per-IP scope is not stated (the probe was unauthenticated,
+  so the observed bucket is at least per-IP).'
+limit_count: 1
+limits:
+- name: Default request budget (observed)
+  scope: unknown (observed unauthenticated, so per-IP at minimum; per-key on authenticated calls not confirmed)
+  window: '60 seconds (inferred: X-RateLimit-Reset = request time + 60 s)'
+  limit: 120
+  burst: null
+  observed:
+    x_ratelimit_limit: 120
+    x_ratelimit_remaining:
+    - 117
+    - 116
+    x_ratelimit_reset: 1789864738
+    request_time: '2026-09-20T00:37:58Z'
+    reset_time: '2026-09-20T00:38:58Z'
+headers:
+  limit: X-RateLimit-Limit
+  remaining: X-RateLimit-Remaining
+  reset: X-RateLimit-Reset (unix epoch seconds)
+  retry_after: Retry-After (exposed via CORS; sent on 429 per docs)
+  request_id: X-Hilt-Request-Id / X-Request-Id
+  cors_exposed: 'access-control-expose-headers: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After'
+exhaustion:
+  status: 429
+  code: rate_limited
+  guidance: '"Back off, honor Retry-After"; avoid retry loops that create duplicate sessions before reading current
+    state.'
+in_openapi: false
+note: None of these headers or the 429 response are declared in openapi/hilt-so-openapi.yml; the overlay in overlays/
+  adds them as documentation.
+docs: https://docs.hilt.so/developers/errors

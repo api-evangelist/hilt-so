@@ -1,0 +1,160 @@
+generated: '2026-09-19'
+method: probed
+status: published
+source: https://api.hilt.so/mcp (anonymous POST initialize + tools/list, HTTP 200, 2026-09-19); corroborated by
+  https://docs.hilt.so/developers/agent-setup, https://www.hilt.so/llms.txt (Hilt MCP gateway), the OpenAPI operationId
+  callHiltAgentGatewayMcp and the agent-commerce offer document
+deployment:
+  mode: remote
+  endpoint: https://api.hilt.so/mcp
+  install: null
+  package: null
+  auth: none
+  auth_note: initialize and tools/list answer anonymously (no WWW-Authenticate). The five hilt_get_*/hilt_create_quote/hilt_agent_bootstrap
+    tools are free; the three hilt_activate_* tools and hilt_claim_api_key are paid via x402 V2 (HTTP 402 PAYMENT-REQUIRED,
+    Solana USDC) at call time, per the server instructions and the agent-commerce pricing document. No OAuth on
+    this endpoint; the OAuth-gated PayMe connector is a separate resource (mcp/hilt-so-pay-me-mcp.yml).
+  verified: probed
+  transport: 'streamable-http (JSON responses; Accept: application/json, text/event-stream honoured; Mcp-Session-Id
+    exposed via CORS)'
+  protocol_version: '2025-06-18'
+  server_info:
+    name: Hilt Pay Agent Gateway
+    version: 1.1.0
+  capabilities:
+    tools:
+      listChanged: true
+  instructions: Use Hilt's free catalog, pricing, quote, and sandbox bootstrap tools first. Paid tools use x402
+    V2 payment requirements with Solana USDC settlement. For metered Hilt Pay API requests, settle PAYMENT-SIGNATURE
+    through Hilt, atomically consume one unit, and serve only after both succeed. Never invent prices or routes;
+    use the tool contracts.
+  listings:
+  - Glama MCP connector so.hilt/agent-commerce (https://glama.ai/mcp/connectors/so.hilt/agent-commerce, HTTP 200)
+  - Smithery paul-rboo/hilt-pay-agent-commerce (https://smithery.ai/servers/paul-rboo/hilt-pay-agent-commerce, HTTP
+    200)
+server:
+  name: Hilt Pay Agent Gateway
+  version: 1.1.0
+  transport: http
+  url: https://api.hilt.so/mcp
+tool_count: 9
+tools_list_file: mcp/hilt-so-mcp-tools-list.json
+tools:
+- name: hilt_get_offer
+  title: Get Hilt Pay Offer
+  category: discovery
+  description: Get Hilt's canonical agent-commerce offer, interfaces, products, prices, and buying paths.
+  required: []
+  input_properties: []
+  execution:
+    taskSupport: forbidden
+- name: hilt_get_catalog
+  title: Get Hilt Pay Catalog
+  category: discovery
+  description: Get the canonical Hilt Pay agent-commerce catalog and discovery endpoints.
+  required: []
+  input_properties: []
+  execution:
+    taskSupport: forbidden
+- name: hilt_get_pricing
+  title: Get Hilt Pay Pricing
+  category: discovery
+  description: Get canonical Hilt Pay API pricing and activation paths.
+  required: []
+  input_properties: []
+  execution:
+    taskSupport: forbidden
+- name: hilt_create_quote
+  title: Create Hilt Pay Quote
+  category: quote
+  description: Create a deterministic quote and recommended Hilt buying path without charging the buyer.
+  required: []
+  input_properties:
+  - product_url
+  - product_description
+  - current_payment_flow
+  - target_marketplace
+  execution:
+    taskSupport: forbidden
+- name: hilt_agent_bootstrap
+  title: Hilt Pay Agent Bootstrap
+  category: sandbox
+  description: Create a free sandbox setup intent and scoped sandbox key. Live activation remains an explicit paid
+    step.
+  required:
+  - agent_name
+  input_properties:
+  - agent_name
+  - agent_platform
+  - requested_use_case
+  - contact_email
+  - external_reference
+  - requested_permissions
+  - ttl_hours
+  - metadata
+  execution:
+    taskSupport: forbidden
+- name: hilt_claim_api_key
+  title: Claim Hilt Pay API Key
+  category: activation
+  description: Recover live API-key delivery after a settled marketplace plan activation.
+  required:
+  - purchase_intent_id
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  input_properties:
+  - purchase_intent_id
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  execution:
+    taskSupport: forbidden
+- name: hilt_activate_starter
+  title: Activate Hilt Pay API Starter
+  category: activation
+  description: Activate 30 days of Hilt Pay API starter for 79 USDC on Solana. Requires a free Agent Bootstrap setup
+    intent.
+  required:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  input_properties:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  execution:
+    taskSupport: forbidden
+- name: hilt_activate_growth
+  title: Activate Hilt Pay API Growth
+  category: activation
+  description: Activate 30 days of Hilt Pay API growth for 349 USDC on Solana. Requires a free Agent Bootstrap setup
+    intent.
+  required:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  input_properties:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  execution:
+    taskSupport: forbidden
+- name: hilt_activate_scale
+  title: Activate Hilt Pay API Scale
+  category: activation
+  description: Activate 30 days of Hilt Pay API scale for 1250 USDC on Solana. Requires a free Agent Bootstrap setup
+    intent.
+  required:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  input_properties:
+  - setup_intent_id
+  - setup_token
+  - delivery_claim
+  execution:
+    taskSupport: forbidden
+note: inputSchema for every tool is real and saved verbatim in mcp/hilt-so-mcp-tools-list.json. GET /mcp answers
+  405 {"jsonrpc":"2.0","error":{"code":-32000,"message":"Method not allowed"}}. The crosswalk to REST operationIds
+  is in mcp/hilt-so-tool-crosswalk.yml.

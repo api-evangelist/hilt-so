@@ -1,0 +1,92 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/developers/api-keys; https://docs.hilt.so/developers/access; https://docs.hilt.so/developers/quickstart;
+  https://docs.hilt.so/developers/payment-channels; https://api.hilt.so/.well-known/oauth-authorization-server (probed);
+  openapi/hilt-so-openapi.yml (header parameters)
+docs: https://docs.hilt.so/developers/api-keys
+spec_gap: The published OpenAPI declares NO components.securitySchemes and no security requirements on any of its
+  165 operations; every scheme below is documented in prose or discoverable from RFC 8414/9728 metadata. derive-authentication.py
+  therefore produced nothing and this profile is hand-built from the docs.
+schemes:
+- name: HiltApiKey
+  type: apiKey
+  in: header
+  header: X-Hilt-Key
+  key_prefixes:
+    live: hk_live_
+    sandbox: hk_sandbox_
+  applies_to: Workspace merchant routes (/v1/products, /v1/memberships, /v1/receipts, /v1/support, /v1/testing)
+    and Hilt Pay API routes (/v1/access/*)
+  permissions:
+  - access:read - check entitlements and read Pay API rails
+  - access:write - create Pay API apps, products, and payment sessions
+  - access:webhooks - register webhook endpoints for Pay API flows
+  management: Dashboard -> Advanced; GET/POST /v1/keys, DELETE /v1/keys/{key_id}; CLI hilt keys *. Raw key shown
+    once; rotation = create replacement, deploy, GET /v1/products to confirm, revoke old.
+  unauthenticated_response:
+    status: 401
+    body: '{"detail":"Authentication required"}'
+    probed: GET /v1/account/me and POST /v1/access/entitlements/consume, 2026-09-19
+- name: DashboardBearer
+  type: http
+  scheme: bearer
+  header: 'Authorization: Bearer <token>'
+  applies_to: 'Dashboard/session routes: /v1/auth/*, /v1/account/*, /v1/webhooks/endpoints (quickstart uses Bearer
+    for webhook endpoint creation and test events), /v1/keys, /v1/billing/*'
+  obtain: POST /v1/auth/login, POST /v1/auth/wallet (wallet-signature login), /v1/auth/oauth/{provider}/start; refresh
+    via POST /v1/auth/refresh; CLI hilt login
+  note: Postman environment variable bearerToken.
+- name: PayMeOAuth
+  type: oauth2
+  flow: authorizationCode
+  pkce: S256 required
+  authorizationUrl: https://api.hilt.so/oauth/authorize
+  tokenUrl: https://api.hilt.so/oauth/token
+  registrationUrl: https://api.hilt.so/oauth/register (RFC 7591 dynamic client registration)
+  revocationUrl: https://api.hilt.so/oauth/revoke
+  refresh: refresh_token grant supported
+  client_auth: none (public clients)
+  scopes:
+    pay_me:read: Read connector-started payments and received activity
+    pay_me:request: Create and manage self-shared payment links
+    pay_me:prepare: Start and manage wallet-approved payments to verified PayMe handles
+  resource: https://api.hilt.so/mcp/pay-me (RFC 9728 metadata at /.well-known/oauth-protected-resource/mcp/pay-me)
+  identity: Sign in with X supplies the PayMe identity
+  discovery: well-known/hilt-so-api-oauth-authorization-server.json
+- name: x402PaymentSignature
+  type: payment-protocol
+  protocol: x402 V2
+  headers:
+    challenge: PAYMENT-REQUIRED (HTTP 402 response; base64 payment requirement)
+    proof: PAYMENT-SIGNATURE (request header on retry; declared as a header parameter on POST /v1/access/x402/settle
+      and on /v1/solana/transaction-evidence)
+    result: PAYMENT-RESPONSE (response header after settlement)
+  settlement: Solana USDC (network solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp per the agent-commerce offer)
+  applies_to: Merchant-protected resources; Hilt agent-commerce plan activation; the transaction-evidence resource
+    (0.05 USDC/request); paid MCP gateway tools
+  note: 'Not a credential for Hilt itself: the buyer never receives the merchant X-Hilt-Key.'
+- name: MPPPaymentCredential
+  type: payment-protocol
+  protocol: Machine Payments Protocol (MPP) over HTTP 402
+  headers:
+    challenge: 'WWW-Authenticate: Payment'
+    credential: 'Authorization: Payment <MPP credential>'
+    receipt: Payment-Receipt (successful responses)
+  applies_to: MPP metered session channels (/v1/access/metered-sessions/*) and the public PayMe agent payment action
+    POST /v1/pay-me/payments (no payer account, OAuth grant or API key)
+  on_chain_program: CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX (Solana mainnet channel program)
+- name: WebhookSignature
+  type: hmac
+  header: X-Hilt-Signature
+  format: t=<unix_timestamp>,v1=<hex_hmac_sha256>
+  signed_payload: <timestamp>.<raw_json_body>
+  algorithm: HMAC-SHA256 with the endpoint signing secret
+  direction: Hilt -> merchant (verify inbound webhooks)
+  also: Stripe-Signature header parameter on POST /v1/billing/webhooks/stripe (Hilt account billing inbound from
+    Stripe)
+request_id_headers:
+- X-Hilt-Request-Id
+- X-Request-Id
+summary: API key (X-Hilt-Key, hk_live_/hk_sandbox_) for merchants and Pay API; bearer session tokens for the dashboard
+  surface; OAuth 2.1-style PKCE with DCR for the PayMe MCP connector; x402 V2 and MPP payment credentials for paid
+  requests; HMAC-signed webhooks.

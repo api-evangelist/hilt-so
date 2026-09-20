@@ -1,18 +1,240 @@
 aid: hilt-so
 name: Hilt
-description: 'Hilt is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Hilt is a zero-custody Solana payments company operated in the United Kingdom by Paul Wild trading
+  as Hilt (London). It ships four connected products: PayMe (a free receiving link and QR for an OAuth-verified
+  X handle, sender pays a flat 2% fee), Direct Checkout (a no-account SOL / USDC / single-token checkout link),
+  Hilt Pay Workspace (the merchant dashboard for hosted checkout, embeds, WooCommerce, receipts, memberships, native
+  Solana USDC subscriptions and signed webhooks) and Hilt Pay API, the developer and agent product under /v1/access
+  that turns an HTTP 402 into an operating record: x402 V2 payment requirement, Solana USDC or native SOL settlement,
+  receipt, entitlement, atomic metered usage consumption, MPP payment channels and webhook trail. Hilt publishes
+  an OpenAPI 3.1 contract (165 operations on api.hilt.so), a hosted MCP gateway and an OAuth-gated PayMe MCP connector,
+  an A2A agent card, llms.txt on three hosts, TypeScript and Python SDKs, a CLI, Postman assets and a documented
+  sandbox. Live pricing is $0/month plus 1% per successful settlement.'
+image: https://www.hilt.so/Logo.png
 url: https://raw.githubusercontent.com/api-evangelist/hilt-so/refs/heads/main/apis.yml
 x-type: company
+position: Producing
 x-source: harvest:a2a-registry
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: full enrichment pass 2026-09-19 (local-v3)
+x-company:
+  legal_name: Paul Wild trading as Hilt
+  structure: sole trader
+  country: United Kingdom
+  city: London
+  address: Office 18824, 182-184 High Street North, East Ham, London, E6 2JA
+  launched: '2026-05-01'
+  source: https://www.hilt.so/legal/terms
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
 tags:
-- Company
-apis: []
+- Payments
+- Solana
+- Stablecoins
+- USDC
+- Crypto Payments
+- Agentic Payments
+- x402
+- Checkout
+- Subscriptions
+- Webhooks
+- MCP
+- Entitlements
+- Micropayments
+- Developer Tools
+- Fintech
+apis:
+- aid: hilt-so:hilt-pay-api
+  name: Hilt API (Pay API + Workspace)
+  description: 'The Hilt REST contract: Hilt Pay API /v1/access routes (agent bootstrap, apps, products, x402 V2
+    payment sessions and settlement, durable and metered entitlements, MPP metered payment channels, native Solana
+    USDC subscriptions, sandbox sessions, webhooks), Workspace merchant routes (products, hosted checkout, payments,
+    memberships, receipts, support, webhooks, API keys, testing scenarios), PayMe routes and the agent-commerce
+    offer/catalog/pricing and plan-activation routes. OpenAPI 3.1.0, 154 paths / 165 operations, FastAPI-generated;
+    declares no securitySchemes (auth documented in prose: X-Hilt-Key hk_live_/hk_sandbox_, dashboard bearer, PayMe
+    OAuth PKCE, x402 PAYMENT-SIGNATURE, MPP Authorization: Payment).'
+  image: https://www.hilt.so/Logo.png
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Payments
+  - Solana
+  - USDC
+  - x402
+  - Entitlements
+  - Subscriptions
+  - Webhooks
+  - Receipts
+  - Checkout
+  - Agentic Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-openapi.yml
+  - type: OpenAPI
+    url: https://api.hilt.so/openapi.json
+    name: Provider-hosted OpenAPI (full, 165 operations)
+  - type: OpenAPI
+    url: https://api.hilt.so/v1/openapi.json
+    name: Provider-hosted OpenAPI v1 subset (143 paths; also served at https://www.hilt.so/openapi.json and mirrored
+      in github.com/Hiltpay/hilt-developer-assets/openapi/hilt-openapi-v1.json)
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+    name: Redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Overlay
+    url: overlays/hilt-so-openapi-overlay.yaml
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+    name: Webhook docs
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+    name: Saved copy of the public collection
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+- aid: hilt-so:transaction-evidence
+  name: Hilt Solana Transaction Evidence API
+  description: 'A public pay-per-request x402 V2 resource on www.hilt.so (0.05 USDC per request, Solana USDC): POST
+    /v1/solana/transaction-evidence returns signers, invoked programs, SOL and token balance changes, parsed transfers,
+    finality, fee and timestamp for one finalized Solana mainnet transaction. Its own OpenAPI 3.1.0 declares the
+    PAYMENT-REQUIRED 402 header and PAYMENT-RESPONSE 200 header plus x-payment-info. Announced 27 August 2026 as
+    one of two live payment paths for wallet-capable agents.'
+  image: https://www.hilt.so/Logo.png
+  humanURL: https://docs.hilt.so/developers/transaction-evidence
+  baseURL: https://www.hilt.so
+  tags:
+  - Solana
+  - Blockchain Data
+  - x402
+  - Micropayments
+  - Transaction Evidence
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-transaction-evidence-openapi.yml
+  - type: OpenAPI
+    url: https://www.hilt.so/v1/solana/transaction-evidence/openapi.json
+    name: Provider-hosted OpenAPI
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+- aid: hilt-so:agent-gateway
+  name: Hilt Pay Agent Gateway (MCP + A2A)
+  description: 'Hosted MCP server at https://api.hilt.so/mcp (streamable HTTP, protocol 2025-06-18, server Hilt
+    Pay Agent Gateway 1.1.0) exposing nine tools: free offer/catalog/pricing/quote/sandbox-bootstrap tools and x402-paid
+    Starter/Growth/Scale plan activation plus API-key claim, each with a real JSON Schema inputSchema (tools/list
+    answers anonymously). The same gateway publishes an A2A 0.3.0 agent card at /.well-known/agent-card.json (four
+    skills) with a JSON-RPC endpoint at /a2a/jsonrpc and a second Agentverse transport at /agentverse/a2a. Listed
+    on Glama and Smithery.'
+  image: https://www.hilt.so/Logo.png
+  humanURL: https://docs.hilt.so/developers/agent-setup
+  baseURL: https://api.hilt.so/mcp
+  tags:
+  - MCP
+  - A2A
+  - Agent Commerce
+  - x402
+  - Solana
+  - USDC
+  properties:
+  - type: MCPServer
+    url: mcp/hilt-so-mcp.yml
+  - type: MCPServer
+    url: https://api.hilt.so/mcp
+    name: Live MCP endpoint (probed)
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: AgentCard
+    url: a2a/hilt-so-a2a.yml
+  - type: AgentCard
+    url: https://api.hilt.so/.well-known/agent-card.json
+    name: Live agent card (probed 200)
+  - type: Documentation
+    url: https://docs.hilt.so/developers/agent-builder-kit
+  - type: Documentation
+    url: https://www.hilt.so/agent-discovery-standard
+    name: Agent Discovery Standard
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+- aid: hilt-so:payme-mcp
+  name: Hilt PayMe MCP Connector
+  description: 'OAuth-gated remote MCP resource at https://api.hilt.so/mcp/pay-me for compatible AI clients: resolve
+    a verified PayMe handle, start a wallet-approved SOL or Solana USDC payment (the client prepares terms; the
+    payer signs in their own wallet), read activity, and create/cancel payment links. Authorization is OAuth authorization-code
+    with PKCE S256 and dynamic client registration on the issuer https://api.hilt.so (RFC 8414 + RFC 9728 metadata
+    published), scopes pay_me:read, pay_me:request, pay_me:prepare. Anonymous tools/list answers 401 with a resource_metadata
+    challenge; the ten tool names come from the docs.'
+  image: https://www.hilt.so/Logo.png
+  humanURL: https://docs.hilt.so/developers/pay-me-mcp
+  baseURL: https://api.hilt.so/mcp/pay-me
+  tags:
+  - MCP
+  - OAuth
+  - Solana
+  - USDC
+  - Payments
+  - PayMe
+  properties:
+  - type: MCPServer
+    url: mcp/hilt-so-pay-me-mcp.yml
+  - type: MCPServer
+    url: https://api.hilt.so/mcp/pay-me
+    name: Live MCP endpoint (OAuth-gated, probed 401)
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/pay-me-mcp
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -20,4 +242,113 @@ maintainers:
   email: info@apis.io
 common:
 - type: Website
-  url: https://hilt.so/
+  url: https://www.hilt.so/
+- type: DeveloperPortal
+  url: https://www.hilt.so/developers
+- type: Documentation
+  url: https://docs.hilt.so/developers
+- type: APIReference
+  url: https://api.hilt.so/v1/docs
+- type: GettingStarted
+  url: https://docs.hilt.so/developers/quickstart
+- type: Support
+  url: https://docs.hilt.so/merchant/support
+- type: Contact
+  url: https://www.hilt.so/contact
+- type: Blog
+  url: https://www.hilt.so/articles
+- type: GitHubOrganization
+  url: https://github.com/Hiltpay
+- type: Pricing
+  url: https://www.hilt.so/developers/pricing
+- type: SignUp
+  url: https://app.hilt.so/register
+- type: Login
+  url: https://app.hilt.so/login
+- type: TermsOfService
+  url: https://www.hilt.so/legal/terms
+- type: PrivacyPolicy
+  url: https://www.hilt.so/legal/privacy
+- type: RefundPolicy
+  url: https://www.hilt.so/legal/refund
+- type: StatusPage
+  url: https://www.hilt.so/status
+- type: ChangeLog
+  url: https://www.hilt.so/updates
+- type: ReleaseNotes
+  url: https://docs.hilt.so/release-notes/changelog
+- type: ChangeLog
+  url: changelog/hilt-so-changelog.yml
+- type: LinkedIn
+  url: https://www.linkedin.com/company/hiltpay
+- type: YouTube
+  url: https://www.youtube.com/@hiltpay
+- type: Postman
+  url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+- type: LLMsTxt
+  url: llms/hilt-so-llms.txt
+- type: LLMsTxt
+  url: https://www.hilt.so/llms.txt
+  name: www llms.txt
+- type: LLMsTxt
+  url: https://docs.hilt.so/llms.txt
+  name: docs llms.txt
+- type: WellKnown
+  url: well-known/hilt-so-well-known.yml
+- type: MCPServer
+  url: mcp/hilt-so-mcp.yml
+- type: MCPServer
+  url: mcp/hilt-so-pay-me-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/hilt-so-tool-crosswalk.yml
+- type: AgentCard
+  url: a2a/hilt-so-a2a.yml
+- type: Packages
+  url: packages/hilt-so-packages.yml
+- type: SDKs
+  url: packages/hilt-so-packages.yml
+- type: CLI
+  url: cli/hilt-so-cli.yml
+- type: Components
+  url: components/hilt-so-components.yml
+- type: Sandbox
+  url: sandbox/hilt-so-sandbox.yml
+- type: Authentication
+  url: authentication/hilt-so-authentication.yml
+- type: OAuthScopes
+  url: scopes/hilt-so-scopes.yml
+- type: Conventions
+  url: conventions/hilt-so-conventions.yml
+- type: Idempotency
+  url: conventions/hilt-so-conventions.yml
+- type: Lifecycle
+  url: lifecycle/hilt-so-lifecycle.yml
+- type: Conformance
+  url: conformance/hilt-so-conformance.yml
+- type: ErrorCatalog
+  url: errors/hilt-so-problem-types.yml
+- type: DomainSecurity
+  url: security/hilt-so-domain-security.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Plans
+  url: plans/hilt-so-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/hilt-so-rate-limits.yml
+- type: Webhooks
+  url: asyncapi/hilt-so-webhooks-asyncapi.yml
+- type: AsyncAPI
+  url: asyncapi/hilt-so-webhooks-asyncapi.yml
+- type: DataModel
+  url: data-model/hilt-so-data-model.yml
+- type: Overlay
+  url: overlays/hilt-so-openapi-overlay.yaml
+- type: RegulatoryPosture
+  url: regulatory/hilt-so-regulatory-posture.yml
+- type: DataSubjectRequest
+  url: https://www.hilt.so/legal/privacy
+x-enrichment:
+  date: '2026-09-19'
+  status: enriched
+  artifacts_added: 48
+  pass: local-v3

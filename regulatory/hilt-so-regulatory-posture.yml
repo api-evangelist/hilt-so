@@ -1,0 +1,63 @@
+generated: '2026-09-19'
+method: searched
+source: Harvested from artifacts already in this repo (well-known/, security/, lifecycle/, conformance/), live probes
+  of conventional paths on www.hilt.so (2026-09-19), and the legal pages https://www.hilt.so/legal/privacy, /legal/terms,
+  /legal/refund
+description: Horizontal regulatory signals Hilt itself publishes. Applicability of any regime is NOT decided here.
+  Hilt is a UK sole-trader business (Paul Wild trading as Hilt, London) operating a zero-custody Solana payment
+  layer; the privacy policy names UK/EEA data-subject rights and a request address.
+signals:
+  data_subject_request:
+    present: true
+    mechanism: email
+    contact: privacy@hilt.so
+    statement: '"If you are located in the UK, EEA, or another jurisdiction with similar rights, you may have rights
+      to access, correct, delete, restrict, object to, or export certain personal data. To exercise these rights,
+      email privacy@hilt.so."'
+    url: https://www.hilt.so/legal/privacy
+    last_updated: '2026-04-30'
+    note: A stated rights list plus a dedicated request address; no self-service portal. Recorded because the page
+      carries the substance (rights enumerated, controller named, lawful bases stated), not merely the word.
+  subprocessors:
+    present: false
+    note: Privacy policy section 6 says data may be shared with infrastructure/hosting/payment/email/support/blockchain
+      providers but publishes no named list or dated table; /legal/subprocessors 404.
+probes:
+- url: https://www.hilt.so/accessibility
+  status: 404
+- url: https://www.hilt.so/legal/subprocessors
+  status: 404
+- url: https://www.hilt.so/legal/dpa
+  status: 404
+- url: https://www.hilt.so/security
+  status: 404
+- url: https://www.hilt.so/.well-known/security.txt
+  status: 404
+- url: https://www.hilt.so/legal/privacy
+  status: 200
+- url: https://www.hilt.so/legal/terms
+  status: 200
+- url: https://www.hilt.so/legal/refund
+  status: 200
+- url: https://www.hilt.so/trust
+  status: 200
+  note: Trust & safety narrative; no certifications, SBOM, VPAT, transparency report or incident-notification commitment.
+absent:
+- sbom
+- support_lifetime
+- accessibility_conformance
+- training_data_summary
+- ai_transparency
+- global_privacy_control
+- data_residency
+- incident_notification
+- age_assurance
+- notice_and_action
+- transparency_report
+- exit_assistance
+retention_statement: '"We retain account data for as long as the account remains active and for a limited period
+  after closure where needed for security, tax, bookkeeping, or dispute handling." (privacy policy section 7)'
+controller:
+  name: Paul Wild trading as Hilt
+  jurisdiction: United Kingdom
+  address: Office 18824, 182-184 High Street North, East Ham, London, E6 2JA

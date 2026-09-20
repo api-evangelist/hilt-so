@@ -1,0 +1,204 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/developers/access, /developers/errors, /developers/webhooks, /developers/payment-channels,
+  /developers/api-keys, /merchant/native-subscriptions, /developers/pay-me-mcp; openapi/hilt-so-openapi.yml (header
+  + query parameters, responses); live api.hilt.so response headers (probed 2026-09-19); https://www.hilt.so/legal/refund
+description: 'Cross-cutting runtime semantics of the Hilt API that the OpenAPI does not fully express: auth style,
+  idempotency (with a machine verdict), pagination, request tracing, versioning, error envelope, rate-limit signalling,
+  dry-run, and reversibility per write surface.'
+base_url: https://api.hilt.so
+api_style: REST over HTTPS, JSON requests and responses (FastAPI-generated OpenAPI 3.1.0)
+authentication:
+  scheme: X-Hilt-Key API key (hk_live_ / hk_sandbox_) for merchant + Pay API routes; Bearer session token for dashboard
+    routes; OAuth PKCE for the PayMe MCP resource; x402 V2 / MPP payment credentials on paid requests
+  detail: authentication/hilt-so-authentication.yml
+  docs: https://docs.hilt.so/developers/api-keys
+idempotency:
+  supported: true
+  coverage: partial
+  mechanism: Idempotency-Key request header (client-generated; <= 255 chars; no whitespace/control characters)
+  applies_to: '15 of 96 write operations declare the header: every Hilt Pay API /v1/access write (apps, products,
+    payment sessions, MPP sessions/deliveries/settle, sandbox sessions, payment proofs, x402 settle, entitlement
+    consume, webhooks, rail settings, native-subscription cancel-confirm), POST /v1/receipt and the public PayMe
+    MPP action POST /v1/pay-me/payments. Workspace merchant writes (products, memberships, support tickets, webhook
+    endpoints, keys) do NOT declare it.'
+  scope:
+  - update_rail_setting_v1_access_rail_settings__rail_id__put
+  - confirm_native_subscription_cancel_v1_access_native_subscriptions__authorization_id__cancel_confirm_post
+  - create_app_v1_access_apps_post
+  - create_product_v1_access_products_post
+  - create_payment_session_v1_access_payment_sessions_post
+  - create_mpp_metered_session_v1_access_metered_sessions_post
+  - create_mpp_metered_delivery_v1_access_metered_sessions__session_id__deliveries_post
+  - settle_mpp_metered_session_v1_access_metered_sessions__session_id__settle_post
+  - create_sandbox_payment_session_v1_access_sandbox_payment_sessions_post
+  - confirm_sandbox_payment_session_v1_access_sandbox_payment_sessions__sandbox_session_id__confirm_post
+  - submit_payment_proof_v1_access_payment_proofs_post
+  - settle_x402_payment_v1_access_x402_settle_post
+  - consume_entitlement_usage_v1_access_entitlements_consume_post
+  - create_webhook_v1_access_webhooks_post
+  - create_or_settle_pay_me_agent_payment_v1_pay_me_payments_post
+  retention: null
+  retention_note: Not stated in the docs.
+  conflict_behavior: 'Same key + different body -> idempotency_conflict (409); same key still processing -> idempotency_in_progress;
+    concurrent race -> idempotency_race; missing on a route that requires it -> idempotency_key_required. Settlement
+    reconciliation is idempotent: a retry can reuse a finalized Solana transaction. MPP: reusing a delivery id with
+    the same amount returns the existing reservation, with different terms fails 409.'
+  sdk: '@hiltpay/sdk / hilt-sdk 1.1.0+ send a request-level idempotency key; protectEndpoint / protect_request reuse
+    the caller''s stable request id for retries.'
+  docs: https://docs.hilt.so/developers/errors
+pagination:
+  style: mixed offset/page (no cursor)
+  variants:
+  - params: page, per_page
+    used_by: GET /v1/receipts, GET /v1/webhooks/deliveries, GET /v1/webhooks/events (response fields page, total)
+  - params: limit
+    used_by: GET /v1/memberships, GET /v1/memberships/renewal-intelligence (limit, window_days), GET /v1/webhooks/timeline
+  - params: limit, offset
+    used_by: three list routes in the spec
+  - params: next
+    used_by: one route
+  response_fields:
+  - page
+  - total
+  docs: https://docs.hilt.so/developers/quickstart (limit=20; page=1&per_page=20 examples)
+field_expansion:
+  supported: false
+sparse_fields:
+  supported: false
+metadata:
+  supported: true
+  mechanism: 'metadata object on agent bootstrap (hilt_agent_bootstrap inputSchema: metadata {string: any}); external_reference
+    / external_customer_id / external_product_id correlation ids on Pay API resources'
+  note: No documented size limits.
+request_tracing:
+  request_id_header: X-Hilt-Request-Id (also X-Request-Id)
+  description: Surfaced by the SDKs as HiltError.requestId; the docs ask for it in support tickets.
+  client_request_id: external_request_id / request_id fields on Pay API payment sessions and settlements; the docs
+    require a stable request id reused across retries.
+versioning:
+  scheme: URL path (/v1) + dated api_version on webhook events
+  current: v1 / info.version 1.0.0; webhook api_version example 2026-05-04
+  header: null
+  detail: lifecycle/hilt-so-lifecycle.yml
+  changelog: changelog/hilt-so-changelog.yml
+error_envelope:
+  media_type: application/json
+  shape: '{"detail": string | {code, message} | [ValidationError]}'
+  codes: errors/hilt-so-problem-types.yml
+  rfc9457: false
+rate_limit_signaling:
+  headers:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - Retry-After
+  observed: 120 per 60 s (inferred), unauthenticated probe
+  exhaustion: 429 rate_limited
+  detail: rate-limits/hilt-so-rate-limits.yml
+dry_run_mode:
+  supported: true
+  kind: sandbox-mode + free quote
+  mechanisms:
+  - 'hk_sandbox_ keys: same base URL, /v1/testing/* scenarios and /v1/access/sandbox/* payment sessions, no on-chain
+    movement'
+  - 'MCP tool hilt_create_quote: "Create a deterministic quote and recommended Hilt buying path without charging
+    the buyer"'
+  - POST /v1/access/entitlements/check is read-only (has_access) versus /consume which mutates
+  detail: sandbox/hilt-so-sandbox.yml
+reversibility:
+  grade: verified
+  na: false
+  summary: 'Hilt is zero-custody: a finalized Solana transfer cannot be reversed by Hilt, and the refund policy
+    says so. What CAN be taken back is everything before finality (a PayMe payment awaiting wallet approval, an
+    unused payment link, an MPP channel''s unspent escrow) and the forward commitment of a subscription (cancel
+    with access to the paid-through date). Windows below are the docs'' own words.'
+  surfaces:
+  - write_surface: Native Solana USDC subscription (recurring collection)
+    create: submit_agent_bootstrap_manifest_* with renewal_mode solana_native_subscription / buyer approval
+    reversal: cancel
+    operations:
+    - create_native_subscription_cancel_intent_v1_access_native_subscriptions__authorization_id__cancel_intent_post
+    - confirm_native_subscription_cancel_v1_access_native_subscriptions__authorization_id__cancel_confirm_post
+    window: '"Cancellation stops future collection. Access can remain active until the paid-through date, depending
+      on the product and cancellation choice." immediate_revoke=false keeps access until the current paid-through
+      date; immediate_revoke=true ends it now.'
+    window_stated: true
+    docs: https://docs.hilt.so/merchant/native-subscriptions
+    grade: verified
+  - write_surface: PayMe connector payment (MCP)
+    create: hilt_pay_me_send_payment
+    reversal: cancel
+    operations:
+    - hilt_pay_me_cancel_payment (MCP tool; no public REST route)
+    window: '"Cancel a payment still awaiting wallet approval" — i.e. before the payer signs; after on-chain finality
+      there is no reversal.'
+    window_stated: true
+    docs: https://docs.hilt.so/developers/pay-me-mcp
+    grade: verified
+  - write_surface: PayMe payment link (MCP)
+    create: hilt_pay_me_create_payment_link
+    reversal: cancel
+    operations:
+    - hilt_pay_me_cancel_payment_link
+    window: '"Cancel an unused payment link"'
+    window_stated: true
+    docs: https://docs.hilt.so/developers/pay-me-mcp
+    grade: verified
+  - write_surface: MPP metered session channel (escrow deposit)
+    create: create_mpp_metered_session_v1_access_metered_sessions_post
+    reversal: close / settle-and-return
+    operations:
+    - settle_mpp_metered_session_v1_access_metered_sessions__session_id__settle_post
+    window: Session expiry "five minutes to 24 hours"; "Any unused USDC is returned to the payer through the channel
+      close flow"; a recovery worker runs at session expiry.
+    window_stated: true
+    docs: https://docs.hilt.so/developers/payment-channels
+    grade: verified
+  - write_surface: x402 / hosted payment session settled on-chain
+    create: create_payment_session_v1_access_payment_sessions_post -> settle_x402_payment_v1_access_x402_settle_post
+    reversal: none
+    operations: []
+    window: '"the underlying blockchain payment is not reversible by Hilt. If a merchant needs to make a goodwill
+      refund, that refund must be handled separately by the merchant" (refund policy).'
+    window_stated: true
+    docs: https://www.hilt.so/legal/refund
+    grade: none
+  - write_surface: Entitlement usage consumption
+    create: consume_entitlement_usage_v1_access_entitlements_consume_post
+    reversal: none
+    operations: []
+    window: Atomic decrement; no un-consume route. Idempotency-Key prevents double-consumption on retry.
+    window_stated: false
+    docs: https://docs.hilt.so/developers/access
+    grade: none
+  - write_surface: Workspace product
+    create: api_create_product_v1_products_post
+    reversal: archive (soft)
+    operations:
+    - api_archive_product_v1_products__product_id__delete
+    window: null
+    window_stated: false
+    grade: documented
+  - write_surface: Webhook endpoint / API key / Zapier hook / PayMe connector connection
+    reversal: disable / revoke / unsubscribe / disconnect
+    operations:
+    - disable_webhook_endpoint_v1_webhooks_endpoints__endpoint_id__delete
+    - revoke_key_v1_keys__key_id__delete
+    - unsubscribe_zapier_hook_v1_integrations_zapier_hooks__endpoint_id__delete
+    - disconnect_pay_me_connector_v1_pay_me_connector_connections__connection_id__delete
+    window: null
+    window_stated: false
+    grade: documented
+  - write_surface: Webhook delivery
+    reversal: replay (re-do, not undo)
+    operations:
+    - replay_owned_webhook_delivery_v1_webhooks_deliveries__delivery_id__replay_post
+    grade: documented
+cross_links:
+  errors: errors/hilt-so-problem-types.yml
+  lifecycle: lifecycle/hilt-so-lifecycle.yml
+  authentication: authentication/hilt-so-authentication.yml
+  rate_limits: rate-limits/hilt-so-rate-limits.yml
+  sandbox: sandbox/hilt-so-sandbox.yml
+  webhooks: asyncapi/hilt-so-webhooks-asyncapi.yml

@@ -1,0 +1,106 @@
+generated: '2026-09-19'
+method: searched
+source: openapi/hilt-so-openapi.yml (headers, responses, operationIds); https://api.hilt.so/.well-known/oauth-authorization-server
+  and /.well-known/oauth-protected-resource/mcp/pay-me (probed 200); api.hilt.so/mcp initialize (probed); a2a/hilt-so-agent-card.json
+  (probed); docs.hilt.so developers/errors, webhooks, payment-channels, access; pay.hilt.so/actions.json (probed)
+description: 'Cross-cutting and domain standards Hilt implements or does not. Domain-standard signature for the
+  agent-payments market is carried IN THE CONTRACT: x402 V2 headers PAYMENT-REQUIRED / PAYMENT-SIGNATURE / PAYMENT-RESPONSE
+  are declared on operations and responses of both published OpenAPIs, and MPP over HTTP 402 is documented with
+  its channel program id.'
+conformance:
+- id: oauth2
+  conforms: true
+  evidence: 'RFC 8414 document at https://api.hilt.so/.well-known/oauth-authorization-server: authorization_code
+    + refresh_token, PKCE S256, revocation endpoint. Governs the PayMe MCP resource.'
+  scope: PayMe MCP connector only; Workspace/Pay API use X-Hilt-Key.
+- id: oauth2-pkce
+  conforms: true
+  evidence: 'code_challenge_methods_supported: [S256]; token_endpoint_auth_methods_supported: [none] (public clients).'
+- id: oauth2-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://api.hilt.so/oauth/register in the RFC 8414 document (RFC 7591).
+- id: oauth2-protected-resource-metadata
+  conforms: true
+  evidence: RFC 9728 document at https://api.hilt.so/.well-known/oauth-protected-resource/mcp/pay-me (resource,
+    authorization_servers, scopes_supported, bearer_methods_supported header), advertised via WWW-Authenticate resource_metadata
+    on a 401.
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration 404 on api.hilt.so, www.hilt.so and app.hilt.so; no id_token or openid
+    scope anywhere.
+- id: mcp
+  conforms: true
+  evidence: initialize on https://api.hilt.so/mcp returns protocolVersion 2025-06-18, serverInfo Hilt Pay Agent
+    Gateway 1.1.0, capabilities.tools.listChanged; tools/list returns 9 tools with JSON Schema draft-07 inputSchema.
+    Second MCP resource /mcp/pay-me is OAuth-gated per the MCP authorization spec (RFC 9728 + 8414).
+  version: '2025-06-18'
+- id: a2a
+  conforms: true
+  evidence: AgentCard at https://api.hilt.so/.well-known/agent-card.json (protocolVersion 0.3.0, JSONRPC transport
+    at /a2a/jsonrpc); the endpoint answers A2A error code -32004 to agent/getAuthenticatedExtendedCard. Graded conformant
+    in a2a/hilt-so-a2a.yml.
+  version: 0.3.0
+- id: x402
+  conforms: true
+  domain_standard: true
+  evidence: 'openapi/hilt-so-openapi.yml: POST /v1/access/x402/settle (settle_x402_payment_v1_access_x402_settle_post)
+    declares the PAYMENT-SIGNATURE header parameter; POST /v1/agent-commerce/plans/{starter,growth,scale}/activate
+    declare 402 responses; openapi/hilt-so-transaction-evidence-openapi.yml declares the 402 response header PAYMENT-REQUIRED
+    (required: true, base64 x402 V2 requirement) and the 200 header PAYMENT-RESPONSE plus x-payment-info (fixed
+    0.050000 USD). Settlement rail Solana USDC on network solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp (agent-commerce
+    offer). SDK subpath @hiltpay/sdk/x402 ships the header codecs.'
+  version: V2
+  market: agent payments / HTTP 402 protected resources
+- id: mpp
+  conforms: true
+  domain_standard: true
+  evidence: 'https://docs.hilt.so/developers/payment-channels: WWW-Authenticate: Payment challenge, Authorization:
+    Payment <credential>, Payment-Receipt response header, cumulative vouchers, on-chain channel program CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX;
+    OpenAPI operations create_mpp_metered_session_* / authorize_* / create_mpp_metered_delivery_* / commit_* / settle_*;
+    public PayMe MPP action POST /v1/pay-me/payments (create_or_settle_pay_me_agent_payment_v1_pay_me_payments_post).'
+  name: Machine Payments Protocol over HTTP 402
+- id: solana-actions
+  conforms: true
+  domain_standard: true
+  evidence: https://pay.hilt.so/actions.json maps /me/@* to /solana-actions/pay-me/* (Solana Actions / Blinks rules
+    file).
+- id: idempotency-key
+  conforms: true
+  evidence: 'Idempotency-Key header parameter declared on 15 write operations in openapi/hilt-so-openapi.yml (all
+    /v1/access writes + POST /v1/receipt + POST /v1/pay-me/payments); six documented idempotency_* error codes.
+    Partial coverage: 15 of 96 write operations. See conventions/hilt-so-conventions.yml.'
+- id: rfc9457
+  conforms: false
+  evidence: 'Errors are FastAPI-shaped {"detail": ...} (HTTPValidationError / ValidationError schemas); no application/problem+json
+    media type anywhere in the spec (0 occurrences).'
+- id: pagination
+  conforms: true
+  evidence: 'Mixed styles in the spec: page + per_page (receipts, webhook deliveries; response fields page, total),
+    limit (memberships, webhook events), limit + offset (three list routes), next (one). No cursor pagination.'
+- id: rfc8594-sunset
+  conforms: false
+  evidence: 'No Sunset or Deprecation response headers in the spec or docs; the one deprecated operation (create_hilt_pay_api_stripe_checkout_v1_access_billing_checkout_stripe_post)
+    is marked deprecated: true and answers 410.'
+- id: rate-limit-headers
+  conforms: true
+  evidence: Live responses carry X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset and expose Retry-After
+    via CORS (probed 2026-09-19); the draft IETF RateLimit-* header names are not used and none of the headers are
+    declared in the OpenAPI.
+- id: webhook-signature-hmac
+  conforms: true
+  evidence: X-Hilt-Signature t=<ts>,v1=<hmac_sha256(timestamp.raw_body)> per https://docs.hilt.so/developers/webhooks;
+    verification helpers in @hiltpay/sdk src/webhooks.ts.
+- id: security-txt
+  conforms: false
+  evidence: /.well-known/security.txt 404 on every host.
+- id: scim
+  conforms: false
+  evidence: No SCIM URN or /scim surface.
+- id: json-api
+  conforms: false
+  evidence: application/json envelopes without JSON:API structure.
+compliance_programs:
+  certifications: []
+  note: 'https://www.hilt.so/trust is a trust-and-safety narrative page (zero-custody model, wallet security); it
+    names no SOC 2 / ISO 27001 / PCI programme, so no Compliance pointer is emitted. probe-security-programs.py:
+    vdp=none trust=none.'

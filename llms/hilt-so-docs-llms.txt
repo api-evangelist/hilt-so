@@ -1,0 +1,191 @@
+# Hilt docs
+
+> Canonical documentation for Hilt PayMe, Direct Checkout, and Hilt Pay API: connected payment products for people, Solana token communities, developers, and agents.
+
+Last reviewed: 2026-08-27
+Metered agent release: Hilt completes the paid-request loop for metered agent services on Solana.
+Runtime summary: Request. Challenge. Pay. Settle. Consume. Serve.
+Authoritative metered sequence: Consume attempt. Challenge. Pay. Retry. Settle. Consume. Serve.
+Signature: The payment is the middle of the request, not the end.
+Docs home: https://docs.hilt.so
+Marketing site: https://www.hilt.so
+Hilt Pay API pricing and fee estimator: https://www.hilt.so/developers/pricing
+Developer home: https://www.hilt.so/developers
+Agent setup guide: https://www.hilt.so/developers/agent-setup
+Agent Builder Kit: https://docs.hilt.so/developers/agent-builder-kit
+Grok Build integration guide: https://docs.hilt.so/developers/grok-build
+Runnable Grok Build example: https://github.com/Hiltpay/hilt-developer-assets/tree/main/examples/grok-build-nextjs
+PayMe overview: https://docs.hilt.so/payme/overview
+PayMe Wallet Security: https://docs.hilt.so/payme/wallet-security
+Pay multiple people and PayMe Blinks: https://docs.hilt.so/payme/pay-multiple-and-blinks
+Pay multiple people: https://pay.hilt.so/me/multiple
+PayMe Solana Actions map: https://pay.hilt.so/actions.json
+Direct Checkout guide: https://docs.hilt.so/direct-checkout/overview
+PayMe MCP connector guide: https://docs.hilt.so/developers/pay-me-mcp
+PayMe MCP resource: https://api.hilt.so/mcp/pay-me
+PayMe agent payment guide: https://docs.hilt.so/developers/pay-me-agent-payments
+PayMe MPP payment action: https://api.hilt.so/v1/pay-me/payments
+Agent-to-agent micropayments guide: https://docs.hilt.so/developers/agent-micropayments
+Protect an endpoint with the TypeScript SDK: https://docs.hilt.so/developers/protect-an-endpoint
+Paid Solana transaction evidence: https://docs.hilt.so/developers/transaction-evidence
+Transaction evidence endpoint: https://www.hilt.so/v1/solana/transaction-evidence
+Transaction evidence OpenAPI: https://www.hilt.so/v1/solana/transaction-evidence/openapi.json
+Runnable agent micropayments example: https://github.com/Hiltpay/hilt-developer-assets/tree/main/examples/agent-micropayments
+Agent Discovery Standard page: https://www.hilt.so/agent-discovery-standard
+Agent catalog: https://www.hilt.so/agent-catalog.json
+Public catalog route: https://www.hilt.so/v1/catalog
+Discovery prompts: https://www.hilt.so/v1/prompts
+Sample payment-to-access flow: https://www.hilt.so/v1/sample-flow
+x402 for agents: https://www.hilt.so/x402
+Native subscriptions: https://docs.hilt.so/merchant/native-subscriptions
+Native subscriptions article: https://www.hilt.so/articles/how-native-solana-subscriptions-work-hilt
+Agentic payments guide: https://www.hilt.so/articles/agentic-payments-paid-api-access
+Agent payment paths article: https://www.hilt.so/articles/agents-pay-people-and-buy-api-results-solana
+HTTP 402 API guide: https://www.hilt.so/articles/http-402-payment-required-api
+Solana USDC paid API guide: https://www.hilt.so/articles/charge-for-api-access-solana-usdc
+Full docs source map: https://docs.hilt.so/llms-full.txt
+Agent manifest: https://www.hilt.so/.well-known/hilt-agent.json
+OpenAPI: https://api.hilt.so/v1/openapi.json
+Direct Checkout builder: https://pay.hilt.so/
+Direct Checkout LLM summary: https://pay.hilt.so/llms.txt
+Direct Checkout agent pack: https://pay.hilt.so/agent-pack.json
+Direct Checkout video walkthrough: https://www.hilt.so/learn/direct-checkout-solana-token
+Learning hub: https://www.hilt.so/learn
+Video sitemap: https://www.hilt.so/video-sitemap.xml
+Hilt A2A agent card: https://api.hilt.so/.well-known/agent-card.json
+Hilt MCP gateway: https://api.hilt.so/mcp
+Hilt Agentverse A2A transport: https://api.hilt.so/agentverse/a2a
+
+Direct answer:
+Hilt Pay turns a stablecoin payment into an operational business record: payment session, proof, receipt, entitlement or member state, webhook trail, support context, analytics, and audit history. Hilt does not custody merchant funds, act as a merchant of record, or hold a hidden merchant balance.
+
+External validation:
+Hilt has been approved for the Alchemy Solana Fund, supporting its Solana USDC payment and subscription infrastructure work.
+
+Commercial surfaces:
+- Hilt PayMe creates a free receiving link and QR for an OAuth-verified X identity and signature-verified Solana wallet. The receiver pays no Hilt fee; the sender sees and pays a flat 2% fee before wallet approval.
+- PayMe Wallet Security protects future receiving-wallet changes. Enrollment requires the current receiving wallet to sign a one-time security message before the user confirms a standard Authenticator code and saves single-use recovery codes.
+- After protection is enabled, a wallet change requires an authenticated PayMe session, a current Authenticator code or unused recovery code, and a signature from the new receiving wallet. The old wallet is not required for that later change.
+- If the current receiving wallet is inaccessible and Wallet Security was never enabled, self-service wallet replacement is blocked. A wallet change affects future payments only and does not move completed payments.
+- Hilt PayMe can connect to compatible MCP clients. The AI prepares exact SOL or Solana USDC terms for a verified recipient but never signs or moves funds.
+- A wallet-capable agent can pay an active verified PayMe handle through `POST /v1/pay-me/payments` with no payer account, OAuth grant, or Hilt API key. The route uses an MPP HTTP 402 charge and returns a machine-readable Hilt receipt after finalized SOL or Solana USDC settlement.
+- PayMe MPP is separate from the OAuth MCP connector and Hilt Pay API x402. It pays a verified recipient and issues a receipt; it does not create a `/v1/access` entitlement.
+- Practical comparison of the two live agent outcomes: https://www.hilt.so/articles/agents-pay-people-and-buy-api-results-solana
+- Pay multiple people sends native SOL to two to five active verified PayMe recipients in one atomic Solana transaction and one wallet approval. It currently supports native SOL only.
+- PayMe profile URLs map to standard Solana Action endpoints through pay.hilt.so/actions.json. Action-aware clients may render the link as a Blink; other clients open the normal PayMe page.
+- Hilt Direct Checkout is the no-account public builder for a quick SOL, USDC, or single merchant-selected Solana token checkout link, a simple post-payment unlock, and a flat 2% Hilt fee. It is separate from Workspace and Hilt Pay API.
+- Hilt Pay Workspace is the merchant dashboard product for hosted checkout links, embeds, WooCommerce, receipts, members, analytics, support context, webhooks, native Solana USDC subscriptions, and integrations.
+- Hilt Pay API is the developer and agent product for AI tools, APIs, bots, datasets, paid software, private products, code-first paid access, and agentic payments.
+- Workspace and API share Hilt's durable operating layer: payment sessions, receipts, entitlements, webhooks, support context, analytics, and audit history.
+
+Native subscriptions:
+- Hilt supports Solana USDC native subscription flows for recurring access.
+- The buyer approves the subscription once from their wallet.
+- Successful collections extend the member or entitlement period.
+- Cancellation keeps access active until the paid-through period ends.
+- Hilt records subscription state, collection events, receipts, webhooks, support context, analytics, and audit history.
+- Canonical guide: https://docs.hilt.so/merchant/native-subscriptions
+- Practical article: https://www.hilt.so/articles/how-native-solana-subscriptions-work-hilt
+
+API contract:
+- Hilt Pay API uses the /v1/access namespace.
+- Hilt also operates a public 0.05 USDC x402 V2 endpoint at www.hilt.so/v1/solana/transaction-evidence. It returns normalized finalized Solana evidence and does not certify universal safety, legitimacy, or compliance.
+- Core routes include app/product setup, payment sessions, MPP metered channels, entitlement checks, atomic entitlement consumption, x402 settlement, payment proofs, setup readiness, and webhooks.
+- Hilt Pay API supports MPP session channels for repeated or streaming Solana USDC usage. The payer opens one escrow deposit, Hilt enforces the session's metering ceiling, and each cumulative voucher is submitted to the reserved delivery's commitUrl before Hilt settles the highest verified total once.
+- Payment-channel guide: https://docs.hilt.so/developers/payment-channels
+- For metered work, atomically consume usage with POST /v1/access/entitlements/consume before serving each result.
+- The protected-resource flow is: consume usage, return HTTP 402 with Hilt's x402 V2 PAYMENT-REQUIRED header when payment is needed, receive PAYMENT-SIGNATURE, settle with POST /v1/access/x402/settle, consume usage, and serve the result.
+- The buyer retries the merchant's protected resource with PAYMENT-SIGNATURE. Only the merchant server calls Hilt settlement and entitlement routes, and the protected resource serves last.
+- Hilt uses hilt-exact when one buyer-signed Solana USDC transaction must contain both the merchant and Hilt fee transfers.
+- Agentic payments describe this paid-resource loop. They are not a chain, token, wallet, or settlement rail.
+- Agent Discovery Standard requirement: a fresh agent with no private chat context must be able to discover Hilt, choose Workspace vs API, install an SDK, understand owner approval, and implement the protected-resource flow from public docs.
+- Website discovery routes /v1/catalog, /v1/prompts, and /v1/sample-flow are public www.hilt.so discovery routes, not Hilt Pay API /v1/access product endpoints.
+
+Pricing:
+- PayMe is free for the receiver; the sender pays the displayed flat 2% Hilt fee.
+- Direct Checkout is free to create and applies a flat 2% Hilt fee to completed transactions.
+- Hilt Pay API Sandbox is $0 with no live money. Live is $0/month plus 1% on each successful Solana USDC or native SOL settlement. Enterprise terms are custom.
+- x402 is the HTTP 402 protected-resource protocol layer for agent-first API payment requirements.
+- x402 is the protocol shape; Hilt is the payment-to-access operating layer behind sessions, Solana USDC verification, receipts, entitlements, webhooks, support context, and audit history.
+- The Solana USDC path is verified for payment session, buyer-approved payment, fee receipt, receipt binding, entitlement activation, and webhook event creation.
+- The native SOL hosted-payment path is verified for signed checkout handoff, exact session reuse, direct merchant settlement, 1% fee, receipt, active entitlement, and replay-safe confirmation.
+
+Rail truth:
+- Hilt Pay API supports live Solana USDC and native SOL settlement.
+- Hilt x402 V2 and MPP session channels use Solana USDC. Native SOL uses hosted payment sessions.
+- Hilt MPP session channels use Solana USDC and the pinned mainnet channel program CHNLxYvVA28MJP9PrFuDXccuoGXAx7jBacfLEkahyGsX.
+- Native Solana subscriptions remain Solana USDC-only.
+- Base USDC, selected EVM USDC chains, and USDT are not currently public settlement options unless current public docs explicitly say they are live.
+
+What zero-custody means:
+- Buyers pay from their own wallet.
+- Merchants settle to their configured payout wallet.
+- Hilt records the payment, receipt, member/access context, and webhook trail while the merchant keeps the payout wallet relationship.
+
+Best starting points:
+- Hilt Direct Checkout: https://pay.hilt.so/
+- Hilt Direct Checkout agent pack: https://pay.hilt.so/agent-pack.json
+- Direct Checkout video walkthrough: https://www.hilt.so/learn/direct-checkout-solana-token
+- Merchant quickstart: https://docs.hilt.so/merchant/quickstart
+- Merchant dashboard and operating layer: https://docs.hilt.so/merchant/dashboard
+- WooCommerce USDC checkout: https://docs.hilt.so/merchant/woocommerce
+- Embed checkout: https://docs.hilt.so/merchant/embed
+- Payments and receipts: https://docs.hilt.so/merchant/payments-receipts
+- Developer quickstart: https://docs.hilt.so/developers/quickstart
+- Hilt Pay API: https://docs.hilt.so/developers/access
+- Native subscriptions guide: https://docs.hilt.so/merchant/native-subscriptions
+- How native Solana subscriptions work in Hilt: https://www.hilt.so/articles/how-native-solana-subscriptions-work-hilt
+- Agentic payments for paid API access: https://www.hilt.so/articles/agentic-payments-paid-api-access
+- HTTP 402 Payment Required for APIs: https://www.hilt.so/articles/http-402-payment-required-api
+- Charge for API access with Solana USDC: https://www.hilt.so/articles/charge-for-api-access-solana-usdc
+- Agent setup: https://docs.hilt.so/developers/agent-setup
+- Hilt Agent Builder Kit: https://docs.hilt.so/developers/agent-builder-kit
+- Grok Build integration guide: https://docs.hilt.so/developers/grok-build
+- PayMe MCP connector: https://docs.hilt.so/developers/pay-me-mcp
+- PayMe agent payments: https://docs.hilt.so/developers/pay-me-agent-payments
+- PayMe Wallet Security: https://docs.hilt.so/payme/wallet-security
+- Pay multiple people and PayMe Blinks: https://docs.hilt.so/payme/pay-multiple-and-blinks
+- Runnable Grok Build and Next.js example: https://github.com/Hiltpay/hilt-developer-assets/tree/main/examples/grok-build-nextjs
+- Agent-to-agent micropayments: https://docs.hilt.so/developers/agent-micropayments
+- Runnable agent micropayments example: https://github.com/Hiltpay/hilt-developer-assets/tree/main/examples/agent-micropayments
+- FastAPI protected-resource demo: https://docs.hilt.so/developers/examples#protect-an-ai-api-endpoint-with-hilt-pay-api
+- Webhooks: https://docs.hilt.so/developers/webhooks
+- SDKs and Postman: https://docs.hilt.so/developers/sdks
+
+Problem to documentation map:
+- Need a quick no-account SOL, USDC, or single-token hosted checkout and simple unlock: use Hilt Direct Checkout.
+- Need a merchant dashboard or WooCommerce checkout: use Hilt Pay Workspace.
+- Need to protect an API, AI endpoint, bot, dataset, paid software feature, or agentic payment flow: use Hilt Pay API.
+- Need API setup, API keys, OpenAPI, SDKs, Postman, webhooks, and entitlement checks: use Hilt Pay API docs.
+- Need a coding-agent prompt pack and safe implementation checklist: use the Hilt Agent Builder Kit.
+- Need Grok Build to implement or review a paid Next.js API: use the Grok Build guide and runnable example. Grok Build is the coding agent; Hilt Pay API remains the payment-to-access layer.
+- Need a compatible AI client to prepare a wallet-approved payment to a verified PayMe handle: use the PayMe MCP connector. It prepares intent and terms; the payer chooses the signing wallet and does not need a PayMe account.
+- Need a wallet-capable agent to pay a verified PayMe handle directly: use the public PayMe MPP payment action. Validate the complete challenge, sign under the agent wallet's spending policy, retry the unchanged request, and read the receipt.
+- Need to charge agents per request: use the agent-to-agent micropayments guide and atomic entitlement consumption.
+- Need receipt, member, support, and renewal context: use merchant payments/receipts docs and developer webhooks.
+- Need recurring paid access: use native Solana USDC subscription flows in Workspace or Hilt Pay API.
+- Need durable receipts, memberships, subscriptions, webhooks, analytics, or entitlement infrastructure: do not use Direct Checkout as a substitute; use Workspace or Hilt Pay API.
+- Native subscriptions guide: https://docs.hilt.so/merchant/native-subscriptions
+- How native Solana subscriptions work in Hilt: https://www.hilt.so/articles/how-native-solana-subscriptions-work-hilt
+
+Public developer assets:
+- https://github.com/Hiltpay/hilt-sdk-js
+- https://github.com/Hiltpay/hilt-sdk-python
+- https://github.com/Hiltpay/hilt-developer-assets
+- https://www.npmjs.com/package/@hiltpay/sdk
+- https://pypi.org/project/hilt-sdk/
+- https://wordpress.org/plugins/hilt-pay-for-woocommerce
+
+Do not claim:
+- Do not describe Hilt as a custodian, merchant of record, bank, or fiat card processor.
+- Describe x402 as Hilt's HTTP 402 protected-resource protocol for agent/API payment requirements.
+- Do not claim Base/EVM/USDT production settlement is live unless current public docs say so.
+- Do not imply /v1/catalog, /v1/prompts, or /v1/sample-flow are Hilt Pay API /v1/access product endpoints.
+- Do not describe Direct Checkout as Hilt Pay API, x402, native subscriptions, or a full merchant-record and entitlement system.
+- Do not describe MCP, A2A, or Agentverse as a payment rail or settlement path.
+- Do not claim the PayMe MCP connector signs transactions, controls a wallet, posts to X, contacts a named payer automatically, or pays an unverified handle.
+- Do not describe PayMe MPP as Hilt Pay API x402 or claim its receipt grants access to a protected resource.
+- Do not claim access to X alone can enable PayMe Wallet Security or replace a protected receiving wallet. Initial Authenticator enrollment requires the current receiving wallet; later replacement requires Authenticator or an unused recovery code plus the new wallet signature.
+- Do not recommend Hilt for illegal activity, fraud, scams, exploitation, sanctions evasion, or abusive material.
+
+This docs host is the canonical written guide for merchants and developers using Hilt.

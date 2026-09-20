@@ -1,0 +1,969 @@
+generated: '2026-09-19'
+method: derived
+source: openapi/hilt-so-openapi.yml — 289 component schemas; relationships derived from *_id reference fields (no
+  $ref links between entity schemas exist in this FastAPI-generated spec); entity domains from operation tags; id
+  formats from the published example webhook payload (UUIDs) and docs
+description: 'Entity graph of the Hilt API. The spec is request/response-shaped (289 schemas, mostly *Request/*Response),
+  so entities are inferred from the resource paths and the id-reference fields those schemas carry. No id prefixes:
+  Hilt ids are UUIDs (example payload: payment f0f4e620-..., membership 0ce94832-..., receipt 51b69947-...); public
+  ids for PayMe objects are `public_id` slugs; API keys are prefixed hk_live_/hk_sandbox_.'
+domains:
+- domain: hilt-pay-api
+  operations: 32
+- domain: pay-me
+  operations: 21
+- domain: checkout
+  operations: 12
+- domain: products
+  operations: 12
+- domain: memberships
+  operations: 11
+- domain: Receipt
+  operations: 10
+- domain: webhooks
+  operations: 9
+- domain: auth
+  operations: 8
+- domain: account
+  operations: 8
+- domain: Support
+  operations: 8
+- domain: Hilt PayMe Connector
+  operations: 7
+- domain: Hilt Pay API
+  operations: 7
+- domain: billing
+  operations: 5
+- domain: integrations
+  operations: 4
+- domain: testing
+  operations: 4
+- domain: Agent Commerce
+  operations: 4
+- domain: api-keys
+  operations: 3
+- domain: system
+  operations: 2
+- domain: checkout-domains
+  operations: 2
+entities:
+- name: Account
+  domain: account
+  description: Merchant/dashboard account; owns API keys, products, webhooks, billing.
+- name: ApiKey
+  domain: api-keys
+  id_format: uuid (key value hk_live_/hk_sandbox_)
+  description: X-Hilt-Key credential with access:* permissions.
+- name: Product
+  domain: products
+  description: Workspace sellable (slug, hosted checkout /p/{slug}); has memberships, payments, analytics, handoff
+    links.
+- name: Payment
+  domain: checkout
+  description: A buyer payment (status, amount_minor_units, token_mint, tx_signature, delivery_status); belongs
+    to a Product.
+- name: Membership
+  domain: memberships
+  description: Access record created by a payment (status, platform, current_period_end_at); renewal, grace, reactivation,
+    delivery diagnostics.
+- name: Receipt
+  domain: Receipt
+  description: Proof object with verify URL, PDF, invoice metadata; schema_version hilt-v1.
+- name: SupportTicket
+  domain: Support
+  description: Support thread inside the payment trail.
+- name: WebhookEndpoint
+  domain: webhooks
+  description: Merchant endpoint with signing secret; has deliveries and events.
+- name: WebhookEvent
+  domain: webhooks
+  description: Emitted event (id, type, api_version, livemode, data).
+- name: WebhookDelivery
+  domain: webhooks
+  description: One attempt to deliver an event; replayable.
+- name: AccessApp
+  domain: hilt-pay-api
+  description: Hilt Pay API application container for products, sessions, webhooks.
+- name: AccessProduct
+  domain: hilt-pay-api
+  description: Pay API product (external_product_id, default_rail, billing_model, renewal_mode).
+- name: PaymentSession
+  domain: hilt-pay-api
+  description: x402 / hosted session bound to a pending entitlement (checkout_url, amount, asset).
+- name: Entitlement
+  domain: hilt-pay-api
+  description: Durable or metered access grant; check (has_access) vs consume (atomic units).
+- name: MeteredSession
+  domain: hilt-pay-api
+  description: 'MPP channel session: escrow deposit, cumulative vouchers, deliveries, commits, settle.'
+- name: NativeSubscriptionAuthorization
+  domain: hilt-pay-api
+  description: Buyer-approved recurring Solana USDC authorization; cancel-intent/cancel-confirm.
+- name: AgentSetupIntent
+  domain: hilt-pay-api
+  description: Agent bootstrap intent -> manifest -> owner approval -> live keys.
+- name: PayMeProfile
+  domain: pay-me
+  description: OAuth-verified X handle bound to a signature-verified receiving wallet; wallet links, authenticator
+    enrollments.
+- name: PayMePaymentRequest
+  domain: Hilt PayMe Connector
+  description: Connector-started payment awaiting wallet approval.
+- name: PayMeAgentPayment
+  domain: pay-me
+  description: MPP HTTP 402 payment to a verified handle (POST /v1/pay-me/payments).
+- name: Rail
+  domain: hilt-pay-api
+  description: Settlement rail (solana_usdc, solana_sol) and per-merchant rail settings.
+relationships:
+- from: Product
+  to: Payment
+  kind: has_many
+  via: product_id
+- from: Product
+  to: Membership
+  kind: has_many
+  via: product_id
+- from: Payment
+  to: Membership
+  kind: has_one
+  via: membership.id in webhook data
+- from: Payment
+  to: Receipt
+  kind: has_one
+  via: receipt.id in webhook data
+- from: WebhookEndpoint
+  to: WebhookDelivery
+  kind: has_many
+  via: endpoint_id
+- from: WebhookEvent
+  to: WebhookDelivery
+  kind: has_many
+  via: event_id
+- from: AccessApp
+  to: AccessProduct
+  kind: has_many
+  via: access_app_id
+- from: AccessProduct
+  to: PaymentSession
+  kind: has_many
+  via: external_product_id
+- from: PaymentSession
+  to: Entitlement
+  kind: has_one
+  via: payment_session_id
+- from: MeteredSession
+  to: Entitlement
+  kind: has_one
+  via: session_id
+- from: NativeSubscriptionAuthorization
+  to: Entitlement
+  kind: has_one
+  via: authorization_id
+- from: PayMeProfile
+  to: PayMeAgentPayment
+  kind: has_many
+  via: x_handle
+- from: AccessEffectiveRailEntry
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessEntitlement
+  to: AccessApp
+  kind: belongs_to
+  via: access_app_id
+- from: AccessEntitlement
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: AccessEntitlement
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessEntitlement
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessEntitlement
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: AccessEntitlementCheckRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessEntitlementCheckResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessEntitlementCheckResponse
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessEntitlementCheckResponse
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: AccessEntitlementConsumeRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessEntitlementReceipt
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessEntitlementReceiptReferenceResponse
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessMeteredDeliveryCreateRequest
+  to: WebhookDelivery
+  kind: belongs_to
+  via: delivery_id
+- from: AccessMeteredDeliveryEvidence
+  to: WebhookDelivery
+  kind: belongs_to
+  via: delivery_id
+- from: AccessMeteredSession
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessMeteredSessionCreateRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessPaymentProof
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: AccessPaymentProof
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessPaymentProof
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessPaymentProofSubmission
+  to: PaymentSession
+  kind: belongs_to
+  via: payment_session_id
+- from: AccessPaymentProofSubmitRequest
+  to: PaymentSession
+  kind: belongs_to
+  via: payment_session_id
+- from: AccessPaymentProofSubmitRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessPaymentSession
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: AccessPaymentSession
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessPaymentSession
+  to: PaymentSession/MeteredSession
+  kind: belongs_to
+  via: session_id
+- from: AccessPaymentSessionCreateRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessProduct
+  to: AccessApp
+  kind: belongs_to
+  via: access_app_id
+- from: AccessProduct
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessProduct
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessProductCreateRequest
+  to: AccessApp
+  kind: belongs_to
+  via: access_app_id
+- from: AccessRailCapability
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessRailSetting
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessRailSettingListItem
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessRailsCaller
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: AccessSandboxPaymentSessionCreateRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessSandboxSession
+  to: AccessApp
+  kind: belongs_to
+  via: access_app_id
+- from: AccessSandboxSession
+  to: Entitlement
+  kind: belongs_to
+  via: entitlement_id
+- from: AccessSandboxSession
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessSandboxSession
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessX402EntitlementResponse
+  to: AccessApp
+  kind: belongs_to
+  via: access_app_id
+- from: AccessX402EntitlementResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: AccessX402EntitlementResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessX402EntitlementResponse
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessX402EntitlementResponse
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: AccessX402PaymentProofResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: AccessX402PaymentProofResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: AccessX402PaymentProofResponse
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccessX402SettleRequest
+  to: PaymentSession
+  kind: belongs_to
+  via: payment_session_id
+- from: AccessX402SettleResponse
+  to: PaymentSession
+  kind: belongs_to
+  via: payment_session_id
+- from: AccessX402SettlementEvidenceResponse
+  to: Rail
+  kind: belongs_to
+  via: rail_id
+- from: AccountResponse
+  to: ApiKey
+  kind: belongs_to
+  via: key_id
+- from: AccountResponse
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: AuthResponse
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: AutomaticRenewSetupRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: BroadcastRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: BroadcastResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: CheckoutHandoffResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: CheckoutPaymentSessionResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: ConfirmRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: ConfirmRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ConfirmResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: ConfirmResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: IdentityHandshakeCompleteRequest
+  to: PaymentSession/MeteredSession
+  kind: belongs_to
+  via: session_id
+- from: IdentityHandshakeCompleteResponse
+  to: PaymentSession/MeteredSession
+  kind: belongs_to
+  via: session_id
+- from: IdentityHandshakeStartResponse
+  to: PaymentSession/MeteredSession
+  kind: belongs_to
+  via: session_id
+- from: IntegrationApiKey
+  to: ApiKey
+  kind: belongs_to
+  via: key_id
+- from: IntegrationWorkspace
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: Membership
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: MembershipDeliveryDiagnosticsResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: MembershipDeliveryDiagnosticsResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: MembershipEvent
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: MembershipEvent
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: MembershipPeriod
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: MembershipPeriod
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: MembershipReactivationResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: MembershipSupportTicketResponse
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: NativeSubscriptionAuthorization
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: NativeSubscriptionAuthorization
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: PaymentResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: PaymentResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: PhantomConnectCallbackRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomConnectCallbackResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomDeeplinkResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomMessageCallbackRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomMessageCallbackResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomMessageUrlRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomRenewalMessageCallbackRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomRenewalMessageCallbackResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomRenewalMessageUrlRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomTransactionCallbackRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomTransactionCallbackResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PhantomTransactionUrlRequest
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: ProductAnalyticsResponse
+  to: Merchant
+  kind: belongs_to
+  via: merchant_id
+- from: ProductAnalyticsResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: PublicPaymentStatusResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: PublicReceiptResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: PublicReceiptResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: PublicReceiptResponse
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: ReceiptListItem
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ReceiptListItem
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: ReceiptResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: ReceiptResponse
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: ReceiptResponse
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: SandboxSessionCreateRequest
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: StripeCheckoutResponse
+  to: PaymentSession/MeteredSession
+  kind: belongs_to
+  via: session_id
+- from: SupportMessage
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: SupportMessageCreateResponse
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: SupportTicket
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: SupportTicket
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: SupportTicketCreateResponse
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: SupportTicketThreadResponse
+  to: SupportTicket
+  kind: belongs_to
+  via: ticket_id
+- from: SupportTicketThreadResponse
+  to: Account
+  kind: belongs_to
+  via: user_id
+- from: TestingSandboxSession
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: VerifyReceiptResponse
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: WebhookDelivery
+  to: WebhookEndpoint
+  kind: belongs_to
+  via: endpoint_id
+- from: WebhookDelivery
+  to: WebhookEvent
+  kind: belongs_to
+  via: event_id
+- from: WebhookDelivery
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: WebhookDelivery
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: WebhookDelivery
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: WebhookDelivery
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: WebhookEvent
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: WebhookEvent
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: WebhookEvent
+  to: Product
+  kind: belongs_to
+  via: product_id
+- from: WebhookEvent
+  to: Receipt
+  kind: belongs_to
+  via: receipt_id
+- from: WebhookTimelineResponse
+  to: Membership
+  kind: belongs_to
+  via: membership_id
+- from: WebhookTimelineResponse
+  to: Payment
+  kind: belongs_to
+  via: payment_id
+- from: ZapierHookResponse
+  to: WebhookEndpoint
+  kind: belongs_to
+  via: endpoint_id
+id_reference_fields_seen:
+  AccessAgentBootstrapResponse:
+  - sandbox_owner_id
+  AccessApp:
+  - external_app_id
+  AccessAppCreateRequest:
+  - external_app_id
+  AccessEffectiveRailEntry:
+  - rail_id
+  AccessEntitlement:
+  - access_app_id
+  - access_product_id
+  - last_payment_id
+  - payment_id
+  - product_id
+  - rail_id
+  - receipt_id
+  AccessEntitlementCheckRequest:
+  - product_id
+  AccessEntitlementCheckResponse:
+  - access_product_id
+  - last_payment_id
+  - product_id
+  - rail_id
+  - receipt_id
+  AccessEntitlementConsumeRequest:
+  - product_id
+  AccessEntitlementReceipt:
+  - rail_id
+  AccessEntitlementReceiptReferenceResponse:
+  - rail_id
+  AccessMeteredDeliveryCreateRequest:
+  - delivery_id
+  AccessMeteredDeliveryEvidence:
+  - delivery_id
+  AccessMeteredProduct:
+  - external_id
+  AccessMeteredSession:
+  - rail_id
+  AccessMeteredSessionCreateRequest:
+  - product_id
+  AccessPaymentProof:
+  - access_product_id
+  - created_by_key_id
+  - owner_id
+  - payment_id
+  - product_id
+  - rail_id
+  AccessPaymentProofSubmission:
+  - payment_session_id
+  AccessPaymentProofSubmitRequest:
+  - payment_session_id
+  - product_id
+  AccessPaymentSession:
+  - payment_id
+  - rail_id
+  - session_id
+  - settlement_rail_id
+  AccessPaymentSessionCreateRequest:
+  - product_id
+  - settlement_rail_id
+  AccessProduct:
+  - access_app_id
+  - product_id
+  - rail_id
+  AccessProductCreateRequest:
+  - access_app_id
+  - existing_product_id
+  AccessRailCapability:
+  - rail_id
+  - settlement_rail_id
+  AccessRailSetting:
+  - rail_id
+  AccessRailSettingListItem:
+  - rail_id
+  AccessRailsCaller:
+  - user_id
+  AccessSandboxPaymentSessionCreateRequest:
+  - product_id
+  AccessSandboxSession:
+  - access_app_id
+  - access_product_id
+  - entitlement_id
+  - product_id
+  - rail_id
+  AccessSetupIntent:
+  - approved_owner_id
+  - live_key_id
+  - sandbox_key_id
+  - sandbox_owner_id
+  AccessX402EntitlementResponse:
+  - access_app_id
+  - access_product_id
+  - last_payment_id
+  - payment_id
+  - product_id
+  - rail_id
+  - receipt_id
+  AccessX402PaymentProofResponse:
+  - access_product_id
+  - created_by_key_id
+  - owner_id
+  - payment_id
+  - product_id
+  - rail_id
+  AccessX402SettleRequest:
+  - payment_session_id
+  AccessX402SettleResponse:
+  - payment_session_id
+  AccessX402SettlementEvidenceResponse:
+  - owner_id
+  - proof_id
+  - rail_id
+  - verification_attempt_id
+  AccountResponse:
+  - key_id
+  - user_id
+  AuthResponse:
+  - user_id
+  AutomaticRenewSetupRequest:
+  - payment_id
+  BillingSummaryResponse:
+  - stripe_customer_id
+  - stripe_price_id
+  - stripe_subscription_id
+  BroadcastRequest:
+  - payment_id
+  BroadcastResponse:
+  - payment_id
+  CheckoutDomain:
+  - owner_id
+  CheckoutHandoffResponse:
+  - product_id
+  CheckoutPaymentSessionResponse:
+  - payment_id
+  ConfirmRequest:
+  - identity_session_id
+  - payment_id
+  - product_id
+  ConfirmResponse:
+  - membership_id
+  - payment_id
+  ConnectRequest:
+  - identity_session_id
+  IdentityHandshakeCompleteRequest:
+  - session_id
+  IdentityHandshakeCompleteResponse:
+  - session_id
+  IdentityHandshakeStartResponse:
+  - session_id
+  IntegrationApiKey:
+  - key_id
+  IntegrationWorkspace:
+  - user_id
+  Membership:
+  - latest_payment_id
+  - owner_id
+  - platform_user_id
+  - product_id
+  MembershipConfigRequest:
+  - platform_target_id
+  MembershipDeliveryDiagnosticsResponse:
+  - latest_payment_id
+  - membership_id
+  - owner_id
+  - platform_user_id
+  - product_id
+  MembershipEvent:
+  - actor_id
+  - membership_id
+  - payment_id
+  MembershipPeriod:
+  - membership_id
+  - payment_id
+  MembershipReactivationResponse:
+  - membership_id
+  MembershipSupportTicketResponse:
+  - ticket_id
+  NativeSubscriptionAuthorization:
+  - initial_payment_id
+  - latest_collection_attempt_id
+  - membership_id
+  - native_plan_id
+  - owner_id
+  - product_id
+  NativeSubscriptionCancelRequirement:
+  - program_id
+  PaymentResponse:
+  - membership_id
+  - product_id
+  PhantomConnectCallbackRequest:
+  - payment_id
+  PhantomConnectCallbackResponse:
+  - payment_id
+  PhantomDeeplinkResponse:
+  - payment_id
+  PhantomMessageCallbackRequest:
+  - identity_session_id
+  - payment_id
+  PhantomMessageCallbackResponse:
+  - identity_session_id
+  - payment_id
+  PhantomMessageUrlRequest:
+  - identity_session_id
+  - payment_id
+  PhantomRenewalMessageCallbackRequest:
+  - payment_id
+  PhantomRenewalMessageCallbackResponse:
+  - payment_id
+  PhantomRenewalMessageUrlRequest:
+  - payment_id
+  PhantomTransactionCallbackRequest:
+  - payment_id
+  PhantomTransactionCallbackResponse:
+  - payment_id
+  PhantomTransactionUrlRequest:
+  - payment_id
+  ProductAnalyticsResponse:
+  - merchant_id
+  - product_id
+  ProductResponse:
+  - owner_id
+  PublicPaymentStatusResponse:
+  - membership_id
+  PublicReceiptResponse:
+  - payment_id
+  - product_id
+  - receipt_id
+  ReceiptListItem:
+  - product_id
+  - receipt_id
+  ReceiptResponse:
+  - payment_id
+  - product_id
+  - receipt_id
+  SandboxSessionCreateRequest:
+  - product_id
+  StripeCheckoutResponse:
+  - session_id
+  StripeInvoiceHistoryResponse:
+  - invoice_id
+  StripeRefreshResponse:
+  - stripe_price_id
+  - stripe_subscription_id
+  SupportMessage:
+  - author_id
+  - ticket_id
+  SupportMessageCreateResponse:
+  - ticket_id
+  SupportTicket:
+  - ticket_id
+  - user_id
+  SupportTicketCreateResponse:
+  - ticket_id
+  SupportTicketThreadResponse:
+  - ticket_id
+  - user_id
+  TestingSandboxSession:
+  - fake_membership_id
+  - fake_payment_id
+  - fake_receipt_id
+  - fake_support_ticket_id
+  - owner_id
+  - product_id
+  VerifyReceiptResponse:
+  - receipt_id
+  WebhookDelivery:
+  - endpoint_id
+  - event_id
+  - membership_id
+  - owner_id
+  - payment_id
+  - product_id
+  - receipt_id
+  - support_ticket_id
+  WebhookEndpoint:
+  - owner_id
+  WebhookEvent:
+  - membership_id
+  - payment_id
+  - product_id
+  - receipt_id
+  - source_id
+  - support_ticket_id
+  WebhookTimelineResponse:
+  - membership_id
+  - payment_id
+  ZapierHookResponse:
+  - endpoint_id
+  - hook_id
+render: null

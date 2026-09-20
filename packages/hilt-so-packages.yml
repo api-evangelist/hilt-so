@@ -1,0 +1,106 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/developers/sdks; registry.npmjs.org/@hiltpay/sdk; pypi.org/pypi/hilt-sdk/json; api.wordpress.org
+  plugin_information hilt-pay-for-woocommerce; github.com/Hiltpay; https://www.hilt.so/downloads/ (provider-hosted
+  tarballs)
+description: First-party Hilt client libraries. Two SDKs are on public registries at 1.4.0 (both published 2026-08-26).
+  The docs page and the September 2026 changelog already describe 1.5.0 (MPP payment-channel methods) and its install
+  commands point at PROVIDER-HOSTED tarballs on www.hilt.so/downloads rather than the registries; those 1.5.0 files
+  exist (HTTP 200) and the tgz package.json reads @hiltpay/sdk 1.5.0, but the registries have not been updated.
+  The CLI is distributed only as a provider-hosted tarball (@hilt/cli 1.0.0, private:true, never published to npm).
+  License on the SDK repos is a proprietary all-rights-reserved notice ("Copyright (c) 2026 Paul Wild trading as
+  Hilt"); npm records it as UNLICENSED.
+packages:
+- language: typescript
+  registry: npm
+  name: '@hiltpay/sdk'
+  url: https://www.npmjs.com/package/@hiltpay/sdk
+  source: https://github.com/Hiltpay/hilt-sdk-js
+  install: npm install @hiltpay/sdk
+  official: true
+  version: 1.4.0
+  published: '2026-08-26'
+  first_published: '2026-05-06'
+  versions:
+  - 1.0.0
+  - 1.0.1
+  - 1.0.2
+  - 1.0.3
+  - 1.1.0
+  - 1.2.0
+  - 1.3.0
+  - 1.4.0
+  license: UNLICENSED (proprietary; repo LICENSE reserves all rights)
+  runtime: Node 18+ / any fetch runtime; ESM
+  subpath_exports:
+  - '@hiltpay/sdk/x402'
+  - '@hiltpay/sdk/protect'
+  registry_status: 200
+  note: Docs install command is `npm install https://www.hilt.so/downloads/hilt-sdk-1.5.0.tgz` (HTTP 200, package.json
+    version 1.5.0); registry latest remains 1.4.0.
+- language: python
+  registry: pypi
+  name: hilt-sdk
+  url: https://pypi.org/project/hilt-sdk/
+  source: https://github.com/Hiltpay/hilt-sdk-python
+  install: pip install hilt-sdk
+  official: true
+  version: 1.4.0
+  published: '2026-08-26'
+  first_published: '2026-05-06'
+  versions:
+  - 1.0.0
+  - 1.0.1
+  - 1.0.2
+  - 1.0.3
+  - 1.1.0
+  - 1.2.0
+  - 1.3.0
+  - 1.4.0
+  requires_python: '>=3.10'
+  import_name: hilt_sdk
+  registry_status: 200
+  note: Docs install command is `pip install https://www.hilt.so/downloads/hilt_sdk-1.5.0-py3-none-any.whl` (HTTP
+    200); registry latest remains 1.4.0.
+- language: typescript
+  registry: cdn
+  name: '@hilt/cli'
+  url: https://www.hilt.so/downloads/hilt-cli-latest.tgz
+  source: null
+  install: npm install -g https://www.hilt.so/downloads/hilt-cli-latest.tgz
+  official: true
+  version: 1.0.0
+  published: null
+  registry_status: 200
+  sha256: https://www.hilt.so/downloads/hilt-cli-1.0.0.tgz.sha256
+  note: Not on npm (package.json private:true; registry.npmjs.org/@hilt/cli absent). Version read from the tarball
+    package.json; the "latest" tarball is byte-identical to the pinned 1.0.0 file (25,628 bytes). No publish date
+    is exposed by the download host. Command surface in cli/hilt-so-cli.yml.
+- language: php
+  registry: wordpress.org
+  name: hilt-pay-for-woocommerce
+  url: https://wordpress.org/plugins/hilt-pay-for-woocommerce/
+  source: null
+  install: WordPress admin > Plugins > Add New > "Hilt Pay for WooCommerce"
+  official: true
+  version: 0.1.4
+  published: '2026-05-31'
+  requires_wordpress: '6.4'
+  tested_up_to: 7.0.5
+  author: paulhilt
+  homepage: https://www.hilt.so/woocommerce
+  registry_status: 200
+  note: WooCommerce payment gateway plugin; maps WooCommerce products to Hilt hosted checkouts.
+- language: mixed
+  registry: github
+  name: Hiltpay/hilt-developer-assets
+  url: https://github.com/Hiltpay/hilt-developer-assets
+  source: https://github.com/Hiltpay/hilt-developer-assets
+  install: null
+  official: true
+  version: null
+  published: '2026-08-26'
+  registry_status: 200
+  note: 'Public mirror of OpenAPI snapshot (openapi/hilt-openapi-v1.json), Postman collection + environment, Agent
+    Discovery Standard, example webhook payloads, and three runnable examples (grok-build-nextjs, agent-micropayments,
+    hilt-access-fastapi). Version null: not a versioned package; last push recorded instead.'

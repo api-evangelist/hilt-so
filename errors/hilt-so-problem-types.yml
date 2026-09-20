@@ -1,0 +1,126 @@
+generated: '2026-09-19'
+method: searched
+format: custom (FastAPI detail envelope)
+source: DERIVED from openapi/hilt-so-openapi.yml 4xx/5xx responses (165 operations) and ENRICHED from https://docs.hilt.so/developers/errors
+  plus the SDK error registry https://github.com/Hiltpay/hilt-sdk-js/blob/main/src/errors.ts (HILT_ERROR_CODES)
+envelope:
+  media_type: application/json
+  shapes:
+  - '{"detail": "Human readable message"}'
+  - '{"detail": {"code": "error_code", "message": "description"}}'
+  - '{"detail": [ {loc, msg, type, input, ctx} ]}  (422 HTTPValidationError)'
+  normalisation: error type from detail.code | code | error; message from detail.message | detail | message
+  request_id_headers:
+  - X-Hilt-Request-Id
+  - X-Request-Id
+  probed_401: '{"detail":"Authentication required"}'
+  probed_404: '{"detail":"Not Found"}'
+status_codes_in_spec:
+  '402': 4
+  '409': 4
+  '410': 1
+  '422': 132
+status_codes:
+- status: 401
+  meaning: Missing/invalid X-Hilt-Key, bearer token or scope
+  code: invalid_authorization
+  remediation: Verify the correct auth surface and key scope
+  note: Not declared in the spec; observed live.
+- status: 402
+  meaning: 'Payment required: x402 V2 PAYMENT-REQUIRED challenge (or MPP WWW-Authenticate: Payment) — usage missing
+    or plan not activated'
+  operations:
+  - create_or_settle_pay_me_agent_payment_v1_pay_me_payments_post
+  - activateHiltPayApiStarterWithX402
+  - activateHiltPayApiGrowthWithX402
+  - activateHiltPayApiScaleWithX402
+  remediation: Buyer signs the requirement under its wallet policy and retries the SAME request with PAYMENT-SIGNATURE;
+    merchant settles via settle_x402_payment_v1_access_x402_settle_post then consumes
+- status: 409
+  meaning: 'Conflict: same Idempotency-Key with different body (idempotency_conflict), MPP delivery id reused with
+    different terms, or a settled request trying to open a second session'
+  operations:
+  - activateHiltPayApiStarterWithX402
+  - activateHiltPayApiGrowthWithX402
+  - activateHiltPayApiScaleWithX402
+  - claimHiltPayApiMarketplaceKey
+  remediation: Read current state before retrying; never mint a new key for the same logical write
+- status: 410
+  meaning: 'Gone: the retired Hilt Pay API subscription checkout'
+  operations:
+  - create_hilt_pay_api_stripe_checkout_v1_access_billing_checkout_stripe_post
+  remediation: Use native Solana USDC subscriptions or the agent-commerce plan activation routes
+- status: 422
+  meaning: Validation error (HTTPValidationError)
+  count: 132
+  remediation: Fix the request per detail[].loc / msg
+- status: 429
+  meaning: Rate limited
+  code: rate_limited
+  remediation: Back off, honor Retry-After; do not retry-loop into duplicate sessions
+  note: Not declared in the spec; documented and the headers are observed live.
+problem_types:
+- code: payment_failed
+  http: 4xx
+  title: Payment did not complete successfully
+  remediation: Treat as terminal; show a fresh payment path
+  retryable: false
+- code: subscription_expired
+  title: Paid-through period has ended
+  remediation: Stop serving the resource; create a new session
+- code: invalid_authorization
+  http: 401
+  title: Missing or invalid API key or scope
+  remediation: Verify the correct auth surface and key scope
+- code: webhook_signature_failed
+  title: Webhook payload verification failed
+  remediation: Validate the raw body against X-Hilt-Signature
+- code: invalid_idempotency_key
+  title: Idempotency key rejected (SDK registry umbrella)
+- code: idempotency_key_required
+  title: Idempotency-Key header missing on a write that requires it
+- code: idempotency_key_too_long
+  title: Idempotency-Key exceeds 255 characters
+- code: idempotency_key_invalid
+  title: Idempotency-Key contains whitespace or control characters
+- code: idempotency_in_progress
+  title: Same key still processing
+  remediation: Wait and re-read; do not send a second body
+  retryable: true
+- code: idempotency_conflict
+  http: 409
+  title: Same key, different body
+  remediation: Use a new key for a genuinely different request
+- code: idempotency_race
+  title: Concurrent race on the same key
+  retryable: true
+- code: rate_limited
+  http: 429
+  title: Too many requests
+  remediation: Honor Retry-After
+  retryable: true
+- code: setup_not_ready
+  title: Configuration incomplete
+  remediation: Call GET /v1/access/setup/readiness before retrying
+- code: entitlement_missing
+  title: No active entitlement
+  remediation: Return 402 to the buyer and create a payment session
+- code: subscription_cancelled
+  title: Authorization cancelled
+  remediation: Stop future collection attempts
+- code: subscription_requires_reapproval
+  title: Needs buyer reapproval
+  remediation: Ask the buyer to complete the reapproval path
+- code: request_timeout
+  title: SDK timed out before a response
+  remediation: Retry reads with backoff; check state before retrying writes
+  retryable: true
+retry_guidance:
+  safe:
+  - reads
+  - lookups
+  - app-side automation after state checks
+  unsafe:
+  - starting a second payment before the first clearly fails
+  - mutating access without checking the payment/membership trail
+docs: https://docs.hilt.so/developers/errors

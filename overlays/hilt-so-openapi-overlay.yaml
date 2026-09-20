@@ -1,0 +1,139 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Hilt API OpenAPI
+  version: '2026-09-19'
+  x-generated: '2026-09-19'
+  x-method: generated
+  x-source: Documented behaviour from docs.hilt.so and live api.hilt.so probes; applied to openapi/hilt-so-openapi.yml
+    without mutating it
+extends: hilt-so-openapi.yml
+actions:
+- target: $.info
+  description: Record provenance and the canonical docs.
+  update:
+    x-apievangelist:
+      fetched: '2026-09-19'
+      source: https://api.hilt.so/openapi.json
+      sibling_subset: https://api.hilt.so/v1/openapi.json (= https://www.hilt.so/openapi.json; 143 paths, omits
+        the agent-commerce, /mcp and /a2a routes)
+    termsOfService: https://www.hilt.so/legal/terms
+- target: $
+  description: Add externalDocs.
+  update:
+    externalDocs:
+      description: Hilt developer docs
+      url: https://docs.hilt.so/developers
+- target: $.components
+  description: Add the security schemes the docs describe (the published spec declares none).
+  update:
+    securitySchemes:
+      HiltApiKey:
+        type: apiKey
+        in: header
+        name: X-Hilt-Key
+        description: hk_live_ / hk_sandbox_ keys; permissions access:read, access:write, access:webhooks
+      DashboardBearer:
+        type: http
+        scheme: bearer
+        description: Dashboard session token from /v1/auth/login, /v1/auth/wallet or /v1/auth/oauth/{provider}
+      PayMeOAuth:
+        type: oauth2
+        flows:
+          authorizationCode:
+            authorizationUrl: https://api.hilt.so/oauth/authorize
+            tokenUrl: https://api.hilt.so/oauth/token
+            refreshUrl: https://api.hilt.so/oauth/token
+            scopes:
+              pay_me:read: Read connector-started payments and received activity
+              pay_me:request: Create and manage self-shared payment links
+              pay_me:prepare: Start and manage wallet-approved payments to verified PayMe handles
+        description: PKCE S256, dynamic client registration at https://api.hilt.so/oauth/register; governs https://api.hilt.so/mcp/pay-me
+- target: $.components
+  description: Declare the rate-limit and request-id response headers observed live.
+  update:
+    headers:
+      X-RateLimit-Limit:
+        schema:
+          type: integer
+        description: Observed 120
+      X-RateLimit-Remaining:
+        schema:
+          type: integer
+      X-RateLimit-Reset:
+        schema:
+          type: integer
+        description: Unix epoch seconds
+      Retry-After:
+        schema:
+          type: integer
+        description: Seconds; sent on 429
+      X-Hilt-Request-Id:
+        schema:
+          type: string
+- target: $.components.responses
+  description: Add the undeclared 401 and 429 responses.
+  update:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          example:
+            detail: Authentication required
+    RateLimited:
+      description: rate_limited — honor Retry-After
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+- target: $.paths[*][?(@.operationId)]
+  description: 'Every operation: link the error catalogue and conventions.'
+  update:
+    x-apievangelist-conventions: conventions/hilt-so-conventions.yml
+    x-apievangelist-errors: errors/hilt-so-problem-types.yml
+- target: $.paths['/v1/access/billing/checkout/stripe'].post
+  description: Annotate the retired operation with its replacement.
+  update:
+    x-replacement: /v1/access/native-subscriptions/* and /v1/agent-commerce/plans/{starter,growth,scale}/activate
+    x-retired: 2026-08-24 (SDK 1.3.0 removed the helper)
+- target: $
+  description: Declare top-level tags with descriptions (the spec uses tags on operations but declares none).
+  update:
+    tags:
+    - name: hilt-pay-api
+      description: 'Hilt Pay API /v1/access: agent bootstrap, apps, products, payment sessions, x402 settle, entitlements,
+        MPP metered sessions, native subscriptions, sandbox'
+    - name: Hilt Pay API
+      description: Agent-commerce offer/catalog/pricing and x402 plan activation
+    - name: Agent Commerce
+      description: MCP gateway and A2A routes
+    - name: pay-me
+      description: PayMe profiles, wallet links, security, orders, agent payments
+    - name: Hilt PayMe Connector
+      description: OAuth connector connections and payment requests
+    - name: products
+      description: Workspace products and hosted checkout
+    - name: memberships
+      description: Access records, renewal intelligence, delivery recovery
+    - name: Receipt
+      description: Receipts, proofs, PDFs, CSV export
+    - name: webhooks
+      description: Endpoints, test events, deliveries, replay, timeline
+    - name: checkout
+      description: Wallet handshakes and Phantom deep links
+    - name: testing
+      description: Sandbox scenarios and sessions
+    - name: Support
+      description: Support tickets
+    - name: auth
+      description: Dashboard authentication
+    - name: account
+      description: Account profile, analytics, delivery readiness
+    - name: api-keys
+      description: X-Hilt-Key management
+    - name: billing
+      description: Hilt account billing (Stripe)
+    - name: integrations
+      description: Zapier hooks and integration health
+    - name: checkout-domains
+      description: Custom checkout domains
+    - name: system
+      description: Health

@@ -64,5 +64,13 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Hilt is a company surfaced via the API Evangelist harvest backlog (source: a2a-registry) and added to the network as a stub for full-pipeline profiling.
-- https://hilt.so/
+Hilt is a zero-custody Solana payments company operated in the United Kingdom by Paul Wild trading as Hilt (London). It ships four connected products: PayMe (a free receiving link and QR for an OAuth-verified X handle, sender pays a flat 2% fee), Direct Checkout (a no-account SOL / USDC / single-token checkout link), Hilt Pay Workspace (the merchant dashboard for hosted checkout, embeds, WooCommerce, receipts, memberships, native Solana USDC subscriptions and signed webhooks) and Hilt Pay API, the developer and agent product under /v1/access that turns an HTTP 402 into an operating record: x402 V2 payment requirement, Solana USDC or native SOL settlement, receipt, entitlement, atomic metered usage consumption, MPP payment channels and webhook trail. Hilt publishes an OpenAPI 3.1 contract (165 operations on api.hilt.so), a hosted MCP gateway and an OAuth-gated PayMe MCP connector, an A2A agent card, llms.txt on three hosts, TypeScript and Python SDKs, a CLI, Postman assets and a documented sandbox. Live pricing is $0/month plus 1% per successful settlement.
+
+- Website: https://www.hilt.so/
+- Docs: https://docs.hilt.so/developers
+- OpenAPI: https://api.hilt.so/openapi.json (saved at openapi/hilt-so-openapi.yml)
+- MCP gateway: https://api.hilt.so/mcp · PayMe MCP connector: https://api.hilt.so/mcp/pay-me
+- A2A agent card: https://api.hilt.so/.well-known/agent-card.json
+- llms.txt: https://www.hilt.so/llms.txt
+
+Enriched 2026-09-19 (local pass). Artifacts under openapi/, mcp/, a2a/, well-known/, llms/, skills/, conventions/, errors/, lifecycle/, authentication/, scopes/, conformance/, sandbox/, packages/, cli/, components/, changelog/, plans/, rate-limits/, asyncapi/, data-model/, overlays/, regulatory/, security/, postman/.

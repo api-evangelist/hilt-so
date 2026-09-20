@@ -1,0 +1,1 @@
+{"resource":"https://api.hilt.so/mcp/pay-me","resource_name":"Hilt PayMe","authorization_servers":["https://api.hilt.so"],"scopes_supported":["pay_me:read","pay_me:request","pay_me:prepare"],"bearer_methods_supported":["header"],"resource_documentation":"https://docs.hilt.so/developers/pay-me-mcp"}

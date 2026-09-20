@@ -1,0 +1,65 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/developers/testing; https://docs.hilt.so/developers/api-keys; https://docs.hilt.so/developers/quickstart;
+  https://www.hilt.so/developers/pricing (Sandbox tier); MCP tool hilt_agent_bootstrap (probed tools/list)
+description: 'Hilt separates sandbox from live by API-key prefix on ONE base URL. Sandbox keys drive the /v1/testing/*
+  scenario routes and the /v1/access/sandbox/* payment-session routes; nothing moves on-chain. No test wallets,
+  test transaction signatures or magic values are published: the docs say sandbox "does not prove wallet settlement"
+  and "does not prove wallet UX".'
+base_url: https://api.hilt.so (same host for sandbox and live)
+modes:
+  sandbox:
+    key_prefix: hk_sandbox_
+    header: 'X-Hilt-Key: hk_sandbox_...'
+    price: $0/month, no live money
+    how_to_get: Dashboard -> Advanced (create a sandbox key), `hilt keys create --name "Sandbox checks" --sandbox`,
+      or agent-first via POST /v1/access/agent-bootstrap (MCP tool hilt_agent_bootstrap) which returns a scoped
+      sandbox key + owner_approval_url
+  live:
+    key_prefix: hk_live_
+    header: 'X-Hilt-Key: hk_live_...'
+    price: $0/month + 1% of each successful settlement
+    activation: Owner approves live keys, billing and payout wallet (POST /v1/access/agent-bootstrap/{setup_intent_id}/approve);
+      agents can also prepay Starter/Growth/Scale via x402 (hilt_activate_*)
+scenarios:
+  endpoint: GET /v1/testing/scenarios (operationId sandbox_scenarios_v1_testing_scenarios_get)
+  run: POST /v1/testing/sessions (create_sandbox_session_v1_testing_sessions_post); GET /v1/testing/sessions/{session_id}
+  published:
+  - name: confirmed_access
+    covers: clean-path payment, receipt, membership, and webhook handling
+  - name: payment_failed
+    covers: failed-payment handling and buyer recovery logic
+  - name: delivery_failed
+    covers: failed Telegram or Discord delivery plus support escalation
+  - name: renewal_grace
+    covers: recurring access grace and expiry logic
+pay_api_sandbox_flow:
+- step: 1
+  call: POST /v1/access/sandbox/payment-sessions
+  operationId: create_sandbox_payment_session_v1_access_sandbox_payment_sessions_post
+- step: 2
+  call: POST /v1/access/sandbox/payment-sessions/{sandbox_session_id}/confirm (submit the returned proof)
+  operationId: confirm_sandbox_payment_session_v1_access_sandbox_payment_sessions__sandbox_session_id__confirm_post
+- step: 3
+  call: 'POST /v1/access/entitlements/check -> has_access: true'
+  operationId: check_entitlement_v1_access_entitlements_check_post
+- step: 4
+  call: POST /v1/access/entitlements/consume with Idempotency-Key (metered)
+  operationId: consume_entitlement_usage_v1_access_entitlements_consume_post
+test_values:
+  test_wallets: null
+  test_transaction_signatures: null
+  test_cards: n/a (crypto-only)
+  note: None published. Do not invent any.
+time_simulation: null
+fixtures:
+- 'Webhook test events: POST /v1/webhooks/endpoints/{endpoint_id}/test with event_type (signed with the endpoint
+  secret)'
+- 'Example payloads: https://github.com/Hiltpay/hilt-developer-assets/tree/main/examples/webhooks'
+- Postman environment variable sandboxApiKey (postman/hilt-so-postman-environment.json)
+cli:
+- hilt testing scenarios
+- hilt testing run --scenario confirmed_access --product PRODUCT_ID
+- hilt testing list
+- hilt testing get SESSION_ID
+docs: https://docs.hilt.so/developers/testing

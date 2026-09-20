@@ -1,0 +1,164 @@
+generated: '2026-09-19'
+method: probed
+source: https://api.hilt.so/.well-known/agent-card.json
+card:
+  file: a2a/hilt-so-agent-card.json
+discovery:
+  path: /.well-known/agent-card.json
+  canonical: true
+  host: api.hilt.so
+  note: 'Served from api.hilt.so, the OpenAPI servers[] host, the MCP gateway host and the declared A2A JSON-RPC
+    host. The same body is also served at the legacy /.well-known/agent.json. The OpenAPI itself documents both
+    routes (operationIds getHiltA2aAgentCard and getHiltA2aAgentCardLegacy) and the JSON-RPC route (callHiltA2aAgent),
+    so the card is part of the published contract, not an accident of hosting. www.hilt.so, app.hilt.so and pay.hilt.so
+    serve /.well-known/agent.json documents in a Hilt-specific discovery schema (hilt-agent-discovery-2026-08-24
+    / hilt-direct-checkout-agent-pack-2026-08-27); those are NOT AgentCards and are catalogued under well-known/
+    only. Ownership: provider.organization "Hilt", provider.url https://www.hilt.so, documentationUrl https://docs.hilt.so,
+    and the OpenAPI on the same host carries contact hello@hilt.so / https://www.hilt.so.'
+x-evidence:
+  fetched: '2026-09-19'
+  url: https://api.hilt.so/.well-known/agent-card.json
+  http_status: 200
+  content_type: application/json; charset=utf-8
+  body_bytes: 2008
+  body_parses_as: JSON object with AgentCard shape (name, description, protocolVersion, version, url, preferredTransport,
+    additionalInterfaces, provider, documentationUrl, capabilities, securitySchemes, security, defaultInputModes,
+    defaultOutputModes, skills)
+  response_headers_of_note:
+  - 'access-control-allow-origin: *'
+  - 'access-control-expose-headers: Mcp-Session-Id'
+  - 'access-control-expose-headers: X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, Retry-After'
+  - 'strict-transport-security: max-age=31536000; includeSubDomains; preload'
+  - 'x-robots-tag: noindex, nofollow, noarchive'
+  corroborating_probes:
+  - url: https://api.hilt.so/.well-known/agent.json
+    http_status: 200
+    note: Legacy path; identical 2,008-byte body.
+  - url: https://api.hilt.so/a2a/jsonrpc
+    method: GET
+    http_status: 404
+    note: GET on the declared JSON-RPC endpoint returns a 150-byte HTML 404; the endpoint is POST-only.
+  - url: https://api.hilt.so/a2a/jsonrpc
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"agent/getAuthenticatedExtendedCard"}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"error":{"code":-32004,"message":"Unsupported operation: Agent does not support
+      authenticated extended card."}}'
+    note: 'A real A2A JSON-RPC responder: -32004 is the A2A UnsupportedOperationError code. No message was sent
+      and nothing was purchased.'
+  - url: https://api.hilt.so/agentverse/a2a
+    method: POST
+    body: '{"jsonrpc":"2.0","id":1,"method":"tasks/get","params":{}}'
+    http_status: 200
+    response: '{"jsonrpc":"2.0","id":1,"error":{"code":-32600,"message":"Invalid Request","data":"1 validation error
+      for GetTaskRequest params.id Field required ..."}}'
+    note: Second A2A transport named in Hilt's own manifest (canonical_urls.agentverse_a2a). Validates A2A GetTaskRequest
+      shape server-side (pydantic). Not listed in the card's additionalInterfaces.
+  - url: https://www.hilt.so/.well-known/agent-card.json
+    http_status: 404
+  - url: https://www.hilt.so/.well-known/agent.json
+    http_status: 200
+    note: Hilt-schema discovery manifest, not an AgentCard; see well-known/.
+  - url: https://a2aregistry.org
+    note: 'This provider entered the harvest backlog from the a2a-registry listing (x-source: harvest:a2a-registry).
+      The card above was fetched directly from the provider host.'
+agent_card:
+  name: Hilt Pay Agent Gateway
+  description: 'Agent-readable access to Hilt Pay: x402 V2 paid requests with Solana USDC settlement, atomic metered
+    usage, durable entitlements, receipts, signed webhooks, subscription state, sandbox bootstrap, and live API-plan
+    activation.'
+  url: https://api.hilt.so/a2a/jsonrpc
+  version: 1.1.0
+  protocol_version: 0.3.0
+  preferred_transport: JSONRPC
+  additional_interfaces:
+  - url: https://api.hilt.so/a2a/jsonrpc
+    transport: JSONRPC
+  provider:
+    organization: Hilt
+    url: https://www.hilt.so
+  documentation_url: https://docs.hilt.so
+  capabilities:
+    streaming: false
+    pushNotifications: false
+    stateTransitionHistory: false
+  security_schemes: {}
+  security: []
+  default_input_modes:
+  - text
+  default_output_modes:
+  - text
+  skills:
+  - id: discover_hilt_catalog
+    name: Discover Hilt Pay
+    description: Return canonical products, pricing, interfaces, and buying paths.
+    tags:
+    - payments
+    - x402
+    - solana
+    - usdc
+    - catalog
+    examples:
+    - Show me the Hilt Pay catalog
+    - '{"action":"pricing","input":{}}'
+  - id: bootstrap_hilt_sandbox
+    name: Bootstrap Hilt Sandbox
+    description: Create a free sandbox setup intent and scoped sandbox key.
+    tags:
+    - sandbox
+    - bootstrap
+    - api-key
+    examples:
+    - '{"action":"bootstrap","input":{"agent_name":"My Agent"}}'
+  - id: activate_hilt_api_plan
+    name: Activate Hilt Pay API
+    description: Discover Starter, Growth, and Scale x402 V2 activation tools paid in Solana USDC with automatic
+      entitlement and key delivery.
+    tags:
+    - payments
+    - entitlements
+    - receipts
+    - api
+    examples:
+    - '{"action":"activate_plan","input":{}}'
+  - id: build_metered_hilt_endpoint
+    name: Build a metered Hilt endpoint
+    description: Implement consume, HTTP 402 PAYMENT-REQUIRED, paid retry settlement, atomic consumption, and serve
+      using the Hilt Pay API V2 contract.
+    tags:
+    - x402 V2
+    - metered usage
+    - PAYMENT-SIGNATURE
+    - Solana USDC
+    examples:
+    - How should my agent API settle and consume one paid request?
+grade:
+  against: A2A 1.0.0
+  result: conformant
+  hard_checks:
+    capabilities_is_object: true
+    protocolVersion_present: true
+    skills_is_array: true
+  optional_checks:
+    preferredTransport_present: true
+    defaultInputModes_present: true
+    defaultOutputModes_present: true
+    provider_present: true
+    documentationUrl_present: true
+  deviations:
+  - 'protocolVersion is "0.3.0", not "1.0.0": the card targets the 0.3 line of the spec and additionally serves
+    the pre-0.3 /.well-known/agent.json path.'
+  - 'securitySchemes is an empty object and security is an empty array: the card advertises anonymous access; paid
+    skills are gated at the tool/route level by x402 V2 (HTTP 402 PAYMENT-REQUIRED) rather than by an A2A security
+    scheme, which a client cannot learn from the card alone.'
+  - capabilities.streaming, pushNotifications and stateTransitionHistory are all false; supportsAuthenticatedExtendedCard
+    is absent and the JSON-RPC endpoint returns -32004 for agent/getAuthenticatedExtendedCard.
+  - The Agentverse transport at https://api.hilt.so/agentverse/a2a (named in Hilt's own discovery manifest and llms.txt)
+    is not declared in additionalInterfaces.
+  - Skill examples mix natural language with a Hilt-specific JSON action envelope ({"action":"bootstrap","input":{...}})
+    that the A2A spec does not define.
+related_surfaces:
+  mcp_gateway: https://api.hilt.so/mcp (mcp/hilt-so-mcp.yml)
+  openapi: openapi/hilt-so-openapi.yml (operationIds getHiltA2aAgentCard, getHiltA2aAgentCardLegacy, callHiltA2aAgent,
+    callHiltAgentGatewayMcp)
+  agent_commerce_offer: https://api.hilt.so/v1/agent-commerce/offer (interfaces.a2a = https://api.hilt.so/a2a/jsonrpc)

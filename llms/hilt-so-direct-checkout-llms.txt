@@ -1,0 +1,66 @@
+# Hilt Direct Checkout
+
+> Create a hosted checkout link for SOL, USDC, or one supported merchant-selected Solana token mint with no account required, merchant wallet approval, post-payment unlock options, and a flat 2% Hilt fee.
+
+Last reviewed: 2026-08-27
+Canonical builder: https://pay.hilt.so/
+Product boundary: Hilt Direct Checkout is separate from Hilt Pay Workspace and Hilt Pay API /v1/access.
+
+## Best For
+
+- Merchants who want a fast hosted checkout for SOL, USDC, or one supported merchant-selected Solana token mint.
+- Communities, creators, token projects, and small products that want a shareable payment link with a simple unlock.
+- Buyers who should pay from their own Solana wallet and receive a Solscan transaction receipt link.
+
+## Key Facts
+
+- Free to use.
+- Flat 2% Hilt fee.
+- Merchant can use SOL, use USDC, or specify one Solana token mint during link creation.
+- Amount can be set in token units, USD, or SOL.
+- Native SOL uses direct Solana system transfers. Token mints use SPL or Token-2022 transfers.
+- Merchants can unlock a link, file URL, Telegram invite, Discord invite, booking link, code, text/password, API handoff URL, or donation/support message.
+- Token-2022 transfer fees can be detected from mint data.
+- For other token taxes, the merchant can declare the token tax percentage. Native SOL does not use token tax.
+- Hilt is zero-custody: buyer pays from their wallet; merchant receives payment to the configured payout wallet.
+- The buyer payment is restricted and checked by simulation before wallet signing.
+- Unsupported Token-2022 transfer hooks, permanent delegates, unexpected programs, signers, writable accounts, or balance changes are blocked.
+- The confirmed transaction must match the transaction Hilt checked before the unlock appears.
+- The merchant signs setup, the buyer signs payment, and the configured unlock appears only after successful transaction confirmation.
+- Hilt PayMe provides personal links at /me/@handle. X verifies control of the handle and the receiving wallet signs its own binding.
+- Pay multiple people at /me/multiple sends native SOL to two to five verified PayMe recipients in one atomic transaction and one wallet approval.
+- PayMe profile links publish standard Solana Actions through /actions.json. Action-aware clients may render them as Blinks; all other clients can open the normal PayMe page.
+- PayMe Wallet Security protects future receiving-wallet changes. Initial enrollment requires the current receiving wallet, then a standard Authenticator code and safely stored single-use recovery codes.
+- After Wallet Security is enabled, a wallet change requires Authenticator or an unused recovery code plus a signature from the new wallet. If the old wallet is inaccessible and protection was never enabled, self-service replacement is blocked.
+- Hilt PayMe can connect to compatible AI clients through OAuth at https://api.hilt.so/mcp/pay-me. X OAuth controls connector activity; a receiving wallet is optional. The payer approves directly with Phantom, Solflare, Backpack, or Trust Wallet on mobile, or a supported browser wallet such as Jupiter on desktop. SafePal users can copy the PayMe link into SafePal's browser. The payer does not need a PayMe account.
+- A wallet-capable agent can pay an active verified PayMe handle through MPP at https://api.hilt.so/v1/pay-me/payments. The first request returns HTTP 402; the agent validates and signs the exact SOL or Solana USDC transaction, retries the unchanged request, and receives a machine-readable Hilt receipt.
+
+## Use These Routes
+
+- Builder: https://pay.hilt.so/
+- Hilt PayMe: https://pay.hilt.so/me
+- Pay multiple people: https://pay.hilt.so/me/multiple
+- Solana Actions map: https://pay.hilt.so/actions.json
+- PayMe MCP connector guide: https://docs.hilt.so/developers/pay-me-mcp
+- PayMe Wallet Security guide: https://docs.hilt.so/payme/wallet-security
+- PayMe Wallet Security article: https://www.hilt.so/articles/payme-wallet-security-guide
+- PayMe MCP resource: https://api.hilt.so/mcp/pay-me
+- PayMe agent payment action: https://api.hilt.so/v1/pay-me/payments
+- PayMe agent payment guide: https://docs.hilt.so/developers/pay-me-agent-payments
+- Full LLM context: https://pay.hilt.so/llms-full.txt
+- Agent pack: https://pay.hilt.so/agent-pack.json
+- Setup video: https://www.hilt.so/learn/direct-checkout-solana-token
+- Agent JSON: https://pay.hilt.so/.well-known/agent.json
+- Sitemap: https://pay.hilt.so/sitemap.xml
+
+## Boundaries
+
+- Do not describe Direct Checkout as Hilt Pay API /v1/access.
+- Do not claim a token is endorsed because it is used in a checkout.
+- Do not sign messages or transactions for a user.
+- Do not claim the PayMe MCP connector can sign, move funds, post to X, or pay an unverified handle.
+- Do not confuse PayMe MPP with Hilt Pay API x402. PayMe MPP returns a payment receipt, not a /v1/access entitlement.
+- Do not claim X access alone can enable Wallet Security or replace a protected receiving wallet.
+- Do not bypass token tax inputs or transaction simulation.
+- Do not claim every Solana token is supported; one merchant-selected mint is checked and simulated for each checkout.
+- Use Hilt Pay Workspace or Hilt Pay API when durable receipts, memberships, subscriptions, webhooks, analytics, or entitlement infrastructure are required.

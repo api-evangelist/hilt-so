@@ -1,0 +1,111 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.hilt.so/developers/pricing (Hilt Pay API tiers, fee estimator, comparison table; probed 200)
+  + https://api.hilt.so/v1/agent-commerce/pricing (machine-readable agent-commerce plans; probed 200) + https://www.hilt.so/llms.txt
+  (PayMe / Direct Checkout / transaction-evidence fees) + https://www.hilt.so/legal/refund
+provider: Hilt
+providerId: hilt-so
+currency: USD (fees charged in USDC for Solana USDC settlement, in SOL for native SOL)
+description: 'Two published pricing surfaces that do not say the same thing. The web pricing page (updated 24 Aug
+  2026) sells Hilt Pay API as pay-as-you-go: Sandbox $0, Live $0/month + 1% per successful settlement, Enterprise
+  custom. The agent-commerce pricing endpoint that the MCP gateway and A2A card point agents at still sells prepaid
+  30-day plans (Starter 79 / Growth 349 / Scale 1,250 USDC with 1.00% / 0.70% / 0.45% fees) and says "live from
+  $79/month". Both are recorded verbatim; a buyer should treat the web page as the human offer and the endpoint
+  as the agent x402 activation offer.'
+plan_count: 9
+plans:
+- id: pay-api-sandbox
+  product: Hilt Pay API
+  name: Sandbox
+  price: 0
+  currency: USD
+  period: month
+  included:
+  - Sandbox setup and API key
+  - Agent manifest evaluation
+  - x402 protected-resource demo
+  - Sandbox sessions and entitlement checks
+  limits:
+    live_settlement: false
+  source: https://www.hilt.so/developers/pricing
+- id: pay-api-live
+  product: Hilt Pay API
+  name: Live (pay as you go)
+  price: 0
+  currency: USD
+  period: month
+  usage_fee: 1% of each successful Solana USDC or native SOL settlement; no fee for failed or abandoned payments;
+    network fees separate
+  included:
+  - Live Solana USDC or native SOL settlement
+  - x402 protected-resource flow over Solana USDC
+  - Hosted checkout for native SOL
+  - Agent bootstrap and owner approval
+  - Apps, products, receipts, and entitlements
+  - Signed webhooks
+  source: https://www.hilt.so/developers/pricing
+- id: pay-api-enterprise
+  product: Hilt Pay API
+  name: Enterprise
+  price: null
+  currency: USD
+  period: custom
+  included:
+  - Custom limits
+  - Dedicated implementation support
+  - Security and commercial review
+  - Custom audit and export options
+  - Negotiated fee schedule
+  contact: hello@hilt.so
+  source: https://www.hilt.so/developers/pricing
+- id: agent-commerce-starter
+  product: Hilt Pay API (agent x402 activation)
+  name: Starter
+  price: 79
+  currency: USDC (79 USD listed)
+  period: 30-day access period, no automatic renewal
+  usage_fee: 1.00% transaction fee
+  activation: POST https://api.hilt.so/v1/agent-commerce/plans/starter/activate (x402 V2) / MCP tool hilt_activate_starter
+  source: https://api.hilt.so/v1/agent-commerce/pricing
+- id: agent-commerce-growth
+  product: Hilt Pay API (agent x402 activation)
+  name: Growth
+  price: 349
+  currency: USDC
+  period: 30-day access period
+  usage_fee: 0.70% transaction fee
+  activation: POST /v1/agent-commerce/plans/growth/activate
+  source: https://api.hilt.so/v1/agent-commerce/pricing
+- id: agent-commerce-scale
+  product: Hilt Pay API (agent x402 activation)
+  name: Scale
+  price: 1250
+  currency: USDC
+  period: 30-day access period
+  usage_fee: 0.45% transaction fee
+  activation: POST /v1/agent-commerce/plans/scale/activate
+  source: https://api.hilt.so/v1/agent-commerce/pricing
+- id: payme
+  product: Hilt PayMe
+  name: PayMe (receiver)
+  price: 0
+  currency: USD
+  usage_fee: Receiver pays nothing; the sender sees and pays a flat 2% Hilt fee before wallet approval
+  source: https://www.hilt.so/llms.txt
+- id: direct-checkout
+  product: Hilt Direct Checkout
+  name: Direct Checkout
+  price: 0
+  currency: USD
+  usage_fee: Flat 2% Hilt fee on completed transactions (buyer amount grossed up for token transfer fees)
+  source: https://pay.hilt.so/agent-pack.json
+- id: transaction-evidence
+  product: Hilt Solana Transaction Evidence API
+  name: Per-request x402
+  price: 0.05
+  currency: USDC
+  period: per request
+  source: openapi/hilt-so-transaction-evidence-openapi.yml x-payment-info (fixed 0.050000 USD)
+refunds: Confirmed transaction fees are generally not refundable (non-custodial, on-chain); platform-error refunds
+  via billing@hilt.so (https://www.hilt.so/legal/refund, last updated April 30, 2026).
+fee_estimator: https://www.hilt.so/developers/pricing (monthly settled value -> 1% estimate)

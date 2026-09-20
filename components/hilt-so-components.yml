@@ -1,0 +1,69 @@
+generated: '2026-09-19'
+method: searched
+source: https://docs.hilt.so/merchant/embed; https://docs.hilt.so/developers/integrations; https://docs.hilt.so/payme/overview;
+  https://pay.hilt.so/actions.json; https://www.hilt.so/llms.txt
+description: 'Client-side and hosted surfaces distinct from the SDKs: a script-tag embed button, hosted checkout
+  pages, PayMe pages that double as Solana Actions/Blinks, the Direct Checkout builder, and the WooCommerce gateway.'
+families:
+- family: Embed checkout button
+  kind: script-tag
+  loader: https://www.hilt.so/embed.js
+  snippet: '<script async src="https://www.hilt.so/embed.js"></script>
+
+    <div data-hilt-checkout="your-product-slug" data-theme="auto"></div>'
+  attributes:
+    data-hilt-checkout: product slug (required)
+    data-theme: auto | light | dark
+  behaviour: Renders a Hilt checkout button that opens the same hosted checkout as the public /p/{slug} link; no
+    API key in the browser; no host-page events documented.
+  platforms:
+  - Ghost
+  - Carrd
+  - Framer
+  - Webflow
+  - Kajabi
+  - Beehiiv
+  - plain HTML
+- family: Hosted checkout
+  kind: hosted-page
+  urls:
+  - https://pay.hilt.so/p/{slug} (public product checkout)
+  - signed handoff links from POST /v1/products/{product_id}/handoff-link (operationId api_create_checkout_handoff_link_v1_products__product_id__handoff_link_post)
+  - Hilt Pay API payment_session.checkout_url for native SOL hosted sessions
+  wallets:
+  - Phantom
+  - Solflare
+  - Backpack
+  - Trust Wallet (mobile)
+  - Jupiter (desktop browser wallet)
+  - SafePal (via in-app browser)
+- family: PayMe page + Solana Actions (Blinks)
+  kind: hosted-page + solana-actions
+  urls:
+  - https://pay.hilt.so/me (create)
+  - https://pay.hilt.so/me/@{x_handle} (receive)
+  - https://pay.hilt.so/me/multiple (pay 2-5 recipients in one transaction, native SOL only)
+  actions_json:
+    url: https://pay.hilt.so/actions.json
+    rules:
+    - pathPattern: /me/@*
+      apiPath: /solana-actions/pay-me/*
+    - pathPattern: /solana-actions/pay-me/**
+      apiPath: /solana-actions/pay-me/**
+  note: Action-aware clients render the PayMe link as a Blink; other clients open the normal page.
+- family: Direct Checkout builder
+  kind: hosted-builder
+  urls:
+  - https://pay.hilt.so/
+  note: No-account builder for a SOL / USDC / single-token checkout link with a flat 2% fee; agent pack at https://pay.hilt.so/agent-pack.json.
+- family: WooCommerce gateway
+  kind: plugin
+  package: hilt-pay-for-woocommerce 0.1.4 (wordpress.org)
+  docs: https://docs.hilt.so/merchant/woocommerce
+  note: Maps WooCommerce products and variations to Hilt checkouts; Checkout Blocks supported per the August 2026
+    changelog.
+loader_libraries:
+- name: embed.js
+  url: https://www.hilt.so/embed.js
+  versioned: false
+  note: Unpinned; floats to whatever the host serves.

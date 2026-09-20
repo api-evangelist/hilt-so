@@ -1,0 +1,205 @@
+generated: '2026-09-19'
+method: probed
+source: 'live GET probes of /.well-known/* on every Hilt host (2026-09-19): hilt.so, www.hilt.so, docs.hilt.so,
+  api.hilt.so (OpenAPI servers[] + MCP + A2A host), app.hilt.so, pay.hilt.so'
+summary: 'Real documents are served on api.hilt.so: an RFC 8414 authorization-server document (issuer https://api.hilt.so,
+  PKCE S256, dynamic client registration at /oauth/register, scopes pay_me:read/request/prepare), an RFC 9728 protected-resource
+  document at the RESOURCE path /.well-known/oauth-protected-resource/mcp/pay-me (named by the 401 WWW-Authenticate
+  resource_metadata of the PayMe MCP endpoint), and an A2A agent card at both /.well-known/agent-card.json and the
+  legacy /.well-known/agent.json. www.hilt.so, app.hilt.so and pay.hilt.so each serve a /.well-known/agent.json
+  that is a Hilt-schema discovery manifest (schema_version hilt-agent-discovery-*), NOT an A2A AgentCard; recorded
+  as served JSON but not graded as a card. www.hilt.so also serves /.well-known/llms.txt and /.well-known/llms-full.txt.
+  No host serves security.txt, openid-configuration, api-catalog or ai-plugin.json.'
+pointer_basis: 'WellKnown pointer emitted on the strength of the api.hilt.so 200s (RFC 8414 + RFC 9728 + agent card).
+  SecurityTxt pointer NOT emitted: RFC 9116 is unimplemented on every host (www/app answer 404, api answers JSON
+  404, docs answers an SPA shell).'
+false_positive_watch: docs.hilt.so (Mintlify) answers HTTP 200 text/html (684 KB SPA shell) for EVERY /.well-known/*
+  path and for /openapi.json, /llms.txt excepted. Those 200s are recorded as misses. The real OpenAPI lives on api.hilt.so
+  and www.hilt.so.
+hosts:
+- host: https://hilt.so
+  note: Apex 301s every path to https://www.hilt.so/<same path>; probed as redirects only.
+  documents:
+  - path: /.well-known/security.txt
+    status: 301
+    redirect: https://www.hilt.so/.well-known/security.txt
+  - path: /.well-known/openid-configuration
+    status: 301
+    redirect: https://www.hilt.so/.well-known/openid-configuration
+  - path: /.well-known/oauth-authorization-server
+    status: 301
+    redirect: https://www.hilt.so/.well-known/oauth-authorization-server
+  - path: /.well-known/oauth-protected-resource
+    status: 301
+    redirect: https://www.hilt.so/.well-known/oauth-protected-resource
+  - path: /.well-known/api-catalog
+    status: 301
+    redirect: https://www.hilt.so/.well-known/api-catalog
+  - path: /.well-known/ai-plugin.json
+    status: 301
+    redirect: https://www.hilt.so/.well-known/ai-plugin.json
+  - path: /.well-known/agent-card.json
+    status: 301
+    redirect: https://www.hilt.so/.well-known/agent-card.json
+  - path: /.well-known/agent.json
+    status: 301
+    redirect: https://www.hilt.so/.well-known/agent.json
+- host: https://www.hilt.so
+  documents:
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    file: hilt-so-www-agent.json
+    note: Hilt-schema discovery manifest (schema_version hilt-agent-discovery-2026-08-24, name "Hilt Pay", last_reviewed
+      2026-09-03), 36,524 bytes. Not an A2A AgentCard (no url/version/protocolVersion/capabilities/skills). Same
+      bytes served at /.well-known/hilt-agent.json, /agent.json and /agent-discovery.json.
+  - path: /.well-known/hilt-agent.json
+    status: 200
+    content_type: application/json
+    file: hilt-so-www-agent.json
+  - path: /.well-known/llms.txt
+    status: 200
+    content_type: text/plain
+    file: ../llms/hilt-so-llms.txt
+    note: Identical to https://www.hilt.so/llms.txt.
+  - path: /.well-known/llms-full.txt
+    status: 200
+    content_type: text/plain
+    note: 27,655 bytes; not saved (*-llms-full.txt is gitignored).
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://api.hilt.so
+  note: OpenAPI servers[] host, MCP gateway host (/mcp), PayMe MCP resource host (/mcp/pay-me), A2A JSON-RPC host
+    (/a2a/jsonrpc) and the OAuth authorization server (issuer https://api.hilt.so).
+  documents:
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: application/json
+    file: hilt-so-api-oauth-authorization-server.json
+    note: RFC 8414. issuer https://api.hilt.so; authorization_endpoint /oauth/authorize; token_endpoint /oauth/token;
+      registration_endpoint /oauth/register (RFC 7591 DCR); revocation_endpoint /oauth/revoke; grant_types authorization_code+refresh_token;
+      token_endpoint_auth_methods none (public client); code_challenge_methods S256; scopes pay_me:read, pay_me:request,
+      pay_me:prepare; service_documentation https://docs.hilt.so/developers/pay-me-mcp.
+  - path: /.well-known/oauth-protected-resource/mcp/pay-me
+    status: 200
+    content_type: application/json
+    file: hilt-so-api-oauth-protected-resource-mcp-pay-me.json
+    note: 'RFC 9728 for resource https://api.hilt.so/mcp/pay-me; authorization_servers [https://api.hilt.so]; bearer_methods
+      header; resource_documentation docs pay-me-mcp. Discovered from the WWW-Authenticate: Bearer resource_metadata="..."
+      challenge on an anonymous tools/list against /mcp/pay-me (HTTP 401).'
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+    note: Root PRM path answers {"detail":"Not Found"}; the document is published at the resource-scoped path above,
+      as RFC 9728 section 3 permits.
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    file: hilt-so-api-agent-card.json
+    note: A2A AgentCard (protocolVersion 0.3.0, url https://api.hilt.so/a2a/jsonrpc). Graded in a2a/hilt-so-a2a.yml.
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json; charset=utf-8
+    file: hilt-so-api-agent-card.json
+    note: Legacy pre-0.3 path; same 2,008-byte body as agent-card.json (operationId getHiltA2aAgentCardLegacy in
+      the OpenAPI).
+  - path: /.well-known/security.txt
+    status: 404
+    body: '{"detail":"Not Found"}'
+  - path: /.well-known/openid-configuration
+    status: 404
+    body: '{"detail":"Not Found"}'
+  - path: /.well-known/api-catalog
+    status: 404
+    body: '{"detail":"Not Found"}'
+  - path: /.well-known/ai-plugin.json
+    status: 404
+    body: '{"detail":"Not Found"}'
+- host: https://docs.hilt.so
+  note: Mintlify docs host. Answers 200 text/html (SPA shell, 684,648 bytes) for every /.well-known/* path probed;
+    all recorded as misses. Real text documents on this host are /llms.txt and /llms-full.txt only.
+  documents:
+  - path: /.well-known/security.txt
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/openid-configuration
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/oauth-authorization-server
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/oauth-protected-resource
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/api-catalog
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/ai-plugin.json
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/agent-card.json
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: text/html
+    served_document: false
+    note: SPA shell, not a document
+- host: https://app.hilt.so
+  note: Merchant dashboard (Next.js). robots.txt disallows everything but /register.
+  documents:
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    file: hilt-so-pay-agent.json
+    note: Hilt Direct Checkout agent pack (schema_version hilt-direct-checkout-agent-pack-2026-08-27); byte-identical
+      to pay.hilt.so/agent-pack.json. Not an A2A card.
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/oauth-protected-resource
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://pay.hilt.so
+  note: Direct Checkout + PayMe host. Also serves /actions.json (Solana Actions rules mapping /me/@handle to /solana-actions/pay-me/*).
+  documents:
+  - path: /.well-known/agent.json
+    status: 200
+    content_type: application/json
+    file: hilt-so-pay-agent.json
+    note: Hilt Direct Checkout agent pack; canonical_url https://pay.hilt.so/agent-pack.json. Not an A2A card.
+  - path: /.well-known/agent-card.json
+    status: 404

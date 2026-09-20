@@ -1,0 +1,95 @@
+generated: '2026-09-19'
+method: searched
+status: published
+source: https://docs.hilt.so/developers/pay-me-mcp (tool names + scope meanings); https://api.hilt.so/.well-known/oauth-authorization-server
+  and https://api.hilt.so/.well-known/oauth-protected-resource/mcp/pay-me (auth, probed 200); anonymous tools/list
+  against the endpoint (probed 401)
+deployment:
+  mode: remote
+  endpoint: https://api.hilt.so/mcp/pay-me
+  install: null
+  package: null
+  auth: oauth
+  verified: probed
+  probe:
+    request: POST /mcp/pay-me tools/list (anonymous)
+    http_status: 401
+    www_authenticate: Bearer resource_metadata="https://api.hilt.so/.well-known/oauth-protected-resource/mcp/pay-me"
+    body: '{"error":"unauthorized","message":"A Hilt PayMe connector token is required."}'
+    note: The live tool schemas are auth-gated behind OAuth; tool names and descriptions below come from the provider
+      docs, and inputSchemas need an authenticated tools/list.
+  oauth2:
+    authorization_server: https://api.hilt.so
+    authorization_endpoint: https://api.hilt.so/oauth/authorize
+    token_endpoint: https://api.hilt.so/oauth/token
+    registration_endpoint: https://api.hilt.so/oauth/register
+    revocation_endpoint: https://api.hilt.so/oauth/revoke
+    grant_types:
+    - authorization_code
+    - refresh_token
+    pkce: S256
+    token_endpoint_auth_methods:
+    - none
+    scopes_supported:
+    - pay_me:read
+    - pay_me:request
+    - pay_me:prepare
+    discovery:
+    - well-known/hilt-so-api-oauth-authorization-server.json
+    - well-known/hilt-so-api-oauth-protected-resource-mcp-pay-me.json
+    identity: Sign in with X (OAuth) supplies the PayMe identity; scopes are approved at consent.
+server:
+  name: Hilt PayMe
+  transport: http
+  url: https://api.hilt.so/mcp/pay-me
+  listings:
+  - Glama MCP connector so.hilt/pay-me (https://glama.ai/mcp/connectors/so.hilt/pay-me)
+scopes:
+- scope: pay_me:read
+  description: Read connector-started payments and, when a receiving profile exists, received activity
+- scope: pay_me:request
+  description: Create and manage self-shared payment links
+- scope: pay_me:prepare
+  description: Start and manage wallet-approved payments to verified PayMe handles
+tool_count: 10
+tools:
+- name: hilt_pay_me_account
+  category: account
+  description: Read connected X identity and optional receiving profile
+- name: hilt_pay_me_resolve_handle
+  category: lookup
+  description: Resolve a verified PayMe recipient
+- name: hilt_pay_me_send_payment
+  category: payments
+  description: Start a trackable payment and return its wallet approval URL
+- name: hilt_pay_me_get_payment
+  category: payments
+  description: Read one outgoing payment and its current state
+- name: hilt_pay_me_list_activity
+  category: payments
+  description: List recent sent and received payment activity
+- name: hilt_pay_me_cancel_payment
+  category: payments
+  description: Cancel a payment still awaiting wallet approval
+- name: hilt_pay_me_create_payment_link
+  category: links
+  description: Create a payment link for the user to share
+- name: hilt_pay_me_list_payment_links
+  category: links
+  description: List recent payment links
+- name: hilt_pay_me_get_payment_link
+  category: links
+  description: Read one payment link and its current state
+- name: hilt_pay_me_cancel_payment_link
+  category: links
+  description: Cancel an unused payment link
+boundaries:
+- cannot access a seed phrase or private key
+- cannot sign or submit a wallet transaction
+- cannot move funds without wallet approval
+- cannot pay an X handle with no active Hilt PayMe profile
+- does not post or send a direct message on X
+- does not contact a named payer automatically
+- does not treat a typed X handle alone as a payout destination
+- separate from Hilt Pay API /v1/access; does not create API entitlements or x402 metered access
+docs: https://docs.hilt.so/developers/pay-me-mcp

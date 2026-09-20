@@ -1,0 +1,231 @@
+{
+  "id": "3b4dbe42-e0ae-42aa-9c7f-8b4c909f6b2d",
+  "name": "Hilt Local Variables",
+  "values": [
+    {
+      "key": "baseUrl",
+      "value": "https://api.hilt.so",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "apiKey",
+      "value": "hk_live_...",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "sandboxApiKey",
+      "value": "hk_sandbox_...",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "bearerToken",
+      "value": "JWT_TOKEN",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "productId",
+      "value": "PRODUCT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "slug",
+      "value": "example-slug",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "paymentId",
+      "value": "PAYMENT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiAppId",
+      "value": "PAY_API_APP_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiProductId",
+      "value": "PAY_API_PRODUCT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiExternalProductId",
+      "value": "pro-ai-api",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiExternalCustomerId",
+      "value": "cust_123",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiRequestId",
+      "value": "req_001",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiPaymentSessionId",
+      "value": "HILT_PAYMENT_SESSION_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payApiPaymentRequired",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "payApiPaymentSignature",
+      "value": "BASE64_X402_V2_PAYMENT_PAYLOAD",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "payApiPaymentResponse",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "mppSessionId",
+      "value": "HILT_METERED_SESSION_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppChallenge",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "mppAuthorization",
+      "value": "Payment ...",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "mppDeliveryId",
+      "value": "delivery-req-001",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppChannelId",
+      "value": "PAYMENT_CHANNEL_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppCumulativeAmount",
+      "value": "10000",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppVoucherExpiresAt",
+      "value": "0",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppVoucherSigner",
+      "value": "AUTHORIZED_SESSION_SIGNER",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "mppVoucherSignature",
+      "value": "BASE58_ED25519_SIGNATURE",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "sandboxSessionId",
+      "value": "SANDBOX_SESSION_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "membershipId",
+      "value": "MEMBERSHIP_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "receiptId",
+      "value": "RECEIPT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "ticketId",
+      "value": "TICKET_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "endpointId",
+      "value": "ENDPOINT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "deliveryId",
+      "value": "1",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "payerWallet",
+      "value": "BuyerWallet1111111111111111111111111111111111",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "merchantWallet",
+      "value": "So1anaMerchantWallet1111111111111111111111111",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "setupIntentId",
+      "value": "SETUP_INTENT_ID",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "setupToken",
+      "value": "hst_...",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "payApiSettlementRail",
+      "value": "solana_usdc",
+      "type": "text",
+      "enabled": true
+    },
+    {
+      "key": "nativeSubscriptionAuthorizationId",
+      "value": "",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+  "_postman_exported_at": "2026-07-21T22:30:00.000Z",
+  "_postman_exported_using": "Codex"
+}

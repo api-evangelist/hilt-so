@@ -1,0 +1,54 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.hilt.so/status (probed 200); https://docs.hilt.so/release-notes/changelog; https://www.hilt.so/updates;
+  https://docs.hilt.so/developers/access; openapi/hilt-so-openapi.yml (deprecated flags, 410); https://www.hilt.so/legal/terms
+status_page:
+  url: https://www.hilt.so/status
+  status: 200
+  kind: self-hosted, first-party
+  monitors: PayMe and checkout, API, account access, docs, and the Solana confirmation dependency behind payment
+    proof
+  incident_history: '"No public incidents recorded yet." (page text, 2026-09-19)'
+  external_host: status.hilt.so does not resolve (NXDOMAIN); the page lives on www.
+  pointer: StatusPage
+versioning:
+  scheme: URL path major version (/v1) for the API; date-stamped api_version on webhook events (example payload
+    api_version 2026-05-04); SDK semver (1.0.0 -> 1.5.0 in four months)
+  current_api_version: 1.0.0 (info.version); paths under /v1
+  namespaces:
+    workspace: /v1/products, /v1/memberships, /v1/receipt(s), /v1/support, /v1/webhooks, /v1/keys, /v1/testing
+    pay_api: /v1/access/*
+    agent_commerce: /v1/agent-commerce/*, /mcp, /a2a/jsonrpc
+    payme: /v1/pay-me/*
+  contract_statement: '"The supported public contract is represented by the developer docs, SDKs, Postman assets,
+    and approved developer-assets snapshots. The changelog explains product-level changes in human language." (docs
+    changelog)'
+deprecation_policy:
+  published: false
+  note: 'No formal deprecation / breaking-change policy and no Sunset (RFC 8594) headers. Retirements are announced
+    in the changelog and the operation is flagged deprecated: true and answers 410. No Deprecation pointer is emitted.'
+  deprecated_operations:
+  - method: POST
+    path: /v1/access/billing/checkout/stripe
+    operationId: create_hilt_pay_api_stripe_checkout_v1_access_billing_checkout_stripe_post
+    summary: Retired Hilt Pay API subscription checkout
+    response: '410'
+    replacement: native Solana USDC subscriptions (/v1/access/native-subscriptions) and agent-commerce plan activation
+      (/v1/agent-commerce/plans/*/activate); SDK 1.3.0 removed the subscription-checkout helper
+sla:
+  published: false
+  note: Terms of Service (last updated April 30, 2026) state no uptime SLA; Enterprise tier lists "Custom limits"
+    and "Dedicated implementation support" without a numeric commitment.
+changelog:
+  artifact: changelog/hilt-so-changelog.yml
+  docs: https://docs.hilt.so/release-notes/changelog
+  release_updates: https://www.hilt.so/updates
+  cadence: roughly weekly since launch (1 May 2026); 31 dated release updates through 27 August 2026
+support_lifetime:
+  stated_period: null
+  note: Not stated anywhere.
+company:
+  operator: Paul Wild trading as Hilt (sole trader, United Kingdom)
+  address: Office 18824, 182-184 High Street North, East Ham, London, E6 2JA
+  launched: 2026-05-01 ("Hilt launched live")
+  funding_signal: Approved for the Alchemy Solana Fund (llms.txt "External validation")

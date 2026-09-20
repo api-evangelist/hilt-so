@@ -1,0 +1,135 @@
+generated: '2026-09-19'
+method: derived
+source: Derived by binding the live tools/list of https://api.hilt.so/mcp (9 tools, probed) and the documented PayMe
+  connector tools (10 tools, docs.hilt.so/developers/pay-me-mcp; live schema OAuth-gated) to operationIds in openapi/hilt-so-openapi.yml
+  (api.hilt.so/openapi.json, 165 operations). Confidence per row.
+purpose: Make the MCP tool the first-class discovery unit and bind it to its backing REST operation. The gateway
+  tools map almost one-to-one onto the "Hilt Pay API" agent-commerce tag; the PayMe connector tools map onto the
+  "Hilt PayMe Connector" tag with less certainty because the connector schema is gated.
+surfaces:
+  rest_openapi: openapi/hilt-so-openapi.yml (source openapi/_original/hilt-so-api-openapi.json; 154 paths, 165 operations,
+    289 schemas)
+  mcp_gateway: https://api.hilt.so/mcp (tools/list open; paid tools gated by x402 at call time)
+  mcp_pay_me: 'https://api.hilt.so/mcp/pay-me (tools/list gated: OAuth PKCE, scopes pay_me:*)'
+  a2a: https://api.hilt.so/a2a/jsonrpc (card skills discover_hilt_catalog, bootstrap_hilt_sandbox, activate_hilt_api_plan,
+    build_metered_hilt_endpoint)
+crosswalk:
+- tool: hilt_get_offer
+  category: discovery
+  rest:
+  - getHiltPayApiMarketplaceOffer
+  binding: rest
+  confidence: high
+  note: GET /v1/agent-commerce/offer; same document the tool returns (probed 200).
+- tool: hilt_get_catalog
+  category: discovery
+  rest:
+  - getHiltAgentCommerceCatalog
+  binding: rest
+  confidence: high
+  note: GET /v1/agent-commerce/catalog.
+- tool: hilt_get_pricing
+  category: discovery
+  rest:
+  - getHiltAgentCommercePricing
+  binding: rest
+  confidence: high
+  note: GET /v1/agent-commerce/pricing.
+- tool: hilt_agent_bootstrap
+  category: sandbox
+  rest:
+  - create_agent_bootstrap_v1_access_agent_bootstrap_post
+  binding: rest
+  confidence: high
+  note: Tool inputSchema (agent_name, agent_platform, requested_use_case, contact_email, external_reference, requested_permissions,
+    ttl_hours, metadata) matches the POST /v1/access/agent-bootstrap request body.
+- tool: hilt_claim_api_key
+  category: activation
+  rest:
+  - claimHiltPayApiMarketplaceKey
+  binding: rest
+  confidence: high
+  note: POST /v1/agent-commerce/plans/claim; inputs purchase_intent_id / setup_intent_id.
+- tool: hilt_activate_starter
+  category: activation
+  rest:
+  - activateHiltPayApiStarterWithX402
+  binding: rest
+  confidence: high
+  note: POST /v1/agent-commerce/plans/starter/activate; x402 V2 paid (79 USDC per the pricing document).
+- tool: hilt_activate_growth
+  category: activation
+  rest:
+  - activateHiltPayApiGrowthWithX402
+  binding: rest
+  confidence: high
+  note: 349 USDC.
+- tool: hilt_activate_scale
+  category: activation
+  rest:
+  - activateHiltPayApiScaleWithX402
+  binding: rest
+  confidence: high
+  note: 1,250 USDC.
+- tool: hilt_pay_me_resolve_handle
+  category: lookup
+  rest:
+  - resolve_pay_me_profile_v1_pay_me__x_handle__get
+  binding: rest
+  confidence: medium
+  note: GET /v1/pay-me/{x_handle} is the public handle resolver; the connector tool may add OAuth-scoped fields.
+- tool: hilt_pay_me_send_payment
+  category: payments
+  rest:
+  - create_pay_me_payment_request_v1_pay_me_payment_requests_post
+  binding: rest
+  confidence: medium
+  note: The "Hilt PayMe Connector" tag owns POST /v1/pay-me/payment-requests, which returns a wallet-approval URL;
+    matches the tool description.
+- tool: hilt_pay_me_get_payment
+  category: payments
+  rest:
+  - read_pay_me_payment_request_v1_pay_me_payment_requests__public_id__get
+  - read_pay_me_payment_intent_v1_pay_me_payment_intents__public_id__get
+  binding: rest
+  confidence: medium
+- tool: hilt_pay_me_account
+  category: account
+  rest:
+  - read_pay_me_connector_connections_v1_pay_me_connector_connections_get
+  - read_pay_me_session_v1_pay_me_session_get
+  binding: rest
+  confidence: low
+  note: Connector connection + session reads are the closest public routes; the connector may use an internal identity
+    route.
+mcp_only:
+- tool: hilt_create_quote
+  reason: No public REST operation produces a quote; the tool composes pricing + product description into a buying-path
+    recommendation server-side.
+- tool: hilt_pay_me_list_activity
+  reason: No public list route for sent/received PayMe activity in the OpenAPI.
+- tool: hilt_pay_me_cancel_payment
+  reason: No public cancel route for a pending PayMe payment request in the OpenAPI.
+- tool: hilt_pay_me_create_payment_link
+  reason: Payment links (pay_me:request scope) have no matching public route; /v1/pay-me/orders and /v1/pay-me/{x_handle}/checkouts
+    are payer-side checkouts, not self-shared links.
+- tool: hilt_pay_me_list_payment_links
+  reason: As above.
+- tool: hilt_pay_me_get_payment_link
+  reason: As above.
+- tool: hilt_pay_me_cancel_payment_link
+  reason: As above.
+rest_only:
+  count: 153
+  note: 'Everything outside the agent-commerce and PayMe connector tags: Workspace merchant routes (products, memberships,
+    receipts, support, webhooks, keys, billing, testing) and the Hilt Pay API /v1/access routes (agent bootstrap
+    manifest/status/approve, apps, products, rails, payment sessions, x402 settle, entitlements check/consume, MPP
+    metered sessions, native subscriptions, sandbox sessions, payment proofs). The A2A skill build_metered_hilt_endpoint
+    describes the /v1/access flow but no MCP tool wraps it; the merchant server is expected to call REST directly.'
+coverage:
+  mcp_tools_total: 19
+  bound_to_rest: 12
+  mcp_only: 7
+  rest_operations_total: 165
+  rest_operations_with_tool: 13
+  rest_only: 152

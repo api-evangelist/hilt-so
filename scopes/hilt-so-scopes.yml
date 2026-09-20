@@ -1,0 +1,58 @@
+generated: '2026-09-19'
+method: searched
+source: https://api.hilt.so/.well-known/oauth-authorization-server (scopes_supported, probed 200); https://api.hilt.so/.well-known/oauth-protected-resource/mcp/pay-me;
+  https://docs.hilt.so/developers/pay-me-mcp (scope meanings); https://docs.hilt.so/developers/api-keys (API-key
+  permissions)
+docs: https://docs.hilt.so/developers/pay-me-mcp
+spec_gap: openapi/hilt-so-openapi.yml declares no oauth2 securityScheme, so derive-oauth-scopes.py produced nothing;
+  the scope list is taken from the RFC 8414 document, which is authoritative.
+oauth2:
+  authorization_server: https://api.hilt.so
+  authorization_endpoint: https://api.hilt.so/oauth/authorize
+  token_endpoint: https://api.hilt.so/oauth/token
+  registration_endpoint: https://api.hilt.so/oauth/register
+  revocation_endpoint: https://api.hilt.so/oauth/revoke
+  grant_types:
+  - authorization_code
+  - refresh_token
+  pkce:
+  - S256
+  token_endpoint_auth_methods:
+  - none
+  resource: https://api.hilt.so/mcp/pay-me
+  scopes:
+  - scope: pay_me:read
+    description: Read connector-started payments and, when a receiving profile exists, received activity
+    tools:
+    - hilt_pay_me_account
+    - hilt_pay_me_get_payment
+    - hilt_pay_me_list_activity
+    - hilt_pay_me_list_payment_links
+    - hilt_pay_me_get_payment_link
+  - scope: pay_me:request
+    description: Create and manage self-shared payment links
+    tools:
+    - hilt_pay_me_create_payment_link
+    - hilt_pay_me_cancel_payment_link
+  - scope: pay_me:prepare
+    description: Start and manage wallet-approved payments to verified PayMe handles
+    tools:
+    - hilt_pay_me_resolve_handle
+    - hilt_pay_me_send_payment
+    - hilt_pay_me_cancel_payment
+  scope_count: 3
+  note: Tool-to-scope assignment is inferred from the docs' scope meanings and tool descriptions; the connector
+    schema is OAuth-gated so it was not confirmed against a live tools/list.
+api_key_permissions:
+  header: X-Hilt-Key
+  permissions:
+  - permission: access:read
+    description: Check entitlements and read Pay API rails
+  - permission: access:write
+    description: Create Pay API apps, products, and payment sessions
+  - permission: access:webhooks
+    description: Register webhook endpoints for Pay API flows
+  requested_via: requested_permissions[] on POST /v1/access/agent-bootstrap (MCP tool hilt_agent_bootstrap); requested_live_scopes[]
+    in the agent-setup example
+  guidance: Use the minimum permissions needed. Most server-side integrations need read; checkout creation or webhook
+    subscription workflows may also need execute.

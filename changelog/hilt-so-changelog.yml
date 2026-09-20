@@ -1,0 +1,139 @@
+generated: '2026-09-19'
+method: searched
+source: https://www.hilt.so/updates (31 dated release updates, 30 April - 27 August 2026) and https://docs.hilt.so/release-notes/changelog
+  (monthly, April - September 2026); SDK CHANGELOG.md files in github.com/Hiltpay/hilt-sdk-js and hilt-sdk-python
+scheme: Dated release updates (one page per update under /updates/<slug>) plus a monthly docs changelog; SDKs are
+  semver. No API version bump has occurred (still /v1, info.version 1.0.0).
+current:
+  api: v1 (1.0.0)
+  sdk_registry: 1.4.0 (2026-08-26)
+  sdk_docs: 1.5.0 (provider-hosted tarballs; MPP payment-channel methods)
+  cli: 1.0.0
+  woocommerce_plugin: 0.1.4
+latest:
+  date: 2026-09
+  title: MPP session channels for Solana USDC streaming payments
+  source: 'docs changelog September 2026: capped channel creation, cumulative voucher authorization, idempotent
+    delivery reservation; SDK 1.5.0'
+breaking_changes:
+- date: '2026-08-24'
+  change: 'Retired Hilt Pay API subscription checkout (POST /v1/access/billing/checkout/stripe now deprecated: true,
+    410); SDK 1.3.0 removed the helper'
+  migration: native Solana USDC subscriptions
+entries:
+- date: '2026-08-27'
+  title: Hilt opens two live payment paths for wallet-capable agents
+  kind: addition
+  highlights:
+  - Public PayMe MPP payment action POST /v1/pay-me/payments (no payer account/OAuth/API key)
+  - 0.05 USDC x402 V2 transaction-evidence resource at www.hilt.so/v1/solana/transaction-evidence
+  url: https://www.hilt.so/updates
+- date: '2026-08-26'
+  title: Protect a paid endpoint with one Hilt SDK wrapper
+  kind: addition
+  highlights:
+  - '@hiltpay/sdk 1.4.0 protectEndpoint; hilt-sdk 1.4.0 protect_request'
+  - Retry-safe request identity; getHiltPaymentSessionId
+  url: https://www.hilt.so/updates
+- date: '2026-08-24'
+  title: Hilt Pay API moves to pay-as-you-go and adds native SOL
+  kind: pricing-change
+  highlights:
+  - Live pricing now $0/month + 1% per successful settlement
+  - Native SOL hosted payment sessions; SDKs 1.3.0 remove the retired subscription-checkout helper
+  url: https://www.hilt.so/updates
+- date: '2026-08-20'
+  title: PayMe adds Wallet Security for receiving-wallet changes
+  kind: addition
+  highlights:
+  - Authenticator + recovery codes + new-wallet signature for wallet changes
+  url: https://www.hilt.so/updates
+- date: '2026-08-08'
+  title: Hilt PayMe adds trackable AI-assisted payments
+  kind: addition
+  highlights:
+  - PayMe MCP connector (OAuth PKCE, pay_me:* scopes)
+  url: https://www.hilt.so/updates
+- date: '2026-07-22'
+  title: Hilt Pay Agent Gateway is live across agent discovery networks
+  kind: addition
+  highlights:
+  - MCP gateway https://api.hilt.so/mcp, A2A agent card, Glama/Smithery listings
+  url: https://www.hilt.so/updates
+- date: '2026-07-20'
+  title: AI-to-AI metered payments are live
+  kind: addition
+  highlights:
+  - x402 V2 settlement + atomic entitlement consumption; SDKs 1.2.0; idempotent settlement reconciliation
+  url: https://www.hilt.so/updates
+- date: '2026-06-04'
+  title: SDKs and developer assets are updated to 1.1.0
+  kind: addition
+  highlights:
+  - HiltError/HiltApiError models, typed webhook verification, request-level idempotency keys
+  url: https://www.hilt.so/updates
+- date: '2026-06-04'
+  title: Native Solana subscriptions are live
+  kind: addition
+  highlights:
+  - Buyer-approved Solana USDC subscriptions; cancel-intent/cancel-confirm
+  url: https://www.hilt.so/updates
+- date: '2026-05-31'
+  title: Hilt Pay API is now the agent-first developer surface
+  kind: addition
+  highlights:
+  - /v1/access namespace; agent bootstrap + owner approval
+  url: https://www.hilt.so/updates
+- date: '2026-05-31'
+  title: Hilt Pay for WooCommerce is approved on WordPress.org
+  kind: addition
+  highlights:
+  - hilt-pay-for-woocommerce 0.1.4
+  url: https://www.hilt.so/updates
+- date: '2026-05-17'
+  title: Embed checkout is now live
+  kind: addition
+  highlights:
+  - https://www.hilt.so/embed.js
+  url: https://www.hilt.so/updates
+- date: '2026-05-06'
+  title: Public SDK packages and developer assets are now live
+  kind: addition
+  highlights:
+  - '@hiltpay/sdk 1.0.0 (npm), hilt-sdk 1.0.0 (PyPI), hilt-developer-assets'
+  url: https://www.hilt.so/updates
+- date: '2026-05-05'
+  title: CLI coverage, playbooks, and sandbox v1 are now in sync
+  kind: addition
+  highlights:
+  - Hilt CLI 1.0.0; /v1/testing scenarios
+  url: https://www.hilt.so/updates
+- date: '2026-05-04'
+  title: Native Hilt webhooks are live
+  kind: addition
+  highlights:
+  - X-Hilt-Signature signed events; replay
+  url: https://www.hilt.so/updates
+- date: '2026-05-01'
+  title: Hilt launched live
+  kind: launch
+  highlights: []
+  url: https://www.hilt.so/updates
+sdk_releases:
+- version: 1.0.0
+  date: '2026-05-06'
+- version: 1.0.1
+  date: '2026-05-31'
+- version: 1.0.2
+  date: '2026-05-31'
+- version: 1.0.3
+  date: '2026-06-04'
+- version: 1.1.0
+  date: '2026-06-04'
+- version: 1.2.0
+  date: '2026-07-20'
+- version: 1.3.0
+  date: '2026-08-24'
+- version: 1.4.0
+  date: '2026-08-26'
+window: launch (2026-05-01) to 2026-09
