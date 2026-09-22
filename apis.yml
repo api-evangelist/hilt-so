@@ -37,6 +37,22 @@ tags:
 - Agentic Payments
 - x402
 - Checkout
+- Subscription
+- Webhook
+- MCP
+- Entitlements
+- Micropayments
+- Developer Tools
+- Fintech
+tags_raw:
+- Payments
+- Solana
+- Stablecoins
+- USDC
+- Crypto Payments
+- Agentic Payments
+- x402
+- Checkout
 - Subscriptions
 - Webhooks
 - MCP
@@ -58,6 +74,17 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Payments
+  - Solana
+  - USDC
+  - x402
+  - Entitlements
+  - Subscription
+  - Webhook
+  - Receipts
+  - Checkout
+  - Agentic Payments
+  tags_raw:
   - Payments
   - Solana
   - USDC
@@ -179,6 +206,13 @@ apis:
   tags:
   - MCP
   - A2A
+  - Agentic Commerce
+  - x402
+  - Solana
+  - USDC
+  tags_raw:
+  - MCP
+  - A2A
   - Agent Commerce
   - x402
   - Solana
@@ -217,6 +251,13 @@ apis:
   humanURL: https://docs.hilt.so/developers/pay-me-mcp
   baseURL: https://api.hilt.so/mcp/pay-me
   tags:
+  - MCP
+  - Authentication
+  - Solana
+  - USDC
+  - Payments
+  - PayMe
+  tags_raw:
   - MCP
   - OAuth
   - Solana
