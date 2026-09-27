@@ -1,0 +1,291 @@
+openapi: 3.2.0
+info:
+  title: Hilt So API Keys API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged api-keys across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: API Keys
+paths:
+  /v1/keys:
+    get:
+      tags:
+      - API Keys
+      summary: List Keys
+      description: Lists all API keys for the authenticated user (excludes raw values).
+      operationId: list_keys_v1_keys_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/KeySummary'
+                type: array
+                title: Response List Keys V1 Keys Get
+    post:
+      tags:
+      - API Keys
+      summary: Create Key
+      description: 'Creates a new API key.
+
+        The raw key value is returned ONCE and cannot be retrieved again.
+
+        Store it in a secrets manager immediately.'
+      operationId: create_key_v1_keys_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateKeyRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateKeyResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/keys/{key_id}:
+    delete:
+      tags:
+      - API Keys
+      summary: Revoke Key
+      description: 'Revokes an API key. Revocation is immediate and permanent.
+
+        Requests using this key will receive HTTP 401 from the next request onwards.'
+      operationId: revoke_key_v1_keys__key_id__delete
+      parameters:
+      - name: key_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Key Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    KeyUsageSummary:
+      properties:
+        total_calls:
+          type: integer
+          title: Total Calls
+          default: 0
+        success_calls:
+          type: integer
+          title: Success Calls
+          default: 0
+        error_calls:
+          type: integer
+          title: Error Calls
+          default: 0
+        credits_burned:
+          type: integer
+          title: Credits Burned
+          default: 0
+        latest_activity_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Activity At
+        latest_endpoint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Endpoint
+      type: object
+      title: KeyUsageSummary
+    KeySummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        key_prefix:
+          type: string
+          title: Key Prefix
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+        sandbox_mode:
+          type: boolean
+          title: Sandbox Mode
+        last_used_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Used At
+        created_at:
+          type: string
+          title: Created At
+        revoked_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Revoked At
+        usage_summary:
+          $ref: '#/components/schemas/KeyUsageSummary'
+          default:
+            total_calls: 0
+            success_calls: 0
+            error_calls: 0
+            credits_burned: 0
+        recent_activity:
+          items:
+            $ref: '#/components/schemas/KeyActivityItem'
+          type: array
+          title: Recent Activity
+          default: []
+      type: object
+      required:
+      - id
+      - name
+      - key_prefix
+      - permissions
+      - sandbox_mode
+      - last_used_at
+      - created_at
+      - revoked_at
+      title: KeySummary
+    CreateKeyResponse:
+      properties:
+        key:
+          $ref: '#/components/schemas/KeySummary'
+        raw_key:
+          type: string
+          title: Raw Key
+      type: object
+      required:
+      - key
+      - raw_key
+      title: CreateKeyResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    KeyActivityItem:
+      properties:
+        endpoint:
+          type: string
+          title: Endpoint
+        http_method:
+          type: string
+          title: Http Method
+        status_code:
+          type: integer
+          title: Status Code
+        credits_burned:
+          type: integer
+          title: Credits Burned
+        duration_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Ms
+        error_message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Message
+        created_at:
+          type: string
+          title: Created At
+      type: object
+      required:
+      - endpoint
+      - http_method
+      - status_code
+      - credits_burned
+      - duration_ms
+      - error_message
+      - created_at
+      title: KeyActivityItem
+    CreateKeyRequest:
+      properties:
+        name:
+          type: string
+          title: Name
+        sandbox_mode:
+          type: boolean
+          title: Sandbox Mode
+          default: false
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+          default:
+          - read
+          - execute
+      type: object
+      required:
+      - name
+      title: CreateKeyRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

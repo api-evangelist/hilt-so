@@ -44,6 +44,7 @@ tags:
 - Micropayments
 - Developer Tools
 - Fintech
+- A2A
 tags_raw:
 - Payments
 - Solana
@@ -60,146 +61,17 @@ tags_raw:
 - Micropayments
 - Developer Tools
 - Fintech
+- A2A
 apis:
-- aid: hilt-so:hilt-pay-api
-  name: Hilt API (Pay API + Workspace)
-  description: 'The Hilt REST contract: Hilt Pay API /v1/access routes (agent bootstrap, apps, products, x402 V2
-    payment sessions and settlement, durable and metered entitlements, MPP metered payment channels, native Solana
-    USDC subscriptions, sandbox sessions, webhooks), Workspace merchant routes (products, hosted checkout, payments,
-    memberships, receipts, support, webhooks, API keys, testing scenarios), PayMe routes and the agent-commerce
-    offer/catalog/pricing and plan-activation routes. OpenAPI 3.1.0, 154 paths / 165 operations, FastAPI-generated;
-    declares no securitySchemes (auth documented in prose: X-Hilt-Key hk_live_/hk_sandbox_, dashboard bearer, PayMe
-    OAuth PKCE, x402 PAYMENT-SIGNATURE, MPP Authorization: Payment).'
-  image: https://www.hilt.so/Logo.png
-  humanURL: https://docs.hilt.so/developers/access
-  baseURL: https://api.hilt.so
-  tags:
-  - Payments
-  - Solana
-  - USDC
-  - x402
-  - Entitlements
-  - Subscription
-  - Webhook
-  - Receipts
-  - Checkout
-  - Agentic Payments
-  tags_raw:
-  - Payments
-  - Solana
-  - USDC
-  - x402
-  - Entitlements
-  - Subscriptions
-  - Webhooks
-  - Receipts
-  - Checkout
-  - Agentic Payments
-  properties:
-  - type: OpenAPI
-    url: openapi/hilt-so-openapi.yml
-  - type: OpenAPI
-    url: https://api.hilt.so/openapi.json
-    name: Provider-hosted OpenAPI (full, 165 operations)
-  - type: OpenAPI
-    url: https://api.hilt.so/v1/openapi.json
-    name: Provider-hosted OpenAPI v1 subset (143 paths; also served at https://www.hilt.so/openapi.json and mirrored
-      in github.com/Hiltpay/hilt-developer-assets/openapi/hilt-openapi-v1.json)
-  - type: Documentation
-    url: https://docs.hilt.so/developers
-  - type: APIReference
-    url: https://api.hilt.so/v1/docs
-  - type: APIReference
-    url: https://api.hilt.so/v1/redoc
-    name: Redoc
-  - type: GettingStarted
-    url: https://docs.hilt.so/developers/quickstart
-  - type: Overlay
-    url: overlays/hilt-so-openapi-overlay.yaml
-  - type: Authentication
-    url: authentication/hilt-so-authentication.yml
-  - type: OAuthScopes
-    url: scopes/hilt-so-scopes.yml
-  - type: Conventions
-    url: conventions/hilt-so-conventions.yml
-  - type: Idempotency
-    url: conventions/hilt-so-conventions.yml
-  - type: ErrorCatalog
-    url: errors/hilt-so-problem-types.yml
-  - type: Conformance
-    url: conformance/hilt-so-conformance.yml
-  - type: Lifecycle
-    url: lifecycle/hilt-so-lifecycle.yml
-  - type: Sandbox
-    url: sandbox/hilt-so-sandbox.yml
-  - type: DataModel
-    url: data-model/hilt-so-data-model.yml
-  - type: Webhooks
-    url: asyncapi/hilt-so-webhooks-asyncapi.yml
-  - type: AsyncAPI
-    url: asyncapi/hilt-so-webhooks-asyncapi.yml
-  - type: Webhooks
-    url: https://docs.hilt.so/developers/webhooks
-    name: Webhook docs
-  - type: RateLimits
-    url: rate-limits/hilt-so-rate-limits.yml
-  - type: Plans
-    url: plans/hilt-so-plans-pricing.yml
-  - type: ChangeLog
-    url: changelog/hilt-so-changelog.yml
-  - type: Postman
-    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
-  - type: Postman
-    url: postman/hilt-so-postman-collection.json
-    name: Saved copy of the public collection
-  - type: Packages
-    url: packages/hilt-so-packages.yml
-  - type: SDKs
-    url: packages/hilt-so-packages.yml
-  - type: CLI
-    url: cli/hilt-so-cli.yml
-  - type: Components
-    url: components/hilt-so-components.yml
-  - type: AgentSkill
-    url: skills/_index.yml
-  - type: ToolCrosswalk
-    url: mcp/hilt-so-tool-crosswalk.yml
-- aid: hilt-so:transaction-evidence
-  name: Hilt Solana Transaction Evidence API
-  description: 'A public pay-per-request x402 V2 resource on www.hilt.so (0.05 USDC per request, Solana USDC): POST
-    /v1/solana/transaction-evidence returns signers, invoked programs, SOL and token balance changes, parsed transfers,
-    finality, fee and timestamp for one finalized Solana mainnet transaction. Its own OpenAPI 3.1.0 declares the
-    PAYMENT-REQUIRED 402 header and PAYMENT-RESPONSE 200 header plus x-payment-info. Announced 27 August 2026 as
-    one of two live payment paths for wallet-capable agents.'
-  image: https://www.hilt.so/Logo.png
-  humanURL: https://docs.hilt.so/developers/transaction-evidence
-  baseURL: https://www.hilt.so
-  tags:
-  - Solana
-  - Blockchain Data
-  - x402
-  - Micropayments
-  - Transaction Evidence
-  properties:
-  - type: OpenAPI
-    url: openapi/hilt-so-transaction-evidence-openapi.yml
-  - type: OpenAPI
-    url: https://www.hilt.so/v1/solana/transaction-evidence/openapi.json
-    name: Provider-hosted OpenAPI
-  - type: Documentation
-    url: https://docs.hilt.so/developers/transaction-evidence
-  - type: Plans
-    url: plans/hilt-so-plans-pricing.yml
-  - type: Conformance
-    url: conformance/hilt-so-conformance.yml
 - aid: hilt-so:agent-gateway
   name: Hilt Pay Agent Gateway (MCP + A2A)
-  description: 'Hosted MCP server at https://api.hilt.so/mcp (streamable HTTP, protocol 2025-06-18, server Hilt
-    Pay Agent Gateway 1.1.0) exposing nine tools: free offer/catalog/pricing/quote/sandbox-bootstrap tools and x402-paid
-    Starter/Growth/Scale plan activation plus API-key claim, each with a real JSON Schema inputSchema (tools/list
-    answers anonymously). The same gateway publishes an A2A 0.3.0 agent card at /.well-known/agent-card.json (four
-    skills) with a JSON-RPC endpoint at /a2a/jsonrpc and a second Agentverse transport at /agentverse/a2a. Listed
-    on Glama and Smithery.'
+  description: >-
+    Hosted MCP server at https://api.hilt.so/mcp (streamable HTTP, protocol 2025-06-18, server Hilt Pay
+    Agent Gateway 1.1.0) exposing nine tools: free offer/catalog/pricing/quote/sandbox-bootstrap tools
+    and x402-paid Starter/Growth/Scale plan activation plus API-key claim, each with a real JSON Schema
+    inputSchema (tools/list answers anonymously). The same gateway publishes an A2A 0.3.0 agent card at
+    /.well-known/agent-card.json (four skills) with a JSON-RPC endpoint at /a2a/jsonrpc and a second Agentverse
+    transport at /agentverse/a2a. Listed on Glama and Smithery.
   image: https://www.hilt.so/Logo.png
   humanURL: https://docs.hilt.so/developers/agent-setup
   baseURL: https://api.hilt.so/mcp
@@ -241,12 +113,13 @@ apis:
     url: skills/_index.yml
 - aid: hilt-so:payme-mcp
   name: Hilt PayMe MCP Connector
-  description: 'OAuth-gated remote MCP resource at https://api.hilt.so/mcp/pay-me for compatible AI clients: resolve
-    a verified PayMe handle, start a wallet-approved SOL or Solana USDC payment (the client prepares terms; the
-    payer signs in their own wallet), read activity, and create/cancel payment links. Authorization is OAuth authorization-code
-    with PKCE S256 and dynamic client registration on the issuer https://api.hilt.so (RFC 8414 + RFC 9728 metadata
-    published), scopes pay_me:read, pay_me:request, pay_me:prepare. Anonymous tools/list answers 401 with a resource_metadata
-    challenge; the ten tool names come from the docs.'
+  description: >-
+    OAuth-gated remote MCP resource at https://api.hilt.so/mcp/pay-me for compatible AI clients: resolve
+    a verified PayMe handle, start a wallet-approved SOL or Solana USDC payment (the client prepares terms;
+    the payer signs in their own wallet), read activity, and create/cancel payment links. Authorization
+    is OAuth authorization-code with PKCE S256 and dynamic client registration on the issuer https://api.hilt.so
+    (RFC 8414 + RFC 9728 metadata published), scopes pay_me:read, pay_me:request, pay_me:prepare. Anonymous
+    tools/list answers 401 with a resource_metadata challenge; the ten tool names come from the docs.
   image: https://www.hilt.so/Logo.png
   humanURL: https://docs.hilt.so/developers/pay-me-mcp
   baseURL: https://api.hilt.so/mcp/pay-me
@@ -276,6 +149,1222 @@ apis:
     url: authentication/hilt-so-authentication.yml
   - type: Documentation
     url: https://docs.hilt.so/developers/pay-me-mcp
+- aid: hilt-so:hilt-so-account-api
+  name: Hilt Account API
+  description: The account API from Hilt — 7 operation(s) for account.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - account
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-account-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-agent-commerce-api
+  name: Hilt Agent Commerce API
+  description: The Agent Commerce API from Hilt — 4 operation(s) for agent commerce.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Agent Commerce
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-agent-commerce-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-api-keys-api
+  name: Hilt API Keys API
+  description: The api-keys API from Hilt — 2 operation(s) for api-keys.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - api-keys
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-api-keys-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-auth-api
+  name: Hilt Auth API
+  description: The auth API from Hilt — 8 operation(s) for auth.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - auth
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-auth-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-billing-api
+  name: Hilt Billing API
+  description: The billing API from Hilt — 5 operation(s) for billing.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - billing
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-billing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-checkout-api
+  name: Hilt Checkout API
+  description: The checkout API from Hilt — 12 operation(s) for checkout.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - checkout
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-checkout-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-checkout-domains-api
+  name: Hilt Checkout Domains API
+  description: The checkout-domains API from Hilt — 1 operation(s) for checkout-domains.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - checkout-domains
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-checkout-domains-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-hilt-pay-api-api
+  name: Hilt Hilt Pay API
+  description: The Hilt Pay API API from Hilt — 39 operation(s) for hilt pay api.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Hilt Pay API
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-hilt-pay-api-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-hilt-payme-connector-api
+  name: Hilt Hilt PayMe Connector API
+  description: The Hilt PayMe Connector API from Hilt — 6 operation(s) for hilt payme connector.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Hilt PayMe Connector
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-hilt-payme-connector-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-integrations-api
+  name: Hilt Integrations API
+  description: The integrations API from Hilt — 4 operation(s) for integrations.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - integrations
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-integrations-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-memberships-api
+  name: Hilt Memberships API
+  description: The memberships API from Hilt — 11 operation(s) for memberships.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - memberships
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-memberships-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-pay-me-api
+  name: Hilt Pay Me API
+  description: The pay-me API from Hilt — 21 operation(s) for pay-me.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - pay-me
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-pay-me-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-products-api
+  name: Hilt Products API
+  description: The products API from Hilt — 9 operation(s) for products.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - products
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-products-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-receipt-api
+  name: Hilt Receipt API
+  description: The Receipt API from Hilt — 10 operation(s) for receipt.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Receipt
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-receipt-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-solana-api
+  name: Hilt Solana API
+  description: The Solana API from Hilt — 1 operation(s) for solana.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Solana
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-solana-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-support-api
+  name: Hilt Support API
+  description: The Support API from Hilt — 3 operation(s) for support.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - Support
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-support-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-system-api
+  name: Hilt System API
+  description: The system API from Hilt — 2 operation(s) for system.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - system
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-system-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-testing-api
+  name: Hilt Testing API
+  description: The testing API from Hilt — 3 operation(s) for testing.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - testing
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-testing-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
+- aid: hilt-so:hilt-so-webhooks-api
+  name: Hilt Webhooks API
+  description: The webhooks API from Hilt — 7 operation(s) for webhooks.
+  humanURL: https://docs.hilt.so/developers/access
+  baseURL: https://api.hilt.so
+  tags:
+  - webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/hilt-so-webhooks-api-openapi.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers
+  - type: APIReference
+    url: https://api.hilt.so/v1/docs
+  - type: APIReference
+    url: https://api.hilt.so/v1/redoc
+  - type: GettingStarted
+    url: https://docs.hilt.so/developers/quickstart
+  - type: Authentication
+    url: authentication/hilt-so-authentication.yml
+  - type: OAuthScopes
+    url: scopes/hilt-so-scopes.yml
+  - type: Conventions
+    url: conventions/hilt-so-conventions.yml
+  - type: Idempotency
+    url: conventions/hilt-so-conventions.yml
+  - type: ErrorCatalog
+    url: errors/hilt-so-problem-types.yml
+  - type: Conformance
+    url: conformance/hilt-so-conformance.yml
+  - type: Lifecycle
+    url: lifecycle/hilt-so-lifecycle.yml
+  - type: Sandbox
+    url: sandbox/hilt-so-sandbox.yml
+  - type: DataModel
+    url: data-model/hilt-so-data-model.yml
+  - type: Webhooks
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: AsyncAPI
+    url: asyncapi/hilt-so-webhooks-asyncapi.yml
+  - type: Webhooks
+    url: https://docs.hilt.so/developers/webhooks
+  - type: RateLimits
+    url: rate-limits/hilt-so-rate-limits.yml
+  - type: Plans
+    url: plans/hilt-so-plans-pricing.yml
+  - type: ChangeLog
+    url: changelog/hilt-so-changelog.yml
+  - type: Postman
+    url: https://www.hilt.so/downloads/hilt-postman-collection-latest.json
+  - type: Postman
+    url: postman/hilt-so-postman-collection.json
+  - type: Packages
+    url: packages/hilt-so-packages.yml
+  - type: SDKs
+    url: packages/hilt-so-packages.yml
+  - type: CLI
+    url: cli/hilt-so-cli.yml
+  - type: Components
+    url: components/hilt-so-components.yml
+  - type: ToolCrosswalk
+    url: mcp/hilt-so-tool-crosswalk.yml
+  - type: Documentation
+    url: https://docs.hilt.so/developers/transaction-evidence
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -393,3 +1482,10 @@ x-enrichment:
   status: enriched
   artifacts_added: 48
   pass: local-v3
+x-a2a:
+  verified: true
+  probed: '2026-09-26'
+  url: "https://api.hilt.so/.well-known/agent-card.json"
+  grade: "conformant"
+  protocol_version: "0.3.0"
+  control: 404

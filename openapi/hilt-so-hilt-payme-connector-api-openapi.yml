@@ -1,0 +1,605 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Hilt PayMe Connector API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged Hilt PayMe Connector across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Hilt PayMe Connector
+paths:
+  /v1/connectors/grok/authorization:
+    get:
+      tags:
+      - Hilt PayMe Connector
+      summary: Read Grok Authorization
+      operationId: read_grok_authorization_v1_connectors_grok_authorization_get
+      parameters:
+      - name: request
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 20
+          maxLength: 8000
+          title: Request
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorAuthorizationResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    post:
+      tags:
+      - Hilt PayMe Connector
+      summary: Approve Grok Authorization
+      operationId: approve_grok_authorization_v1_connectors_grok_authorization_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectorAuthorizationComplete'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorAuthorizationRedirectResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/pay-me/connector-connections:
+    get:
+      tags:
+      - Hilt PayMe Connector
+      summary: Read Pay Me Connector Connections
+      operationId: read_pay_me_connector_connections_v1_pay_me_connector_connections_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConnectorConnectionListResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/pay-me/connector-connections/{connection_id}:
+    delete:
+      tags:
+      - Hilt PayMe Connector
+      summary: Disconnect Pay Me Connector
+      operationId: disconnect_pay_me_connector_v1_pay_me_connector_connections__connection_id__delete
+      parameters:
+      - name: connection_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Connection Id
+      responses:
+        '204':
+          description: Successful Response
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/pay-me/payment-requests:
+    post:
+      tags:
+      - Hilt PayMe Connector
+      summary: Create Pay Me Payment Request
+      operationId: create_pay_me_payment_request_v1_pay_me_payment_requests_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentRequestCreate'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestEnvelope'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/pay-me/payment-requests/{public_id}:
+    get:
+      tags:
+      - Hilt PayMe Connector
+      summary: Read Pay Me Payment Request
+      operationId: read_pay_me_payment_request_v1_pay_me_payment_requests__public_id__get
+      parameters:
+      - name: public_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Public Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentRequestEnvelope'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/pay-me/payment-intents/{public_id}:
+    get:
+      tags:
+      - Hilt PayMe Connector
+      summary: Read Pay Me Payment Intent
+      operationId: read_pay_me_payment_intent_v1_pay_me_payment_intents__public_id__get
+      parameters:
+      - name: public_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Public Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntentEnvelope'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    ConnectorAuthorizationComplete:
+      properties:
+        request:
+          type: string
+          maxLength: 8000
+          minLength: 20
+          title: Request
+        approved:
+          type: boolean
+          title: Approved
+          default: true
+      type: object
+      required:
+      - request
+      title: ConnectorAuthorizationComplete
+    PaymentIntentEnvelope:
+      properties:
+        payment:
+          $ref: '#/components/schemas/PaymentIntentResponse'
+      type: object
+      required:
+      - payment
+      title: PaymentIntentEnvelope
+    ConnectorAuthorizationResponse:
+      properties:
+        client:
+          $ref: '#/components/schemas/ConnectorClientSummary'
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        requiresX:
+          type: boolean
+          title: Requiresx
+        requiresWallet:
+          type: boolean
+          title: Requireswallet
+        identity:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Identity
+        profile:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Profile
+        zeroCustody:
+          $ref: '#/components/schemas/ConnectorZeroCustodySummary'
+      type: object
+      required:
+      - client
+      - scopes
+      - requiresX
+      - requiresWallet
+      - identity
+      - profile
+      - zeroCustody
+      title: ConnectorAuthorizationResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaymentRequestEnvelope:
+      properties:
+        paymentRequest:
+          $ref: '#/components/schemas/PaymentRequestResponse'
+      type: object
+      required:
+      - paymentRequest
+      title: PaymentRequestEnvelope
+    PaymentRequestCreate:
+      properties:
+        amount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Amount
+        asset:
+          type: string
+          maxLength: 12
+          title: Asset
+          default: USDC
+        from_x_handle:
+          type: string
+          maxLength: 16
+          title: From X Handle
+          default: ''
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        expires_in_hours:
+          type: integer
+          maximum: 168
+          minimum: 1
+          title: Expires In Hours
+          default: 72
+      type: object
+      required:
+      - amount
+      title: PaymentRequestCreate
+    PaymentIntentFeePreviewResponse:
+      properties:
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        buyerTotal:
+          type: string
+          title: Buyertotal
+        platformFeePercent:
+          type: string
+          title: Platformfeepercent
+      type: object
+      required:
+      - hiltFeeAmount
+      - buyerTotal
+      - platformFeePercent
+      title: PaymentIntentFeePreviewResponse
+    ConnectorConnectionResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        client:
+          $ref: '#/components/schemas/ConnectorClientSummary'
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        connectedAt:
+          type: string
+          title: Connectedat
+        lastUsedAt:
+          type: string
+          title: Lastusedat
+      type: object
+      required:
+      - id
+      - client
+      - scopes
+      - connectedAt
+      - lastUsedAt
+      title: ConnectorConnectionResponse
+    PaymentRequestResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        recipient:
+          $ref: '#/components/schemas/PaymentRequestRecipientResponse'
+        requestedFromXHandle:
+          type: string
+          title: Requestedfromxhandle
+        asset:
+          $ref: '#/components/schemas/PaymentRequestAssetResponse'
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        note:
+          type: string
+          title: Note
+        approvalUrl:
+          type: string
+          title: Approvalurl
+        payerWallet:
+          type: string
+          title: Payerwallet
+        txSignature:
+          type: string
+          title: Txsignature
+        createdAt:
+          type: string
+          title: Createdat
+        expiresAt:
+          type: string
+          title: Expiresat
+        paidAt:
+          type: string
+          title: Paidat
+      type: object
+      required:
+      - id
+      - status
+      - recipient
+      - requestedFromXHandle
+      - asset
+      - recipientAmount
+      - note
+      - approvalUrl
+      - payerWallet
+      - txSignature
+      - createdAt
+      - expiresAt
+      - paidAt
+      title: PaymentRequestResponse
+    PaymentRequestAssetResponse:
+      properties:
+        mint:
+          type: string
+          title: Mint
+        symbol:
+          type: string
+          title: Symbol
+        name:
+          type: string
+          title: Name
+        decimals:
+          type: integer
+          title: Decimals
+      type: object
+      required:
+      - mint
+      - symbol
+      - name
+      - decimals
+      title: PaymentRequestAssetResponse
+    PaymentIntentResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        direction:
+          type: string
+          title: Direction
+        status:
+          type: string
+          title: Status
+        recipient:
+          $ref: '#/components/schemas/PaymentRequestRecipientResponse'
+        asset:
+          $ref: '#/components/schemas/PaymentRequestAssetResponse'
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        feePreview:
+          $ref: '#/components/schemas/PaymentIntentFeePreviewResponse'
+        note:
+          type: string
+          title: Note
+        approvalUrl:
+          type: string
+          title: Approvalurl
+        txSignature:
+          type: string
+          title: Txsignature
+        solscanUrl:
+          type: string
+          title: Solscanurl
+        createdAt:
+          type: string
+          title: Createdat
+        expiresAt:
+          type: string
+          title: Expiresat
+        authorizedAt:
+          type: string
+          title: Authorizedat
+        confirmedAt:
+          type: string
+          title: Confirmedat
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
+      type: object
+      required:
+      - id
+      - direction
+      - status
+      - recipient
+      - asset
+      - recipientAmount
+      - feePreview
+      - note
+      - approvalUrl
+      - txSignature
+      - solscanUrl
+      - createdAt
+      - expiresAt
+      - authorizedAt
+      - confirmedAt
+      - walletApprovalRequired
+      title: PaymentIntentResponse
+    ConnectorClientSummary:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        redirectHost:
+          type: string
+          title: Redirecthost
+          default: ''
+      type: object
+      required:
+      - id
+      - name
+      title: ConnectorClientSummary
+    ConnectorConnectionListResponse:
+      properties:
+        connections:
+          items:
+            $ref: '#/components/schemas/ConnectorConnectionResponse'
+          type: array
+          title: Connections
+      type: object
+      required:
+      - connections
+      title: ConnectorConnectionListResponse
+    PaymentRequestRecipientResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        xHandle:
+          type: string
+          title: Xhandle
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        identityVerified:
+          type: boolean
+          title: Identityverified
+        walletVerified:
+          type: boolean
+          title: Walletverified
+      type: object
+      required:
+      - name
+      - xHandle
+      - xProfileUrl
+      - recipientWallet
+      - identityVerified
+      - walletVerified
+      title: PaymentRequestRecipientResponse
+    ConnectorZeroCustodySummary:
+      properties:
+        canPrepare:
+          type: boolean
+          title: Canprepare
+        canSign:
+          type: boolean
+          title: Cansign
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
+      type: object
+      required:
+      - canPrepare
+      - canSign
+      - walletApprovalRequired
+      title: ConnectorZeroCustodySummary
+    ConnectorAuthorizationRedirectResponse:
+      properties:
+        redirectUrl:
+          type: string
+          title: Redirecturl
+      type: object
+      required:
+      - redirectUrl
+      title: ConnectorAuthorizationRedirectResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

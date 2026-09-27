@@ -1,0 +1,235 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Checkout Domains API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged checkout-domains across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: checkout-domains
+paths:
+  /v1/checkout-domains:
+    get:
+      tags:
+      - checkout-domains
+      summary: List merchant checkout domain requests
+      operationId: list_merchant_checkout_domains_v1_checkout_domains_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutDomainListResponse'
+    post:
+      tags:
+      - checkout-domains
+      summary: Request a merchant checkout domain
+      operationId: request_merchant_checkout_domain_v1_checkout_domains_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutDomainRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutDomainCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    CheckoutDomainListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CheckoutDomain'
+          type: array
+          title: Items
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
+      type: object
+      required:
+      - items
+      - routing_enabled
+      title: CheckoutDomainListResponse
+    CheckoutDomainCreateResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/CheckoutDomain'
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
+      type: object
+      required:
+      - item
+      - routing_enabled
+      title: CheckoutDomainCreateResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CheckoutDomainRequest:
+      properties:
+        domain:
+          type: string
+          maxLength: 253
+          minLength: 3
+          title: Domain
+      type: object
+      required:
+      - domain
+      title: CheckoutDomainRequest
+    CheckoutDomain:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        domain:
+          type: string
+          title: Domain
+        state:
+          type: string
+          title: State
+        verification_dns_name:
+          type: string
+          title: Verification Dns Name
+        verification_dns_value:
+          type: string
+          title: Verification Dns Value
+        cname_target:
+          type: string
+          title: Cname Target
+        dns_checked_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dns Checked At
+        dns_verified_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Dns Verified At
+        certificate_status:
+          type: string
+          title: Certificate Status
+        certificate_requested_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Certificate Requested At
+        certificate_issued_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Certificate Issued At
+        activated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activated At
+        paused_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Paused At
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failure Reason
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - domain
+      - state
+      - verification_dns_name
+      - verification_dns_value
+      - cname_target
+      - dns_checked_at
+      - dns_verified_at
+      - certificate_status
+      - certificate_requested_at
+      - certificate_issued_at
+      - activated_at
+      - paused_at
+      - failure_reason
+      - routing_enabled
+      - created_at
+      - updated_at
+      title: CheckoutDomain
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

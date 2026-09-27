@@ -1,3 +1,5 @@
+# x-archived-from: hilt-so-openapi.yml
+# x-archived-on: 2026-09-26
 # Faithful YAML rendering of the provider-published spec saved verbatim at openapi/_original/hilt-so-api-openapi.json
 # fetched 2026-09-19 from the URL in info.x-source-url of that file's sibling manifest; content unchanged.
 openapi: 3.1.0

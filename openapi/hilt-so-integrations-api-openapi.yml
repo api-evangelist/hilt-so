@@ -1,0 +1,702 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Integrations API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged integrations across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Integrations
+paths:
+  /v1/integrations/health:
+    get:
+      tags:
+      - Integrations
+      summary: Check integration connection health
+      operationId: integration_health_v1_integrations_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationHealthResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/integrations/events:
+    get:
+      tags:
+      - Integrations
+      summary: List emitted events for integrations
+      operationId: list_integration_events_v1_integrations_events_get
+      parameters:
+      - name: event_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          default: 20
+          title: Per Page
+      - name: limit
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: integer
+            maximum: 100
+            minimum: 1
+          - type: 'null'
+          title: Limit
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntegrationEventsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/integrations/zapier/hooks:
+    post:
+      tags:
+      - Integrations
+      summary: Subscribe a Zapier REST Hook
+      operationId: subscribe_zapier_hook_v1_integrations_zapier_hooks_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ZapierHookSubscribeRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZapierHookResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/integrations/zapier/hooks/{endpoint_id}:
+    delete:
+      tags:
+      - Integrations
+      summary: Unsubscribe a Zapier REST Hook
+      operationId: unsubscribe_zapier_hook_v1_integrations_zapier_hooks__endpoint_id__delete
+      parameters:
+      - name: endpoint_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Endpoint Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZapierHookResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    IntegrationWorkspace:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        tier:
+          type: string
+          title: Tier
+        sandbox:
+          type: boolean
+          title: Sandbox
+        hilt_pay:
+          type: boolean
+          title: Hilt Pay
+      additionalProperties: true
+      type: object
+      required:
+      - user_id
+      - tier
+      - sandbox
+      - hilt_pay
+      title: IntegrationWorkspace
+    IntegrationWebhookCapabilities:
+      properties:
+        supported_events:
+          items:
+            type: string
+          type: array
+          title: Supported Events
+        event_id_header:
+          type: string
+          title: Event Id Header
+        signature_header:
+          type: string
+          title: Signature Header
+        timestamp_header:
+          type: string
+          title: Timestamp Header
+        zapier_active_hook_limit:
+          type: integer
+          title: Zapier Active Hook Limit
+      additionalProperties: true
+      type: object
+      required:
+      - supported_events
+      - event_id_header
+      - signature_header
+      - timestamp_header
+      - zapier_active_hook_limit
+      title: IntegrationWebhookCapabilities
+    WebhookEndpoint:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          title: Url
+        status:
+          type: string
+          title: Status
+        signing_secret_preview:
+          type: string
+          title: Signing Secret Preview
+        subscribed_events:
+          items:
+            type: string
+          type: array
+          title: Subscribed Events
+        product_ids:
+          items:
+            type: string
+          type: array
+          title: Product Ids
+        consecutive_failures:
+          type: integer
+          title: Consecutive Failures
+        last_success_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Success At
+        last_failure_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Failure At
+        last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Error
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - label
+      - url
+      - status
+      - signing_secret_preview
+      - subscribed_events
+      - product_ids
+      - consecutive_failures
+      - last_success_at
+      - last_failure_at
+      - last_error
+      - archived_at
+      - created_at
+      - updated_at
+      title: WebhookEndpoint
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    WebhookDelivery:
+      properties:
+        id:
+          type: integer
+          title: Id
+        event_id:
+          type: string
+          title: Event Id
+        endpoint_id:
+          type: string
+          title: Endpoint Id
+        owner_id:
+          type: string
+          title: Owner Id
+        status:
+          type: string
+          title: Status
+        attempt_count:
+          type: integer
+          title: Attempt Count
+        last_attempt_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Attempt At
+        next_attempt_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Attempt At
+        delivered_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivered At
+        response_status:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Response Status
+        response_body:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Response Body
+        last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Error
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        endpoint_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpoint Label
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        support_ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Support Ticket Id
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - event_id
+      - endpoint_id
+      - owner_id
+      - status
+      - attempt_count
+      - last_attempt_at
+      - next_attempt_at
+      - delivered_at
+      - response_status
+      - response_body
+      - last_error
+      - created_at
+      - updated_at
+      title: WebhookDelivery
+    ZapierHookSubscribeRequest:
+      properties:
+        target_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Target Url
+        targetUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Targeturl
+        event_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Event Type
+        eventType:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Eventtype
+        subscribed_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subscribed Events
+        subscribedEvents:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subscribedevents
+        product_ids:
+          items:
+            type: string
+          type: array
+          title: Product Ids
+        productIds:
+          items:
+            type: string
+          type: array
+          title: Productids
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+      type: object
+      title: ZapierHookSubscribeRequest
+    IntegrationRateLimit:
+      properties:
+        requests_per_minute:
+          type: integer
+          title: Requests Per Minute
+        headers:
+          items:
+            type: string
+          type: array
+          title: Headers
+      additionalProperties: true
+      type: object
+      required:
+      - requests_per_minute
+      - headers
+      title: IntegrationRateLimit
+    IntegrationApiKey:
+      properties:
+        key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Id
+        permissions:
+          items:
+            type: string
+          type: array
+          title: Permissions
+        has_read:
+          type: boolean
+          title: Has Read
+        has_execute:
+          type: boolean
+          title: Has Execute
+        minimum_scopes:
+          items:
+            type: string
+          type: array
+          title: Minimum Scopes
+      additionalProperties: true
+      type: object
+      required:
+      - key_id
+      - permissions
+      - has_read
+      - has_execute
+      - minimum_scopes
+      title: IntegrationApiKey
+    IntegrationHealthResponse:
+      properties:
+        ok:
+          type: boolean
+          title: Ok
+        api_version:
+          type: string
+          title: Api Version
+        workspace:
+          $ref: '#/components/schemas/IntegrationWorkspace'
+        api_key:
+          $ref: '#/components/schemas/IntegrationApiKey'
+        rate_limit:
+          $ref: '#/components/schemas/IntegrationRateLimit'
+        webhooks:
+          $ref: '#/components/schemas/IntegrationWebhookCapabilities'
+      additionalProperties: true
+      type: object
+      required:
+      - ok
+      - api_version
+      - workspace
+      - api_key
+      - rate_limit
+      - webhooks
+      title: IntegrationHealthResponse
+    IntegrationEventsResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        events:
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+          type: array
+          title: Events
+        supported_events:
+          items:
+            type: string
+          type: array
+          title: Supported Events
+        per_page:
+          type: integer
+          title: Per Page
+      additionalProperties: true
+      type: object
+      required:
+      - total
+      - page
+      - events
+      - supported_events
+      - per_page
+      title: IntegrationEventsResponse
+    WebhookEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        event_version:
+          type: string
+          title: Event Version
+        source_type:
+          type: string
+          title: Source Type
+        source_id:
+          type: string
+          title: Source Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        support_ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Support Ticket Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        payload:
+          type: object
+          title: Payload
+        deliveries:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WebhookDelivery'
+            type: array
+          - type: 'null'
+          title: Deliveries
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - event_type
+      - event_version
+      - source_type
+      - source_id
+      - product_id
+      - payment_id
+      - membership_id
+      - receipt_id
+      - support_ticket_id
+      - created_at
+      - payload
+      title: WebhookEvent
+    ZapierHookResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        hook_id:
+          type: string
+          title: Hook Id
+        endpoint_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Endpoint Id
+        endpoint:
+          $ref: '#/components/schemas/WebhookEndpoint'
+        supported_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Supported Events
+        reused:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Reused
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - hook_id
+      - endpoint
+      title: ZapierHookResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

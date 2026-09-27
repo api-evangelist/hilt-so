@@ -1,12 +1,12 @@
-# Faithful YAML rendering of the provider-published spec saved verbatim at openapi/_original/hilt-so-transaction-evidence-openapi.json
-# fetched 2026-09-19 from the URL in info.x-source-url of that file's sibling manifest; content unchanged.
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Hilt Solana Transaction Evidence API
+  title: Hilt So Solana API
   version: 1.0.0
-  description: Pay-per-request normalized evidence for finalized Solana transactions. Payment uses x402 V2 with Solana USDC.
+  description: 'Operations tagged Solana across 2 of this provider''s published API definitions: hilt-so-transaction-evidence-openapi.json, hilt-so-transaction-evidence-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://www.hilt.so
+tags:
+- name: Solana
 paths:
   /v1/solana/transaction-evidence:
     post:
@@ -55,24 +55,12 @@ paths:
           amount: '0.050000'
         protocols:
         - x402: {}
+      tags:
+      - Solana
+    servers:
+    - url: https://www.hilt.so
 components:
   schemas:
-    TransactionEvidenceRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - request_id
-      - transaction_signature
-      properties:
-        request_id:
-          type: string
-          minLength: 8
-          maxLength: 120
-          pattern: ^[A-Za-z0-9._:-]{8,120}$
-          description: Fresh retry key for one paid lookup. Reuse it only when retrying that same request.
-        transaction_signature:
-          type: string
-          description: Solana transaction signature to inspect at finalized commitment.
     TransactionEvidenceResponse:
       type: object
       required:
@@ -138,3 +126,27 @@ components:
             type: string
         boundary:
           type: string
+    TransactionEvidenceRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - request_id
+      - transaction_signature
+      properties:
+        request_id:
+          type: string
+          minLength: 8
+          maxLength: 120
+          pattern: ^[A-Za-z0-9._:-]{8,120}$
+          description: Fresh retry key for one paid lookup. Reuse it only when retrying that same request.
+        transaction_signature:
+          type: string
+          description: Solana transaction signature to inspect at finalized commitment.
+x-refined-from:
+- hilt-so-transaction-evidence-openapi.json
+- hilt-so-transaction-evidence-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

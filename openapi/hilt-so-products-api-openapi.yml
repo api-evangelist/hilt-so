@@ -1,0 +1,1464 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Products API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged products across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Products
+paths:
+  /v1/products:
+    post:
+      tags:
+      - Products
+      summary: Create a B2C payment product
+      operationId: api_create_product_v1_products_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Products
+      summary: List my products
+      operationId: api_list_products_v1_products_get
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: product_type
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Type
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/p/{slug}:
+    get:
+      tags:
+      - Products
+      summary: View product (public)
+      description: Public product view — strips sensitive fields.
+      operationId: api_view_product_public_v1_products_p__slug__get
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/p/{slug}/connect:
+    post:
+      tags:
+      - Products
+      summary: Initiate a checkout session (public)
+      description: 'Canonical checkout session initializer.
+
+
+        Creates one payment session / intent record and returns:
+
+        - payment_id — the canonical ID used by both the browser signer path and
+
+        the Phantom mobile path throughout the checkout flow
+
+        - phantom_mobile.connect_url — Phantom Universal Link for mobile app-switch
+
+        signing (present only if the server has a
+
+        dapp key configured)
+
+
+        Both execution paths (browser Phantom and mobile Phantom) share the same
+
+        payment_id and converge on the same backend confirmation + delivery pipeline.
+
+
+        Identity / customer reference fields are optional at session-creation time.
+
+        They must be provided by payment time (via the confirm or sign endpoints)
+
+        for products that enforce membership identity.
+
+
+        No API key required.'
+      operationId: api_connect_payment_v1_products_p__slug__connect_post
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConnectRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutPaymentSessionResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/p/{slug}/resolve-handoff:
+    post:
+      tags:
+      - Products
+      summary: Resolve a signed buyer handoff (public)
+      operationId: api_resolve_checkout_handoff_v1_products_p__slug__resolve_handoff_post
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Slug
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutHandoffResolveRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutHandoffResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/{product_id}/payments:
+    get:
+      tags:
+      - Products
+      summary: List payments for a product
+      operationId: api_list_payments_v1_products__product_id__payments_get
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 200
+          minimum: 1
+          default: 50
+          title: Limit
+      - name: offset
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+          title: Offset
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/{product_id}/analytics:
+    get:
+      tags:
+      - Products
+      summary: Payment analytics for a product
+      operationId: api_product_analytics_v1_products__product_id__analytics_get
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductAnalyticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/{product_id}:
+    get:
+      tags:
+      - Products
+      summary: Get product by ID
+      operationId: api_get_product_v1_products__product_id__get
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    patch:
+      tags:
+      - Products
+      summary: Update a product
+      operationId: api_update_product_v1_products__product_id__patch
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      tags:
+      - Products
+      summary: Archive a product
+      operationId: api_archive_product_v1_products__product_id__delete
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/products/{product_id}/handoff-link:
+    post:
+      tags:
+      - Products
+      summary: Create a signed buyer checkout link
+      operationId: api_create_checkout_handoff_link_v1_products__product_id__handoff_link_post
+      parameters:
+      - name: product_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+          title: Product Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckoutHandoffCreateRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckoutHandoffResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/payments/{payment_id}:
+    get:
+      tags:
+      - Products
+      summary: Poll payment status (public)
+      description: Customer polls after signing in Phantom. Safe field subset returned.
+      operationId: api_payment_status_v1_payments__payment_id__get
+      parameters:
+      - name: payment_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Payment Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicPaymentStatusResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    ProductResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Id
+        product_type:
+          type: string
+          title: Product Type
+        status:
+          type: string
+          title: Status
+        title:
+          type: string
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        amount_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Minor Units
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        merchant_wallet:
+          type: string
+          title: Merchant Wallet
+        delivery_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Type
+        delivery_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Value
+        tip_presets_lamports:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Tip Presets Lamports
+        atomic_fee_pct:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Atomic Fee Pct
+        atomic_fee_flat_usd_cents:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Atomic Fee Flat Usd Cents
+        atomic_fee_cap_usd:
+          anyOf:
+          - type: number
+          - type: 'null'
+          title: Atomic Fee Cap Usd
+        max_payments:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Payments
+        slug:
+          type: string
+          title: Slug
+        payment_count:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Payment Count
+        total_volume_lamports:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Total Volume Lamports
+        membership_config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Membership Config
+        membership_enabled:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Membership Enabled
+        membership_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Platform
+        membership_identity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Identity Type
+        membership_identity_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Identity Label
+        membership_identity_required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Membership Identity Required
+        membership_renewal_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Renewal Mode
+        membership_billing_interval_days:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Membership Billing Interval Days
+        checkout_config:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Checkout Config
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - product_type
+      - status
+      - title
+      - description
+      - image_url
+      - amount_minor_units
+      - token_mint
+      - merchant_wallet
+      - slug
+      - created_at
+      title: ProductResponse
+    PaymentListResponse:
+      items:
+        $ref: '#/components/schemas/PaymentResponse'
+      type: array
+      title: PaymentListResponse
+    CheckoutHandoffResponse:
+      properties:
+        handoff_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Handoff Token
+        expires_at:
+          type: string
+          title: Expires At
+        identity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Type
+        identity_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Value
+        identity_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Display
+        return_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Return Url
+        checkout_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checkout Url
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+      additionalProperties: true
+      type: object
+      required:
+      - expires_at
+      title: CheckoutHandoffResponse
+    PublicPaymentStatusResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Signature
+        confirmed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmed At
+        failed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failed At
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failure Reason
+        delivery_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Sent At
+        deep_link_expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Link Expires At
+        delivery_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Status
+        delivery_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Error
+        delivery_attempted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Attempted At
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - status
+      - amount_minor_units
+      - token_mint
+      - tx_signature
+      - confirmed_at
+      - failed_at
+      - failure_reason
+      - delivery_sent_at
+      - deep_link_expires_at
+      - delivery_status
+      - delivery_error
+      - delivery_attempted_at
+      - membership_id
+      title: PublicPaymentStatusResponse
+    PaymentResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        product_id:
+          type: string
+          title: Product Id
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        merchant_amount_lamports:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Merchant Amount Lamports
+        fee_lamports:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fee Lamports
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        status:
+          type: string
+          title: Status
+        tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Signature
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        customer_reference_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Type
+        customer_reference_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Value
+        customer_reference_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Display
+        delivery_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Status
+        delivery_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Error
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        confirmed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmed At
+        failed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failed At
+        delivery_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Sent At
+        deep_link_expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Link Expires At
+        delivery_attempted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Attempted At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - product_id
+      - payer_wallet
+      - amount_minor_units
+      - token_mint
+      - status
+      - created_at
+      title: PaymentResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    CheckoutHandoffCreateRequest:
+      properties:
+        identity_value:
+          type: string
+          maxLength: 160
+          minLength: 1
+          title: Identity Value
+        identity_display:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Identity Display
+        identity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Type
+        return_url:
+          anyOf:
+          - type: string
+            maxLength: 2048
+          - type: 'null'
+          title: Return Url
+        expires_in_minutes:
+          type: integer
+          maximum: 1440
+          minimum: 1
+          title: Expires In Minutes
+          default: 30
+      type: object
+      required:
+      - identity_value
+      title: CheckoutHandoffCreateRequest
+    CheckoutPaymentSessionResponse:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        nonce:
+          type: string
+          title: Nonce
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        merchant_amount_minor_units:
+          type: integer
+          title: Merchant Amount Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+        fee_wallet:
+          type: string
+          title: Fee Wallet
+        token_mint:
+          type: string
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        merchant_wallet:
+          type: string
+          title: Merchant Wallet
+        expires_at:
+          type: string
+          title: Expires At
+        status:
+          type: string
+          title: Status
+        phantom_mobile:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Phantom Mobile
+      additionalProperties: true
+      type: object
+      required:
+      - payment_id
+      - nonce
+      - amount_minor_units
+      - merchant_amount_minor_units
+      - fee_minor_units
+      - fee_wallet
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - merchant_wallet
+      - expires_at
+      - status
+      - phantom_mobile
+      title: CheckoutPaymentSessionResponse
+    CreateProductRequest:
+      properties:
+        product_type:
+          type: string
+          title: Product Type
+        title:
+          type: string
+          maxLength: 120
+          minLength: 1
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        amount_minor_units:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Amount Minor Units
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        merchant_wallet:
+          type: string
+          title: Merchant Wallet
+        delivery_type:
+          type: string
+          title: Delivery Type
+          default: NONE
+        delivery_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Value
+        tip_presets_lamports:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Tip Presets Lamports
+        max_payments:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Max Payments
+        membership_config:
+          anyOf:
+          - $ref: '#/components/schemas/MembershipConfigRequest'
+          - type: 'null'
+      type: object
+      required:
+      - product_type
+      - title
+      - merchant_wallet
+      title: CreateProductRequest
+    ConnectRequest:
+      properties:
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        amount_minor_units:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Amount Minor Units
+        identity_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Session Id
+        customer_reference_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Type
+        customer_reference_value:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Customer Reference Value
+        customer_reference_display:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Customer Reference Display
+        handoff_token:
+          anyOf:
+          - type: string
+            maxLength: 4096
+          - type: 'null'
+          title: Handoff Token
+      type: object
+      title: ConnectRequest
+    ProductAnalyticsResponse:
+      properties:
+        product_id:
+          type: string
+          title: Product Id
+        merchant_id:
+          type: string
+          title: Merchant Id
+        merchant_name:
+          type: string
+          title: Merchant Name
+        merchant_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Email
+        product_title:
+          type: string
+          title: Product Title
+        product_slug:
+          type: string
+          title: Product Slug
+        product_type:
+          type: string
+          title: Product Type
+        status:
+          type: string
+          title: Status
+        token_mint:
+          type: string
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        checkout_opens:
+          type: integer
+          title: Checkout Opens
+        checkout_connects:
+          type: integer
+          title: Checkout Connects
+        checkout_confirmed:
+          type: integer
+          title: Checkout Confirmed
+        checkout_failed:
+          type: integer
+          title: Checkout Failed
+        pending_checkouts:
+          type: integer
+          title: Pending Checkouts
+        confirmed_payment_count:
+          type: integer
+          title: Confirmed Payment Count
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+        tracked_memberships:
+          type: integer
+          title: Tracked Memberships
+        active_memberships:
+          type: integer
+          title: Active Memberships
+        expiring_soon_count:
+          type: integer
+          title: Expiring Soon Count
+        grace_count:
+          type: integer
+          title: Grace Count
+        delivery_failed_count:
+          type: integer
+          title: Delivery Failed Count
+        renewed_30d_count:
+          type: integer
+          title: Renewed 30D Count
+        expired_30d_count:
+          type: integer
+          title: Expired 30D Count
+        reminded_30d_count:
+          type: integer
+          title: Reminded 30D Count
+        open_support_count:
+          type: integer
+          title: Open Support Count
+        support_30d_count:
+          type: integer
+          title: Support 30D Count
+        latest_payment_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Payment At
+        connect_rate_pct:
+          type: number
+          title: Connect Rate Pct
+        confirm_rate_pct:
+          type: number
+          title: Confirm Rate Pct
+        completion_rate_pct:
+          type: number
+          title: Completion Rate Pct
+        failed_delivery_rate_pct:
+          type: number
+          title: Failed Delivery Rate Pct
+        renewal_rate_pct:
+          type: number
+          title: Renewal Rate Pct
+        confirmed_count:
+          type: integer
+          title: Confirmed Count
+        failed_count:
+          type: integer
+          title: Failed Count
+        pending_count:
+          type: integer
+          title: Pending Count
+        total_volume_lamports:
+          type: integer
+          title: Total Volume Lamports
+        total_fees_lamports:
+          type: integer
+          title: Total Fees Lamports
+        last_payment_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Payment At
+        window_days:
+          type: integer
+          title: Window Days
+        funnel_daily:
+          items:
+            type: object
+          type: array
+          title: Funnel Daily
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - product_id
+      - merchant_id
+      - merchant_name
+      - merchant_email
+      - product_title
+      - product_slug
+      - product_type
+      - status
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - checkout_opens
+      - checkout_connects
+      - checkout_confirmed
+      - checkout_failed
+      - pending_checkouts
+      - confirmed_payment_count
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      - tracked_memberships
+      - active_memberships
+      - expiring_soon_count
+      - grace_count
+      - delivery_failed_count
+      - renewed_30d_count
+      - expired_30d_count
+      - reminded_30d_count
+      - open_support_count
+      - support_30d_count
+      - latest_payment_at
+      - connect_rate_pct
+      - confirm_rate_pct
+      - completion_rate_pct
+      - failed_delivery_rate_pct
+      - renewal_rate_pct
+      - confirmed_count
+      - failed_count
+      - pending_count
+      - total_volume_lamports
+      - total_fees_lamports
+      - last_payment_at
+      - window_days
+      - funnel_daily
+      - generated_at
+      title: ProductAnalyticsResponse
+    MembershipConfigRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        access_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Mode
+        identity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Type
+        identity_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Label
+        identity_required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Identity Required
+        renewal_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Renewal Mode
+        billing_interval_days:
+          anyOf:
+          - type: integer
+            maximum: 3660
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Billing Interval Days
+        grace_period_days:
+          anyOf:
+          - type: integer
+            maximum: 365
+            minimum: 0
+          - type: 'null'
+          title: Grace Period Days
+        renewal_reminder_offsets_days:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Renewal Reminder Offsets Days
+        platform_target_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Target Id
+        platform_target_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Target Label
+        allow_multiple_active:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Allow Multiple Active
+        settings_json:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Settings Json
+      type: object
+      title: MembershipConfigRequest
+    CheckoutHandoffResolveRequest:
+      properties:
+        handoff_token:
+          type: string
+          minLength: 1
+          title: Handoff Token
+      type: object
+      required:
+      - handoff_token
+      title: CheckoutHandoffResolveRequest
+    UpdateProductRequest:
+      properties:
+        title:
+          anyOf:
+          - type: string
+            maxLength: 120
+            minLength: 1
+          - type: 'null'
+          title: Title
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
+        image_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Image Url
+        amount_minor_units:
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+          - type: 'null'
+          title: Amount Minor Units
+        merchant_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Wallet
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        delivery_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Type
+        delivery_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Value
+        tip_presets_lamports:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Tip Presets Lamports
+        max_payments:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Max Payments
+        membership_config:
+          anyOf:
+          - $ref: '#/components/schemas/MembershipConfigRequest'
+          - type: 'null'
+      type: object
+      title: UpdateProductRequest
+    ProductListResponse:
+      items:
+        $ref: '#/components/schemas/ProductResponse'
+      type: array
+      title: ProductListResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

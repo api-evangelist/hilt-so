@@ -1,0 +1,521 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Auth API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged auth across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Auth
+paths:
+  /v1/auth/register:
+    post:
+      tags:
+      - Auth
+      summary: Register
+      description: Creates a new Hilt merchant account on the free plan.
+      operationId: register_v1_auth_register_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+        required: true
+      responses:
+        '201':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/login:
+    post:
+      tags:
+      - Auth
+      summary: Login
+      description: Password-based login. Returns JWT on success with full entitlement claims.
+      operationId: login_v1_auth_login_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/wallet:
+    post:
+      tags:
+      - Auth
+      summary: Wallet Auth
+      description: 'Phantom wallet-based authentication.
+
+        Verifies the signed nonce, creates or retrieves the user account.
+
+        Wallet-only accounts have no email so is_staff is always False.'
+      operationId: wallet_auth_v1_auth_wallet_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WalletAuthRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/oauth/providers:
+    get:
+      tags:
+      - Auth
+      summary: Oauth Provider Status
+      operationId: oauth_provider_status_v1_auth_oauth_providers_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthProviderStatusResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/oauth/{provider}/start:
+    get:
+      tags:
+      - Auth
+      summary: Oauth Start
+      operationId: oauth_start_v1_auth_oauth__provider__start_get
+      parameters:
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      - name: mode
+        in: query
+        required: false
+        schema:
+          type: string
+          default: login
+          title: Mode
+      - name: next
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next
+      - name: surface
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Surface
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthStartResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/oauth/{provider}/callback:
+    get:
+      tags:
+      - Auth
+      summary: Oauth Callback
+      operationId: oauth_callback_v1_auth_oauth__provider__callback_get
+      parameters:
+      - name: provider
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Provider
+      - name: code
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Code
+      - name: state
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: State
+      - name: error
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error
+      - name: error_description
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Error Description
+      responses:
+        '302':
+          description: Redirect to the Hilt application after OAuth.
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/logout:
+    post:
+      tags:
+      - Auth
+      summary: Logout
+      description: 'Logs out the current session.
+
+        For stateless JWTs this is a no-op server-side.
+
+        Clients should discard the token locally.'
+      operationId: logout_v1_auth_logout_post
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/auth/refresh:
+    post:
+      tags:
+      - Auth
+      summary: Refresh Token
+      description: 'Refreshes a JWT that is still valid.
+
+        Issues a new token with a fresh TTL and re-derives entitlement claims
+
+        from the database so subscription changes are reflected immediately.'
+      operationId: refresh_token_v1_auth_refresh_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    OAuthProviderInfo:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        callback_url:
+          type: string
+          title: Callback Url
+        app_base_url:
+          type: string
+          title: App Base Url
+        uses_app_secret_fallback:
+          type: boolean
+          title: Uses App Secret Fallback
+          default: false
+        missing:
+          items:
+            type: string
+          type: array
+          title: Missing
+      type: object
+      required:
+      - enabled
+      - callback_url
+      - app_base_url
+      - missing
+      title: OAuthProviderInfo
+    DetailResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      title: DetailResponse
+    OAuthProviderStatusResponse:
+      properties:
+        google:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+        github:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+        x:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+      type: object
+      required:
+      - google
+      - github
+      - x
+      title: OAuthProviderStatusResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    OAuthStartResponse:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        callback_url:
+          type: string
+          title: Callback Url
+        authorization_url:
+          type: string
+          title: Authorization Url
+      type: object
+      required:
+      - provider
+      - callback_url
+      - authorization_url
+      title: OAuthStartResponse
+    AuthResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        user_id:
+          type: string
+          title: User Id
+        tier:
+          type: string
+          title: Tier
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        claims:
+          $ref: '#/components/schemas/EntitlementClaims'
+      type: object
+      required:
+      - token
+      - user_id
+      - tier
+      - email
+      - claims
+      title: AuthResponse
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        referral_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referral Code
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
+    EntitlementClaims:
+      properties:
+        hilt_score:
+          type: boolean
+          title: Hilt Score
+        hilt_pay:
+          type: boolean
+          title: Hilt Pay
+        hilt_ops:
+          type: boolean
+          title: Hilt Ops
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+        is_staff:
+          type: boolean
+          title: Is Staff
+      type: object
+      required:
+      - hilt_score
+      - hilt_pay
+      - hilt_ops
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      - is_staff
+      title: EntitlementClaims
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    WalletAuthRequest:
+      properties:
+        wallet_address:
+          type: string
+          title: Wallet Address
+        signed_message:
+          type: string
+          title: Signed Message
+        message_nonce:
+          type: string
+          title: Message Nonce
+      type: object
+      required:
+      - wallet_address
+      - signed_message
+      - message_nonce
+      title: WalletAuthRequest
+    RefreshRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: RefreshRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

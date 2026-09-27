@@ -1,0 +1,699 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Account API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged account across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Account
+paths:
+  /v1/account/me:
+    get:
+      tags:
+      - Account
+      summary: Get Me
+      description: 'Returns the authenticated user''s full profile for dashboard bootstrap.
+
+        This is the primary endpoint for dashboard bootstrap.'
+      operationId: get_me_v1_account_me_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+    patch:
+      tags:
+      - Account
+      summary: Update Me
+      description: Updates mutable fields on the user profile.
+      operationId: update_me_v1_account_me_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedFieldsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/summary:
+    get:
+      tags:
+      - Account
+      summary: Get Account Summary
+      description: 'Returns the merchant-facing dashboard summary used by the sidebar and overview.
+
+        Figures are grouped by asset so we do not collapse USDC and SOL into one fake number.'
+      operationId: get_account_summary_v1_account_summary_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountSummaryResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/analytics:
+    get:
+      tags:
+      - Account
+      summary: Get Account Analytics
+      operationId: get_account_analytics_v1_account_analytics_get
+      parameters:
+      - name: window_days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 90
+          minimum: 3
+          default: 30
+          title: Window Days
+      - name: daily_days
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 30
+          minimum: 3
+          default: 14
+          title: Daily Days
+      - name: start_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: Start Date
+      - name: end_date
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+            format: date
+          - type: 'null'
+          title: End Date
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceAnalyticsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/me/security:
+    patch:
+      tags:
+      - Account
+      summary: Update Account Security
+      description: Updates merchant email and password details for hilt.so sign-in.
+      operationId: update_account_security_v1_account_me_security_patch
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountSecurityUpdateRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdatedFieldsResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/delivery/readiness:
+    get:
+      tags:
+      - Account
+      summary: Get Delivery Readiness
+      operationId: get_delivery_readiness_v1_account_delivery_readiness_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryReadinessResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/delivery/test:
+    post:
+      tags:
+      - Account
+      summary: Run Delivery Test
+      operationId: run_delivery_test_v1_account_delivery_test_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeliveryTestRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeliveryTestResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/account/account:
+    delete:
+      tags:
+      - Account
+      summary: Delete Account
+      description: 'Soft-deletes the account. Sets deleted_at timestamp and status = ''deleted''.
+
+        GDPR-compliant: user data is pseudonymised, not hard-deleted.'
+      operationId: delete_account_v1_account_account_delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DetailResponse'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    DeliveryReadinessDefaults:
+      properties:
+        payout_wallet_configured:
+          type: boolean
+          title: Payout Wallet Configured
+        default_redirect_url_configured:
+          type: boolean
+          title: Default Redirect Url Configured
+        default_support_url_configured:
+          type: boolean
+          title: Default Support Url Configured
+      additionalProperties: true
+      type: object
+      required:
+      - payout_wallet_configured
+      - default_redirect_url_configured
+      - default_support_url_configured
+      title: DeliveryReadinessDefaults
+    DeliveryReadinessResponse:
+      properties:
+        merchant_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Name
+        overall_status:
+          type: string
+          title: Overall Status
+        active_membership_templates:
+          type: integer
+          title: Active Membership Templates
+        defaults:
+          $ref: '#/components/schemas/DeliveryReadinessDefaults'
+        platforms:
+          additionalProperties:
+            type: object
+          type: object
+          title: Platforms
+        blockers:
+          items:
+            type: string
+          type: array
+          title: Blockers
+        warnings:
+          items:
+            type: string
+          type: array
+          title: Warnings
+        checked_at:
+          type: string
+          title: Checked At
+      additionalProperties: true
+      type: object
+      required:
+      - merchant_name
+      - overall_status
+      - active_membership_templates
+      - defaults
+      - platforms
+      - blockers
+      - warnings
+      - checked_at
+      title: DeliveryReadinessResponse
+    AccountAssetSummary:
+      properties:
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        confirmed_payments:
+          type: integer
+          title: Confirmed Payments
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+      type: object
+      required:
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - confirmed_payments
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      title: AccountAssetSummary
+    DetailResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      title: DetailResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AccountUpdateRequest:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        timezone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timezone
+        notification_prefs:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Notification Prefs
+        merchant_settings:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Merchant Settings
+      type: object
+      title: AccountUpdateRequest
+    AccountSecurityUpdateRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email
+        current_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Password
+        new_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: New Password
+      type: object
+      title: AccountSecurityUpdateRequest
+    UpdatedFieldsResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+        updated_fields:
+          items:
+            type: string
+          type: array
+          title: Updated Fields
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      - updated_fields
+      title: UpdatedFieldsResponse
+    AccountSummaryResponse:
+      properties:
+        active_templates:
+          type: integer
+          title: Active Templates
+        paying_members:
+          type: integer
+          title: Paying Members
+        renewals_due:
+          type: integer
+          title: Renewals Due
+        open_support_threads:
+          type: integer
+          title: Open Support Threads
+        receipts_issued:
+          type: integer
+          title: Receipts Issued
+        total_confirmed_payments:
+          type: integer
+          title: Total Confirmed Payments
+        confirmed_payments_today:
+          type: integer
+          title: Confirmed Payments Today
+        overall_assets:
+          items:
+            $ref: '#/components/schemas/AccountAssetSummary'
+          type: array
+          title: Overall Assets
+        today_assets:
+          items:
+            $ref: '#/components/schemas/AccountAssetSummary'
+          type: array
+          title: Today Assets
+      type: object
+      required:
+      - active_templates
+      - paying_members
+      - renewals_due
+      - open_support_threads
+      - receipts_issued
+      - total_confirmed_payments
+      - confirmed_payments_today
+      - overall_assets
+      - today_assets
+      title: AccountSummaryResponse
+    DeliveryTestResponse:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        status:
+          type: string
+          title: Status
+        summary:
+          type: string
+          title: Summary
+        checks:
+          items:
+            type: object
+          type: array
+          title: Checks
+        checked_at:
+          type: string
+          title: Checked At
+      additionalProperties: true
+      type: object
+      required:
+      - provider
+      - status
+      - summary
+      - checks
+      - checked_at
+      title: DeliveryTestResponse
+    DeliveryTestRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+      type: object
+      required:
+      - provider
+      title: DeliveryTestRequest
+    WorkspaceAnalyticsResponse:
+      properties:
+        summary:
+          type: object
+          title: Summary
+        window_assets:
+          items:
+            type: object
+          type: array
+          title: Window Assets
+        funnel_daily:
+          items:
+            type: object
+          type: array
+          title: Funnel Daily
+        revenue_trend_daily:
+          items:
+            type: object
+          type: array
+          title: Revenue Trend Daily
+        source_rows:
+          items:
+            type: object
+          type: array
+          title: Source Rows
+        product_reports:
+          items:
+            type: object
+          type: array
+          title: Product Reports
+        attention_items:
+          items:
+            type: object
+          type: array
+          title: Attention Items
+        expiring_memberships:
+          items:
+            type: object
+          type: array
+          title: Expiring Memberships
+        range_start_date:
+          type: string
+          title: Range Start Date
+        range_end_date:
+          type: string
+          title: Range End Date
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - summary
+      - window_assets
+      - funnel_daily
+      - revenue_trend_daily
+      - source_rows
+      - product_reports
+      - attention_items
+      - expiring_memberships
+      - range_start_date
+      - range_end_date
+      - generated_at
+      title: WorkspaceAnalyticsResponse
+    AccountClaims:
+      properties:
+        hilt_score:
+          type: boolean
+          title: Hilt Score
+        hilt_pay:
+          type: boolean
+          title: Hilt Pay
+        hilt_ops:
+          type: boolean
+          title: Hilt Ops
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+        is_staff:
+          type: boolean
+          title: Is Staff
+      type: object
+      required:
+      - hilt_score
+      - hilt_pay
+      - hilt_ops
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      - is_staff
+      title: AccountClaims
+    AccountResponse:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        wallet_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet Address
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        tier:
+          type: string
+          title: Tier
+        status:
+          type: string
+          title: Status
+        email_verified:
+          type: boolean
+          title: Email Verified
+        timezone:
+          type: string
+          title: Timezone
+        created_at:
+          type: string
+          title: Created At
+        key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Key Id
+        sandbox:
+          type: boolean
+          title: Sandbox
+        notification_prefs:
+          type: object
+          title: Notification Prefs
+        merchant_settings:
+          type: object
+          title: Merchant Settings
+        claims:
+          $ref: '#/components/schemas/AccountClaims'
+        has_password:
+          type: boolean
+          title: Has Password
+          default: false
+        auth_providers:
+          items:
+            type: string
+          type: array
+          title: Auth Providers
+      type: object
+      required:
+      - user_id
+      - email
+      - wallet_address
+      - display_name
+      - tier
+      - status
+      - email_verified
+      - timezone
+      - created_at
+      - key_id
+      - sandbox
+      - notification_prefs
+      - merchant_settings
+      - claims
+      title: AccountResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

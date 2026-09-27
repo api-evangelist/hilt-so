@@ -1,0 +1,1026 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Receipt API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged Receipt across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Receipt
+paths:
+  /v1/receipt:
+    post:
+      tags:
+      - Receipt
+      summary: Generate a signed Hilt receipt
+      description: 'Generate a cryptographically signed Hilt receipt for a Solana transaction.
+
+
+        **Idempotent:** The same `tx_sig` always returns the same receipt.
+
+        Stored immutably in Postgres + Cloudflare R2. Ed25519 signed by the Hilt server key.'
+      operationId: post_receipt_v1_receipt_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptRequest'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}:
+    get:
+      tags:
+      - Receipt
+      summary: Retrieve a receipt by ID
+      description: Retrieve the full signed receipt JSON. Auth required.
+      operationId: get_receipt_v1_receipt__receipt_id__get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/public:
+    get:
+      tags:
+      - Receipt
+      summary: Public receipt proof detail
+      operationId: get_public_receipt_v1_receipt__receipt_id__public_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/verify:
+    get:
+      tags:
+      - Receipt
+      summary: Publicly verify a receipt's cryptographic signature
+      description: '**Public endpoint — no authentication required.**
+
+
+        Re-computes the SHA-256 hash of the receipt JSON and verifies the Ed25519 signature.
+
+        Returns verification result usable by auditors and third parties.'
+      operationId: verify_receipt_v1_receipt__receipt_id__verify_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifyReceiptResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/pdf:
+    get:
+      tags:
+      - Receipt
+      summary: Public PDF receipt proof
+      operationId: get_receipt_pdf_v1_receipt__receipt_id__pdf_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Rendered receipt proof.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/pdf/private:
+    get:
+      tags:
+      - Receipt
+      summary: Authenticated PDF receipt export
+      operationId: get_authenticated_receipt_pdf_v1_receipt__receipt_id__pdf_private_get
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      responses:
+        '200':
+          description: Rendered authenticated receipt.
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipts:
+    get:
+      tags:
+      - Receipt
+      summary: List receipts
+      description: Paginated list of receipts for the authenticated user.
+      operationId: list_receipts_v1_receipts_get
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          description: Page number
+          default: 1
+          title: Page
+        description: Page number
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 100
+          minimum: 1
+          description: Results per page
+          default: 20
+          title: Per Page
+        description: Results per page
+      - name: wallet
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by wallet address
+          title: Wallet
+        description: Filter by wallet address
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search by tx, receipt id, product, or invoice metadata
+          title: Q
+        description: Search by tx, receipt id, product, or invoice metadata
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by product
+          title: Product Id
+        description: Filter by product
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipts/export.csv:
+    get:
+      tags:
+      - Receipt
+      summary: Export authenticated receipt ledger CSV
+      description: Authenticated CSV export for merchant-owned receipt and invoice records.
+      operationId: export_receipts_csv_v1_receipts_export_csv_get
+      parameters:
+      - name: wallet
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by wallet address
+          title: Wallet
+        description: Filter by wallet address
+      - name: q
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Search by tx, receipt id, product, or invoice metadata
+          title: Q
+        description: Search by tx, receipt id, product, or invoice metadata
+      - name: product_id
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          description: Filter by product
+          title: Product Id
+        description: Filter by product
+      responses:
+        '200':
+          description: Receipt ledger export.
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/invoice-metadata:
+    patch:
+      tags:
+      - Receipt
+      summary: Save merchant invoice metadata for a receipt
+      operationId: update_receipt_invoice_metadata_v1_receipt__receipt_id__invoice_metadata_patch
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptInvoiceMetadataRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptUpdateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/receipt/{receipt_id}/send-proof:
+    post:
+      tags:
+      - Receipt
+      summary: Email the public proof link for a receipt
+      operationId: send_receipt_proof_v1_receipt__receipt_id__send_proof_post
+      parameters:
+      - name: receipt_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Receipt Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReceiptSendProofRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReceiptProofEmailResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    ReceiptProofEmailResponse:
+      properties:
+        sent:
+          type: boolean
+          title: Sent
+        email:
+          type: string
+          title: Email
+        verify_url:
+          type: string
+          title: Verify Url
+        pdf_url:
+          type: string
+          title: Pdf Url
+      additionalProperties: true
+      type: object
+      required:
+      - sent
+      - email
+      - verify_url
+      - pdf_url
+      title: ReceiptProofEmailResponse
+    ReceiptRequest:
+      properties:
+        tx_sig:
+          type: string
+          title: Tx Sig
+          description: Solana transaction signature
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+          description: Signer wallet address
+        counterparty_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Counterparty Wallet
+          description: Counterparty wallet address
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+          description: Token mint address
+        amount_raw:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Raw
+          description: Raw token amount (lamports or base units)
+        memo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Memo
+          description: Human-readable memo
+      type: object
+      required:
+      - tx_sig
+      title: ReceiptRequest
+    ReceiptResponse:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        receipt_json:
+          type: object
+          title: Receipt Json
+        receipt_hash:
+          type: string
+          title: Receipt Hash
+        ed25519_sig:
+          type: string
+          title: Ed25519 Sig
+        schema_version:
+          type: string
+          title: Schema Version
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        verify_url:
+          type: string
+          title: Verify Url
+        verify_api_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verify Api Url
+        pdf_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pdf Url
+        tx_sig:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Sig
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        product_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Title
+        product_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Slug
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        merchant_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Wallet
+        amount_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Minor Units
+        amount_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Amount Display
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        invoice_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/ReceiptInvoiceMetadata'
+          - type: 'null'
+        owner_display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Display Name
+        owner_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Email
+        credits_burned:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Credits Burned
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - receipt_id
+      - receipt_json
+      - receipt_hash
+      - ed25519_sig
+      - schema_version
+      - verify_url
+      title: ReceiptResponse
+    ReceiptInvoiceMetadata:
+      properties:
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        customer_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Email
+        billing_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Reference
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        metadata_json:
+          type: object
+          title: Metadata Json
+      additionalProperties: true
+      type: object
+      required:
+      - invoice_number
+      - customer_name
+      - customer_email
+      - billing_reference
+      - notes
+      - metadata_json
+      title: ReceiptInvoiceMetadata
+    ReceiptListResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        per_page:
+          type: integer
+          title: Per Page
+        receipts:
+          items:
+            $ref: '#/components/schemas/ReceiptListItem'
+          type: array
+          title: Receipts
+      additionalProperties: true
+      type: object
+      required:
+      - total
+      - page
+      - per_page
+      - receipts
+      title: ReceiptListResponse
+    ReceiptListItem:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        tx_sig:
+          type: string
+          title: Tx Sig
+        receipt_hash:
+          type: string
+          title: Receipt Hash
+        schema_version:
+          type: string
+          title: Schema Version
+        created_at:
+          type: string
+          title: Created At
+        verify_url:
+          type: string
+          title: Verify Url
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        product_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Title
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        amount_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Minor Units
+        amount_display:
+          type: string
+          title: Amount Display
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+      additionalProperties: true
+      type: object
+      required:
+      - receipt_id
+      - tx_sig
+      - receipt_hash
+      - schema_version
+      - created_at
+      - verify_url
+      - product_id
+      - product_title
+      - payer_wallet
+      - amount_minor_units
+      - amount_display
+      - invoice_number
+      title: ReceiptListItem
+    VerifyReceiptResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        hash_valid:
+          type: boolean
+          title: Hash Valid
+        signature_valid:
+          type: boolean
+          title: Signature Valid
+        signature_required:
+          type: boolean
+          title: Signature Required
+        computed_hash:
+          type: string
+          title: Computed Hash
+        stored_hash:
+          type: string
+          title: Stored Hash
+        on_chain_anchor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: On Chain Anchor
+        checked_at:
+          type: string
+          title: Checked At
+        receipt_id:
+          type: string
+          title: Receipt Id
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - valid
+      - hash_valid
+      - signature_valid
+      - signature_required
+      - computed_hash
+      - stored_hash
+      - on_chain_anchor
+      - checked_at
+      - receipt_id
+      - generated_at
+      title: VerifyReceiptResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PublicReceiptResponse:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        receipt_json:
+          type: object
+          title: Receipt Json
+        receipt_hash:
+          type: string
+          title: Receipt Hash
+        ed25519_sig:
+          type: string
+          title: Ed25519 Sig
+        schema_version:
+          type: string
+          title: Schema Version
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        generated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Generated At
+        verify_url:
+          type: string
+          title: Verify Url
+        verify_api_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verify Api Url
+        pdf_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Pdf Url
+        tx_sig:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Sig
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        product_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Title
+        product_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Slug
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        merchant_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Merchant Wallet
+        amount_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Minor Units
+        amount_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Amount Display
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        invoice_metadata:
+          anyOf:
+          - $ref: '#/components/schemas/ReceiptInvoiceMetadata'
+          - type: 'null'
+        owner_display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Display Name
+        owner_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Email
+        credits_burned:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Credits Burned
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+        verification:
+          $ref: '#/components/schemas/ReceiptVerification'
+      additionalProperties: true
+      type: object
+      required:
+      - receipt_id
+      - receipt_json
+      - receipt_hash
+      - ed25519_sig
+      - schema_version
+      - verify_url
+      - verification
+      title: PublicReceiptResponse
+    ReceiptUpdateResponse:
+      properties:
+        receipt:
+          $ref: '#/components/schemas/ReceiptResponse'
+      additionalProperties: true
+      type: object
+      required:
+      - receipt
+      title: ReceiptUpdateResponse
+    ReceiptSendProofRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Email
+        note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Note
+      type: object
+      title: ReceiptSendProofRequest
+    ReceiptInvoiceMetadataRequest:
+      properties:
+        invoice_number:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Invoice Number
+        customer_name:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Customer Name
+        customer_email:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Customer Email
+        billing_reference:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Billing Reference
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 1200
+          - type: 'null'
+          title: Notes
+      type: object
+      title: ReceiptInvoiceMetadataRequest
+    ReceiptVerification:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        hash_valid:
+          type: boolean
+          title: Hash Valid
+        signature_valid:
+          type: boolean
+          title: Signature Valid
+        signature_required:
+          type: boolean
+          title: Signature Required
+        computed_hash:
+          type: string
+          title: Computed Hash
+        stored_hash:
+          type: string
+          title: Stored Hash
+        on_chain_anchor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: On Chain Anchor
+        checked_at:
+          type: string
+          title: Checked At
+      additionalProperties: true
+      type: object
+      required:
+      - valid
+      - hash_valid
+      - signature_valid
+      - signature_required
+      - computed_hash
+      - stored_hash
+      - on_chain_anchor
+      - checked_at
+      title: ReceiptVerification
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

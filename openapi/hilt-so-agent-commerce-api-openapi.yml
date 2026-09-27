@@ -1,0 +1,99 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Agent Commerce API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged Agent Commerce across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Agent Commerce
+paths:
+  /mcp:
+    post:
+      operationId: callHiltAgentGatewayMcp
+      summary: Call the Hilt Agent Gateway over MCP Streamable HTTP
+      description: Standards-based MCP endpoint exposing the canonical Hilt catalog, quote and bootstrap tools plus x402 V2 API-plan activation tools settled in Solana USDC.
+      tags:
+      - Agent Commerce
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: MCP JSON-RPC response
+        '202':
+          description: MCP notification accepted
+    servers:
+    - url: https://api.hilt.so
+  /.well-known/agent-card.json:
+    get:
+      operationId: getHiltA2aAgentCard
+      summary: Get the Hilt Pay A2A Agent Card
+      tags:
+      - Agent Commerce
+      security: []
+      responses:
+        '200':
+          description: A2A Agent Card
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    servers:
+    - url: https://api.hilt.so
+  /.well-known/agent.json:
+    get:
+      operationId: getHiltA2aAgentCardLegacy
+      summary: Get the Hilt Pay A2A Agent Card from the legacy discovery path
+      description: Compatibility alias for registries that still discover A2A Agent Cards at /.well-known/agent.json. The standards-current A2A path remains /.well-known/agent-card.json.
+      tags:
+      - Agent Commerce
+      security: []
+      responses:
+        '200':
+          description: A2A Agent Card
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+    servers:
+    - url: https://api.hilt.so
+  /a2a/jsonrpc:
+    post:
+      operationId: callHiltA2aAgent
+      summary: Call the Hilt Pay agent over A2A JSON-RPC
+      tags:
+      - Agent Commerce
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: A2A JSON-RPC response
+    servers:
+    - url: https://api.hilt.so
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

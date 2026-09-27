@@ -1,0 +1,103 @@
+openapi: 3.2.0
+info:
+  title: Hilt So System API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged system across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: System
+paths:
+  /health:
+    get:
+      tags:
+      - System
+      summary: Health
+      operationId: health_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+    servers:
+    - url: https://api.hilt.so
+  /v1/health:
+    get:
+      tags:
+      - System
+      summary: Health V1
+      operationId: health_v1_v1_health_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    HealthCheck:
+      properties:
+        status:
+          type: string
+          title: Status
+        detail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - status
+      title: HealthCheck
+    HealthResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        service:
+          type: string
+          title: Service
+        version:
+          type: string
+          title: Version
+        checks:
+          $ref: '#/components/schemas/HealthChecks'
+      additionalProperties: true
+      type: object
+      required:
+      - status
+      - service
+      - version
+      - checks
+      title: HealthResponse
+    HealthChecks:
+      properties:
+        database:
+          $ref: '#/components/schemas/HealthCheck'
+        redis:
+          $ref: '#/components/schemas/HealthCheck'
+      additionalProperties: true
+      type: object
+      required:
+      - database
+      - redis
+      title: HealthChecks
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402

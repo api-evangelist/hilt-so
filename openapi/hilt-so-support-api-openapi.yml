@@ -1,0 +1,430 @@
+openapi: 3.2.0
+info:
+  title: Hilt So Support API
+  version: 1.0.0
+  contact:
+    name: Hilt
+    url: https://www.hilt.so
+    email: hello@hilt.so
+  x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
+  description: 'Operations tagged Support across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://api.hilt.so
+tags:
+- name: Support
+paths:
+  /v1/support/tickets:
+    post:
+      tags:
+      - Support
+      summary: Create support ticket
+      operationId: create_ticket_v1_support_tickets_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    get:
+      tags:
+      - Support
+      summary: List user's tickets
+      operationId: list_tickets_v1_support_tickets_get
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+          title: Page
+      - name: per_page
+        in: query
+        required: false
+        schema:
+          type: integer
+          maximum: 50
+          minimum: 1
+          default: 20
+          title: Per Page
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketListResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/support/tickets/{ticket_id}:
+    get:
+      tags:
+      - Support
+      summary: Ticket thread
+      operationId: get_ticket_v1_support_tickets__ticket_id__get
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Ticket Id
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicketThreadResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+  /v1/support/tickets/{ticket_id}/message:
+    post:
+      tags:
+      - Support
+      summary: Add message to ticket
+      operationId: add_message_v1_support_tickets__ticket_id__message_post
+      parameters:
+      - name: ticket_id
+        in: path
+        required: true
+        schema:
+          type: string
+          title: Ticket Id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddMessageRequest'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportMessageCreateResponse'
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    servers:
+    - url: https://api.hilt.so
+components:
+  schemas:
+    CreateTicketRequest:
+      properties:
+        subject:
+          type: string
+          title: Subject
+        category:
+          type: string
+          title: Category
+          default: OTHER
+        body:
+          type: string
+          title: Body
+        context:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Context
+      type: object
+      required:
+      - subject
+      - body
+      title: CreateTicketRequest
+    AddMessageRequest:
+      properties:
+        body:
+          type: string
+          title: Body
+      type: object
+      required:
+      - body
+      title: AddMessageRequest
+    SupportTicketListResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        tickets:
+          items:
+            $ref: '#/components/schemas/SupportTicket'
+          type: array
+          title: Tickets
+      additionalProperties: true
+      type: object
+      required:
+      - total
+      - page
+      - tickets
+      title: SupportTicketListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    SupportTicketThreadResponse:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        ticket_id:
+          type: string
+          title: Ticket Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        subject:
+          type: string
+          title: Subject
+        category:
+          type: string
+          title: Category
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        status:
+          type: string
+          title: Status
+        context:
+          type: object
+          title: Context
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        resolved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolved At
+        messages:
+          items:
+            $ref: '#/components/schemas/SupportMessage'
+          type: array
+          title: Messages
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - subject
+      - category
+      - status
+      - messages
+      title: SupportTicketThreadResponse
+    SupportTicketCreateResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        status:
+          type: string
+          title: Status
+        subject:
+          type: string
+          title: Subject
+        category:
+          type: string
+          title: Category
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - status
+      - subject
+      - category
+      title: SupportTicketCreateResponse
+    SupportMessage:
+      properties:
+        id:
+          type: string
+          title: Id
+        ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ticket Id
+        author_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Type
+        author_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Id
+        body:
+          type: string
+          title: Body
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - body
+      title: SupportMessage
+    SupportTicket:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        ticket_id:
+          type: string
+          title: Ticket Id
+        user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: User Id
+        subject:
+          type: string
+          title: Subject
+        category:
+          type: string
+          title: Category
+        priority:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Priority
+        status:
+          type: string
+          title: Status
+        context:
+          type: object
+          title: Context
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+        resolved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Resolved At
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - subject
+      - category
+      - status
+      title: SupportTicket
+    SupportMessageCreateResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        message:
+          type: string
+          title: Message
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - message
+      title: SupportMessageCreateResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+x-refined-from:
+- hilt-so-api-openapi.json
+- hilt-so-openapi.yml
+x-hilt-agent-commerce:
+  offer: https://api.hilt.so/v1/agent-commerce/offer
+  catalog: https://api.hilt.so/agent-catalog.json
+  pricing: https://api.hilt.so/pricing
+  x402: https://api.hilt.so/x402
