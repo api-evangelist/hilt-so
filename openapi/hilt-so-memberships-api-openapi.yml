@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Memberships API
+  title: Hilt Memberships API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged memberships across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -82,8 +82,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/lookup:
     get:
       tags:
@@ -136,8 +134,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/renewal-intelligence:
     get:
       tags:
@@ -176,8 +172,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}:
     get:
       tags:
@@ -204,8 +198,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/notes:
     patch:
       tags:
@@ -238,8 +230,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/profile:
     patch:
       tags:
@@ -272,8 +262,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/gift:
     post:
       tags:
@@ -306,8 +294,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/retry-delivery:
     post:
       tags:
@@ -334,8 +320,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/delivery-diagnostics:
     get:
       tags:
@@ -362,8 +346,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/delivery-support-ticket:
     post:
       tags:
@@ -390,8 +372,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/memberships/{membership_id}/reactivation:
     get:
       tags:
@@ -418,18 +398,223 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    MembershipProfileRequest:
+    HTTPValidationError:
       properties:
-        platform_display:
-          type: string
-          title: Platform Display
-          default: ''
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      title: MembershipProfileRequest
+      title: HTTPValidationError
+    MembershipReactivationResponse:
+      properties:
+        membership_id:
+          type: string
+          title: Membership Id
+        product_title:
+          type: string
+          title: Product Title
+        product_slug:
+          type: string
+          title: Product Slug
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        amount_display:
+          type: string
+          title: Amount Display
+        token_mint:
+          type: string
+          title: Token Mint
+        billing_interval_days:
+          type: integer
+          title: Billing Interval Days
+        access_period:
+          type: string
+          title: Access Period
+        membership_started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Started At
+        merchant_name:
+          type: string
+          title: Merchant Name
+        merchant_wallet_preview:
+          type: string
+          title: Merchant Wallet Preview
+        access_target_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Target Label
+        renewal_url:
+          type: string
+          title: Renewal Url
+        reactivation_url:
+          type: string
+          title: Reactivation Url
+        templates:
+          type: object
+          title: Templates
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - membership_id
+      - product_title
+      - product_slug
+      - amount_minor_units
+      - amount_display
+      - token_mint
+      - billing_interval_days
+      - access_period
+      - membership_started_at
+      - merchant_name
+      - merchant_wallet_preview
+      - access_target_label
+      - renewal_url
+      - reactivation_url
+      - templates
+      - generated_at
+      title: MembershipReactivationResponse
+    MembershipListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Membership'
+          type: array
+          title: Items
+        count:
+          type: integer
+          title: Count
+      additionalProperties: true
+      type: object
+      required:
+      - items
+      - count
+      title: MembershipListResponse
+    Membership:
+      properties:
+        id:
+          type: string
+          title: Id
+        product_id:
+          type: string
+          title: Product Id
+        owner_id:
+          type: string
+          title: Owner Id
+        platform:
+          type: string
+          title: Platform
+        platform_user_id:
+          type: string
+          title: Platform User Id
+        platform_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Display
+        customer_identity_type:
+          type: string
+          title: Customer Identity Type
+        customer_identity_value:
+          type: string
+          title: Customer Identity Value
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        status:
+          type: string
+          title: Status
+        current_period_start_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period Start At
+        current_period_end_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period End At
+        grace_ends_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Grace Ends At
+        latest_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Payment Id
+        latest_tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Tx Signature
+        delivery_status:
+          type: string
+          title: Delivery Status
+        delivery_last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Last Error
+        renewal_count:
+          type: integer
+          title: Renewal Count
+        last_reminder_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Reminder Sent At
+        metadata_json:
+          type: object
+          title: Metadata Json
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - product_id
+      - owner_id
+      - platform
+      - platform_user_id
+      - platform_display
+      - customer_identity_type
+      - customer_identity_value
+      - payer_wallet
+      - status
+      - current_period_start_at
+      - current_period_end_at
+      - grace_ends_at
+      - latest_payment_id
+      - latest_tx_signature
+      - delivery_status
+      - delivery_last_error
+      - renewal_count
+      - last_reminder_sent_at
+      - metadata_json
+      - created_at
+      - updated_at
+      title: Membership
     MembershipPeriod:
       properties:
         id:
@@ -498,6 +683,156 @@ components:
       - revoked_at
       - created_at
       title: MembershipPeriod
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MembershipNotesRequest:
+      properties:
+        notes:
+          type: string
+          title: Notes
+          default: ''
+      type: object
+      title: MembershipNotesRequest
+    MembershipDeliveryResponse:
+      properties:
+        membership:
+          $ref: '#/components/schemas/Membership'
+        delivery:
+          type: object
+          title: Delivery
+      additionalProperties: true
+      type: object
+      required:
+      - membership
+      - delivery
+      title: MembershipDeliveryResponse
+    MembershipEvent:
+      properties:
+        id:
+          type: integer
+          title: Id
+        membership_id:
+          type: string
+          title: Membership Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        event_type:
+          type: string
+          title: Event Type
+        actor_type:
+          type: string
+          title: Actor Type
+        actor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor Id
+        payload_json:
+          type: object
+          title: Payload Json
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - membership_id
+      - payment_id
+      - event_type
+      - actor_type
+      - actor_id
+      - payload_json
+      - created_at
+      title: MembershipEvent
+    MembershipRenewalIntelligenceResponse:
+      properties:
+        summary:
+          type: object
+          title: Summary
+        expiring_memberships:
+          items:
+            type: object
+          type: array
+          title: Expiring Memberships
+        product_reports:
+          items:
+            type: object
+          type: array
+          title: Product Reports
+        recent_events:
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+          type: array
+          title: Recent Events
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - summary
+      - expiring_memberships
+      - product_reports
+      - recent_events
+      - generated_at
+      title: MembershipRenewalIntelligenceResponse
+    MembershipDetailResponse:
+      properties:
+        membership:
+          $ref: '#/components/schemas/Membership'
+        periods:
+          items:
+            $ref: '#/components/schemas/MembershipPeriod'
+          type: array
+          title: Periods
+        events:
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+          type: array
+          title: Events
+        auto_renew:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Auto Renew
+      additionalProperties: true
+      type: object
+      required:
+      - membership
+      - periods
+      - events
+      - auto_renew
+      title: MembershipDetailResponse
     MembershipDeliveryDiagnosticsResponse:
       properties:
         membership_id:
@@ -616,48 +951,6 @@ components:
       - actions
       - generated_at
       title: MembershipDeliveryDiagnosticsResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MembershipListResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Membership'
-          type: array
-          title: Items
-        count:
-          type: integer
-          title: Count
-      additionalProperties: true
-      type: object
-      required:
-      - items
-      - count
-      title: MembershipListResponse
     MembershipGiftRequest:
       properties:
         days:
@@ -685,332 +978,14 @@ components:
       - ticket_id
       - created
       title: MembershipSupportTicketResponse
-    Membership:
+    MembershipProfileRequest:
       properties:
-        id:
-          type: string
-          title: Id
-        product_id:
-          type: string
-          title: Product Id
-        owner_id:
-          type: string
-          title: Owner Id
-        platform:
-          type: string
-          title: Platform
-        platform_user_id:
-          type: string
-          title: Platform User Id
         platform_display:
-          anyOf:
-          - type: string
-          - type: 'null'
+          type: string
           title: Platform Display
-        customer_identity_type:
-          type: string
-          title: Customer Identity Type
-        customer_identity_value:
-          type: string
-          title: Customer Identity Value
-        payer_wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payer Wallet
-        status:
-          type: string
-          title: Status
-        current_period_start_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period Start At
-        current_period_end_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period End At
-        grace_ends_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Grace Ends At
-        latest_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Payment Id
-        latest_tx_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Tx Signature
-        delivery_status:
-          type: string
-          title: Delivery Status
-        delivery_last_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Last Error
-        renewal_count:
-          type: integer
-          title: Renewal Count
-        last_reminder_sent_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Reminder Sent At
-        metadata_json:
-          type: object
-          title: Metadata Json
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - product_id
-      - owner_id
-      - platform
-      - platform_user_id
-      - platform_display
-      - customer_identity_type
-      - customer_identity_value
-      - payer_wallet
-      - status
-      - current_period_start_at
-      - current_period_end_at
-      - grace_ends_at
-      - latest_payment_id
-      - latest_tx_signature
-      - delivery_status
-      - delivery_last_error
-      - renewal_count
-      - last_reminder_sent_at
-      - metadata_json
-      - created_at
-      - updated_at
-      title: Membership
-    MembershipDeliveryResponse:
-      properties:
-        membership:
-          $ref: '#/components/schemas/Membership'
-        delivery:
-          type: object
-          title: Delivery
-      additionalProperties: true
-      type: object
-      required:
-      - membership
-      - delivery
-      title: MembershipDeliveryResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    MembershipDetailResponse:
-      properties:
-        membership:
-          $ref: '#/components/schemas/Membership'
-        periods:
-          items:
-            $ref: '#/components/schemas/MembershipPeriod'
-          type: array
-          title: Periods
-        events:
-          items:
-            $ref: '#/components/schemas/MembershipEvent'
-          type: array
-          title: Events
-        auto_renew:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Auto Renew
-      additionalProperties: true
-      type: object
-      required:
-      - membership
-      - periods
-      - events
-      - auto_renew
-      title: MembershipDetailResponse
-    MembershipNotesRequest:
-      properties:
-        notes:
-          type: string
-          title: Notes
           default: ''
       type: object
-      title: MembershipNotesRequest
-    MembershipRenewalIntelligenceResponse:
-      properties:
-        summary:
-          type: object
-          title: Summary
-        expiring_memberships:
-          items:
-            type: object
-          type: array
-          title: Expiring Memberships
-        product_reports:
-          items:
-            type: object
-          type: array
-          title: Product Reports
-        recent_events:
-          items:
-            $ref: '#/components/schemas/MembershipEvent'
-          type: array
-          title: Recent Events
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - summary
-      - expiring_memberships
-      - product_reports
-      - recent_events
-      - generated_at
-      title: MembershipRenewalIntelligenceResponse
-    MembershipReactivationResponse:
-      properties:
-        membership_id:
-          type: string
-          title: Membership Id
-        product_title:
-          type: string
-          title: Product Title
-        product_slug:
-          type: string
-          title: Product Slug
-        amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        amount_display:
-          type: string
-          title: Amount Display
-        token_mint:
-          type: string
-          title: Token Mint
-        billing_interval_days:
-          type: integer
-          title: Billing Interval Days
-        access_period:
-          type: string
-          title: Access Period
-        membership_started_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Started At
-        merchant_name:
-          type: string
-          title: Merchant Name
-        merchant_wallet_preview:
-          type: string
-          title: Merchant Wallet Preview
-        access_target_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access Target Label
-        renewal_url:
-          type: string
-          title: Renewal Url
-        reactivation_url:
-          type: string
-          title: Reactivation Url
-        templates:
-          type: object
-          title: Templates
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - membership_id
-      - product_title
-      - product_slug
-      - amount_minor_units
-      - amount_display
-      - token_mint
-      - billing_interval_days
-      - access_period
-      - membership_started_at
-      - merchant_name
-      - merchant_wallet_preview
-      - access_target_label
-      - renewal_url
-      - reactivation_url
-      - templates
-      - generated_at
-      title: MembershipReactivationResponse
-    MembershipEvent:
-      properties:
-        id:
-          type: integer
-          title: Id
-        membership_id:
-          type: string
-          title: Membership Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        event_type:
-          type: string
-          title: Event Type
-        actor_type:
-          type: string
-          title: Actor Type
-        actor_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actor Id
-        payload_json:
-          type: object
-          title: Payload Json
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - membership_id
-      - payment_id
-      - event_type
-      - actor_type
-      - actor_id
-      - payload_json
-      - created_at
-      title: MembershipEvent
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
+      title: MembershipProfileRequest
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

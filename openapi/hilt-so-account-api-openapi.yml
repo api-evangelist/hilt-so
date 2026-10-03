@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Account API
+  title: Hilt Account API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged account across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -54,8 +54,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/summary:
     get:
       tags:
@@ -72,8 +70,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccountSummaryResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/analytics:
     get:
       tags:
@@ -130,8 +126,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/me/security:
     patch:
       tags:
@@ -158,8 +152,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/delivery/readiness:
     get:
       tags:
@@ -173,8 +165,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DeliveryReadinessResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/delivery/test:
     post:
       tags:
@@ -200,8 +190,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/account/account:
     delete:
       tags:
@@ -218,10 +206,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DetailResponse'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DeliveryTestResponse:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        status:
+          type: string
+          title: Status
+        summary:
+          type: string
+          title: Summary
+        checks:
+          items:
+            type: object
+          type: array
+          title: Checks
+        checked_at:
+          type: string
+          title: Checked At
+      additionalProperties: true
+      type: object
+      required:
+      - provider
+      - status
+      - summary
+      - checks
+      - checked_at
+      title: DeliveryTestResponse
     DeliveryReadinessDefaults:
       properties:
         payout_wallet_configured:
@@ -240,6 +263,52 @@ components:
       - default_redirect_url_configured
       - default_support_url_configured
       title: DeliveryReadinessDefaults
+    UpdatedFieldsResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+        updated_fields:
+          items:
+            type: string
+          type: array
+          title: Updated Fields
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      - updated_fields
+      title: UpdatedFieldsResponse
+    AccountSecurityUpdateRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            format: email
+          - type: 'null'
+          title: Email
+        current_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Password
+        new_password:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: New Password
+      type: object
+      title: AccountSecurityUpdateRequest
+    DetailResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      title: DetailResponse
     DeliveryReadinessResponse:
       properties:
         merchant_name:
@@ -285,137 +354,6 @@ components:
       - warnings
       - checked_at
       title: DeliveryReadinessResponse
-    AccountAssetSummary:
-      properties:
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-        asset_symbol:
-          type: string
-          title: Asset Symbol
-        asset_decimals:
-          type: integer
-          title: Asset Decimals
-        confirmed_payments:
-          type: integer
-          title: Confirmed Payments
-        gross_minor_units:
-          type: integer
-          title: Gross Minor Units
-        net_minor_units:
-          type: integer
-          title: Net Minor Units
-        fee_minor_units:
-          type: integer
-          title: Fee Minor Units
-      type: object
-      required:
-      - token_mint
-      - asset_symbol
-      - asset_decimals
-      - confirmed_payments
-      - gross_minor_units
-      - net_minor_units
-      - fee_minor_units
-      title: AccountAssetSummary
-    DetailResponse:
-      properties:
-        detail:
-          type: string
-          title: Detail
-      additionalProperties: true
-      type: object
-      required:
-      - detail
-      title: DetailResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    AccountUpdateRequest:
-      properties:
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        timezone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Timezone
-        notification_prefs:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Notification Prefs
-        merchant_settings:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Merchant Settings
-      type: object
-      title: AccountUpdateRequest
-    AccountSecurityUpdateRequest:
-      properties:
-        email:
-          anyOf:
-          - type: string
-            format: email
-          - type: 'null'
-          title: Email
-        current_password:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Password
-        new_password:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: New Password
-      type: object
-      title: AccountSecurityUpdateRequest
-    UpdatedFieldsResponse:
-      properties:
-        detail:
-          type: string
-          title: Detail
-        updated_fields:
-          items:
-            type: string
-          type: array
-          title: Updated Fields
-      additionalProperties: true
-      type: object
-      required:
-      - detail
-      - updated_fields
-      title: UpdatedFieldsResponse
     AccountSummaryResponse:
       properties:
         active_templates:
@@ -461,34 +399,65 @@ components:
       - overall_assets
       - today_assets
       title: AccountSummaryResponse
-    DeliveryTestResponse:
+    AccountUpdateRequest:
       properties:
-        provider:
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        timezone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timezone
+        notification_prefs:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Notification Prefs
+        merchant_settings:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Merchant Settings
+      type: object
+      title: AccountUpdateRequest
+    AccountAssetSummary:
+      properties:
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        asset_symbol:
           type: string
-          title: Provider
-        status:
-          type: string
-          title: Status
-        summary:
-          type: string
-          title: Summary
-        checks:
-          items:
-            type: object
-          type: array
-          title: Checks
-        checked_at:
-          type: string
-          title: Checked At
-      additionalProperties: true
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        confirmed_payments:
+          type: integer
+          title: Confirmed Payments
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
       type: object
       required:
-      - provider
-      - status
-      - summary
-      - checks
-      - checked_at
-      title: DeliveryTestResponse
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - confirmed_payments
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      title: AccountAssetSummary
     DeliveryTestRequest:
       properties:
         provider:
@@ -498,6 +467,47 @@ components:
       required:
       - provider
       title: DeliveryTestRequest
+    AccountClaims:
+      properties:
+        hilt_score:
+          type: boolean
+          title: Hilt Score
+        hilt_pay:
+          type: boolean
+          title: Hilt Pay
+        hilt_ops:
+          type: boolean
+          title: Hilt Ops
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+        is_staff:
+          type: boolean
+          title: Is Staff
+      type: object
+      required:
+      - hilt_score
+      - hilt_pay
+      - hilt_ops
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      - is_staff
+      title: AccountClaims
     WorkspaceAnalyticsResponse:
       properties:
         summary:
@@ -562,47 +572,32 @@ components:
       - range_end_date
       - generated_at
       title: WorkspaceAnalyticsResponse
-    AccountClaims:
+    ValidationError:
       properties:
-        hilt_score:
-          type: boolean
-          title: Hilt Score
-        hilt_pay:
-          type: boolean
-          title: Hilt Pay
-        hilt_ops:
-          type: boolean
-          title: Hilt Ops
-        merchant_analytics:
-          type: boolean
-          title: Merchant Analytics
-        buy_notifications:
-          type: boolean
-          title: Buy Notifications
-        receipt_exports:
-          type: boolean
-          title: Receipt Exports
-        tax_exports:
-          type: boolean
-          title: Tax Exports
-        custom_checkout_domains:
-          type: boolean
-          title: Custom Checkout Domains
-        is_staff:
-          type: boolean
-          title: Is Staff
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - hilt_score
-      - hilt_pay
-      - hilt_ops
-      - merchant_analytics
-      - buy_notifications
-      - receipt_exports
-      - tax_exports
-      - custom_checkout_domains
-      - is_staff
-      title: AccountClaims
+      - loc
+      - msg
+      - type
+      title: ValidationError
     AccountResponse:
       properties:
         user_id:
@@ -680,18 +675,6 @@ components:
       - merchant_settings
       - claims
       title: AccountResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

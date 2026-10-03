@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Hilt Pay API
+  title: Hilt Pay API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged Hilt Pay API across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -160,8 +160,6 @@ paths:
                 - free Hilt Pay Agent Bootstrap sandbox setup
                 - agent-native x402 V2 plan activation paid in Solana USDC, or Hilt account billing
                 - Hilt Pay API Starter, Growth, Scale, or Enterprise with live key delivery
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/catalog:
     get:
       operationId: getHiltAgentCommerceCatalog
@@ -177,8 +175,6 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/pricing:
     get:
       operationId: getHiltAgentCommercePricing
@@ -194,8 +190,6 @@ paths:
               schema:
                 type: object
                 additionalProperties: true
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/plans/starter/activate:
     post:
       operationId: activateHiltPayApiStarterWithX402
@@ -259,8 +253,6 @@ paths:
           description: Payment Required
         '409':
           description: The setup or current billing state does not permit this activation
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/plans/growth/activate:
     post:
       operationId: activateHiltPayApiGrowthWithX402
@@ -324,8 +316,6 @@ paths:
           description: Payment Required
         '409':
           description: The setup or current billing state does not permit this activation
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/plans/scale/activate:
     post:
       operationId: activateHiltPayApiScaleWithX402
@@ -389,8 +379,6 @@ paths:
           description: Payment Required
         '409':
           description: The setup or current billing state does not permit this activation
-    servers:
-    - url: https://api.hilt.so
   /v1/agent-commerce/plans/claim:
     post:
       operationId: claimHiltPayApiMarketplaceKey
@@ -435,8 +423,6 @@ paths:
                 additionalProperties: true
         '409':
           description: Activation is still being reconciled
-    servers:
-    - url: https://api.hilt.so
   /v1/access/agent-bootstrap:
     post:
       tags:
@@ -462,8 +448,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/agent-bootstrap/{setup_intent_id}/status:
     post:
       tags:
@@ -497,8 +481,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/agent-bootstrap/{setup_intent_id}/manifest:
     post:
       tags:
@@ -532,8 +514,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/agent-bootstrap/{setup_intent_id}/approve:
     post:
       tags:
@@ -567,8 +547,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/rails:
     get:
       tags:
@@ -582,8 +560,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessRailsResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/rail-settings:
     get:
       tags:
@@ -597,8 +573,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessRailSettingsResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/rail-settings/{rail_id}:
     put:
       tags:
@@ -637,8 +611,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/native-subscriptions/{authorization_id}:
     get:
       tags:
@@ -665,8 +637,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/native-subscriptions/{authorization_id}/cancel-intent:
     post:
       tags:
@@ -699,8 +669,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/native-subscriptions/{authorization_id}/cancel-confirm:
     post:
       tags:
@@ -739,8 +707,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/apps:
     post:
       tags:
@@ -773,8 +739,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/products:
     post:
       tags:
@@ -807,8 +771,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/setup/readiness:
     get:
       tags:
@@ -863,8 +825,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/products/available-rails:
     get:
       tags:
@@ -910,8 +870,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/products/{product_id}/available-rails:
     get:
       tags:
@@ -946,8 +904,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/payment-sessions:
     post:
       tags:
@@ -980,8 +936,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions:
     post:
       tags:
@@ -1014,8 +968,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions/{session_id}/authorize:
     post:
       tags:
@@ -1050,8 +1002,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions/{session_id}/deliveries:
     post:
       tags:
@@ -1090,8 +1040,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions/{session_id}/commits:
     post:
       tags:
@@ -1124,8 +1072,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions/{session_id}/settle:
     post:
       tags:
@@ -1158,8 +1104,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/metered-sessions/{session_id}:
     get:
       tags:
@@ -1186,8 +1130,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/sandbox/payment-sessions:
     post:
       tags:
@@ -1220,8 +1162,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/sandbox/payment-sessions/{sandbox_session_id}/confirm:
     post:
       tags:
@@ -1261,8 +1201,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/payment-proofs:
     post:
       tags:
@@ -1295,8 +1233,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/x402/settle:
     post:
       tags:
@@ -1342,8 +1278,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/entitlements/check:
     post:
       tags:
@@ -1369,8 +1303,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/entitlements/consume:
     post:
       tags:
@@ -1403,8 +1335,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/entitlements/{entitlement_id}:
     get:
       tags:
@@ -1432,8 +1362,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/billing/entitlement:
     get:
       tags:
@@ -1447,8 +1375,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AccessBillingEntitlementResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/access/billing/checkout/stripe:
     post:
       tags:
@@ -1474,8 +1400,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
       deprecated: true
-    servers:
-    - url: https://api.hilt.so
   /v1/access/webhooks:
     post:
       tags:
@@ -1508,784 +1432,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    AccessEntitlementCheckResponse:
-      properties:
-        has_access:
-          type: boolean
-          title: Has Access
-        status:
-          type: string
-          title: Status
-        product_id:
-          type: string
-          title: Product Id
-        access_product_id:
-          type: string
-          title: Access Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Product Id
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        livemode:
-          type: boolean
-          title: Livemode
-        external_customer_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        active_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Active From
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expires At
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-        receipt:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementReceipt'
-          - type: 'null'
-        reason:
-          type: string
-          title: Reason
-        last_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Payment Id
-        source:
-          type: string
-          title: Source
-        usage:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementUsage'
-          - type: 'null'
-      additionalProperties: true
-      type: object
-      required:
-      - has_access
-      - status
-      - product_id
-      - access_product_id
-      - external_product_id
-      - rail_id
-      - rail
-      - livemode
-      - external_customer_id
-      - wallet
-      - email
-      - active_from
-      - expires_at
-      - receipt_id
-      - receipt
-      - reason
-      - last_payment_id
-      - source
-      title: AccessEntitlementCheckResponse
-    AccessSandboxSessionCreateResponse:
-      properties:
-        sandbox_session:
-          $ref: '#/components/schemas/AccessSandboxSession'
-        pending_entitlement:
-          $ref: '#/components/schemas/AccessEntitlement'
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        payment_session_adapter:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Payment Session Adapter
-        livemode:
-          type: boolean
-          enum:
-          - false
-          const: false
-          title: Livemode
-        sandbox_only:
-          type: boolean
-          enum:
-          - true
-          const: true
-          title: Sandbox Only
-        message:
-          type: string
-          title: Message
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - sandbox_session
-      - pending_entitlement
-      - rail
-      - payment_session_adapter
-      - livemode
-      - sandbox_only
-      - message
-      title: AccessSandboxSessionCreateResponse
-    AccessEntitlementUsage:
-      properties:
-        unit:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Unit
-        granted:
-          type: integer
-          title: Granted
-        consumed:
-          type: integer
-          title: Consumed
-        remaining:
-          type: integer
-          title: Remaining
-        exhausted:
-          type: boolean
-          title: Exhausted
-      additionalProperties: true
-      type: object
-      required:
-      - unit
-      - granted
-      - consumed
-      - remaining
-      - exhausted
-      title: AccessEntitlementUsage
-    AccessEntitlementCheckRequest:
-      properties:
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Product Id
-        rail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rail
-        external_customer_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        customer_reference:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Customer Reference
-      type: object
-      title: AccessEntitlementCheckRequest
-    NativeSubscriptionMembership:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        current_period_start_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period Start At
-        current_period_end_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period End At
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        platform_display:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Display
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - status
-      - current_period_start_at
-      - current_period_end_at
-      - platform
-      - platform_display
-      title: NativeSubscriptionMembership
-    AccessBillingSelectionPolicy:
-      properties:
-        current_statuses:
-          items:
-            type: string
-          type: array
-          title: Current Statuses
-        current_rule:
-          type: string
-          title: Current Rule
-      additionalProperties: true
-      type: object
-      required:
-      - current_statuses
-      - current_rule
-      title: AccessBillingSelectionPolicy
-    AccessEntitlementUsageResponse:
-      properties:
-        unit:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Unit
-        granted:
-          type: integer
-          title: Granted
-        consumed:
-          type: integer
-          title: Consumed
-        remaining:
-          type: integer
-          title: Remaining
-        exhausted:
-          type: boolean
-          title: Exhausted
-      type: object
-      required:
-      - unit
-      - granted
-      - consumed
-      - remaining
-      - exhausted
-      title: AccessEntitlementUsageResponse
-    AccessRailSetting:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        enabled:
-          type: boolean
-          title: Enabled
-        mode:
-          type: string
-          title: Mode
-        status:
-          type: string
-          title: Status
-        payout_address:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payout Address
-        label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Label
-        verification_status:
-          type: string
-          title: Verification Status
-        metadata:
-          type: object
-          title: Metadata
-        fee_collection:
-          $ref: '#/components/schemas/AccessFeeCollection'
-        pending_review_age_seconds:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Pending Review Age Seconds
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - rail_id
-      - rail
-      - enabled
-      - mode
-      - status
-      - payout_address
-      - label
-      - verification_status
-      - metadata
-      - fee_collection
-      - pending_review_age_seconds
-      - created_at
-      - updated_at
-      title: AccessRailSetting
-    AccessWebhookCreateResponse:
-      properties:
-        endpoint:
-          $ref: '#/components/schemas/WebhookEndpoint'
-        signing_secret:
-          type: string
-          title: Signing Secret
-        supported_events:
-          items:
-            type: string
-          type: array
-          title: Supported Events
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - endpoint
-      - signing_secret
-      - supported_events
-      title: AccessWebhookCreateResponse
-    AccessMeteredCommitRequest:
-      properties:
-        deliveryId:
-          type: string
-          maxLength: 180
-          minLength: 1
-          title: Deliveryid
-        voucher:
-          $ref: '#/components/schemas/AccessMeteredSignedVoucher'
-      type: object
-      required:
-      - deliveryId
-      - voucher
-      title: AccessMeteredCommitRequest
-    AccessRailSettingResponse:
-      properties:
-        rail_setting:
-          $ref: '#/components/schemas/AccessRailSetting'
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - rail_setting
-      title: AccessRailSettingResponse
-    AccessRailsCaller:
-      properties:
-        user_id:
-          type: string
-          title: User Id
-        sandbox:
-          type: boolean
-          title: Sandbox
-      additionalProperties: true
-      type: object
-      required:
-      - user_id
-      - sandbox
-      title: AccessRailsCaller
-    AccessMeteredChannel:
-      properties:
-        id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Id
-        payer_wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payer Wallet
-        authorized_signer:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Authorized Signer
-        highest_voucher_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Highest Voucher Signature
-        close_requested_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Close Requested At
-        settlement_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Settlement Signature
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - payer_wallet
-      - authorized_signer
-      - highest_voucher_signature
-      - close_requested_at
-      - settlement_signature
-      title: AccessMeteredChannel
-    AccessEntitlementConsumeResponse:
-      properties:
-        consumed:
-          type: boolean
-          title: Consumed
-        units:
-          type: integer
-          title: Units
-        usage_event:
-          $ref: '#/components/schemas/AccessUsageEvent'
-        entitlement:
-          $ref: '#/components/schemas/AccessEntitlement'
-        usage:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementUsage'
-          - type: 'null'
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - consumed
-      - units
-      - usage_event
-      - entitlement
-      - usage
-      title: AccessEntitlementConsumeResponse
-    NativeSubscriptionResponse:
-      properties:
-        authorization:
-          $ref: '#/components/schemas/NativeSubscriptionAuthorization'
-        product:
-          $ref: '#/components/schemas/NativeSubscriptionReference'
-        membership:
-          $ref: '#/components/schemas/NativeSubscriptionMembership'
-        cancel_requirement:
-          anyOf:
-          - $ref: '#/components/schemas/NativeSubscriptionCancelRequirement'
-          - type: 'null'
-      additionalProperties: true
-      type: object
-      required:
-      - authorization
-      - product
-      - membership
-      - cancel_requirement
-      title: NativeSubscriptionResponse
-    AccessAgentBootstrapRequest:
-      properties:
-        agent_name:
-          type: string
-          maxLength: 120
-          minLength: 2
-          title: Agent Name
-        agent_platform:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Agent Platform
-        requested_use_case:
-          anyOf:
-          - type: string
-            maxLength: 1000
-          - type: 'null'
-          title: Requested Use Case
-        contact_email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Contact Email
-        external_reference:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Reference
-        requested_permissions:
-          items:
-            type: string
-          type: array
-          title: Requested Permissions
-        ttl_hours:
-          type: integer
-          maximum: 168
-          minimum: 1
-          title: Ttl Hours
-          default: 24
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - agent_name
-      title: AccessAgentBootstrapRequest
-    AccessAppCreateRequest:
-      properties:
-        name:
-          type: string
-          maxLength: 120
-          minLength: 2
-          title: Name
-        external_app_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External App Id
-        default_rail:
-          type: string
-          title: Default Rail
-          default: solana_usdc
-        rail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rail
-        live_mode:
-          type: boolean
-          title: Live Mode
-          default: false
-        confirm_live_mode:
-          type: boolean
-          title: Confirm Live Mode
-          default: false
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - name
-      title: AccessAppCreateRequest
-    AccessMeteredProduct:
-      properties:
-        id:
-          type: string
-          title: Id
-        external_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Id
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - external_id
-      - title
-      title: AccessMeteredProduct
-    AccessMetering:
-      properties:
-        usage_unit:
-          type: string
-          title: Usage Unit
-        units_per_payment:
-          type: integer
-          title: Units Per Payment
-      additionalProperties: true
-      type: object
-      required:
-      - usage_unit
-      - units_per_payment
-      title: AccessMetering
-    HiltProductReference:
-      properties:
-        id:
-          type: string
-          title: Id
-        slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slug
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-        checkout_url:
-          type: string
-          title: Checkout Url
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - slug
-      - status
-      - title
-      - token_mint
-      - checkout_url
-      title: HiltProductReference
-    AccessX402SettlementEvidenceResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        owner_id:
-          type: string
-          title: Owner Id
-        proof_id:
-          type: string
-          title: Proof Id
-        verification_attempt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Verification Attempt Id
-        rail_id:
-          type: string
-          title: Rail Id
-        status:
-          type: string
-          title: Status
-        settlement_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Settlement Reference
-        finality_state:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Finality State
-        confirmations:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Confirmations
-        settled_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Settled At
-        evidence:
-          type: object
-          title: Evidence
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      type: object
-      required:
-      - id
-      - owner_id
-      - proof_id
-      - verification_attempt_id
-      - rail_id
-      - status
-      - settlement_reference
-      - finality_state
-      - confirmations
-      - settled_at
-      - evidence
-      - created_at
-      title: AccessX402SettlementEvidenceResponse
-    AccessMeteredSessionResponse:
-      properties:
-        metered_session:
-          $ref: '#/components/schemas/AccessMeteredSession'
-        payment_receipt:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Receipt
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - metered_session
-      title: AccessMeteredSessionResponse
     AccessProductCreateRequest:
       properties:
         access_app_id:
@@ -2420,20 +1568,368 @@ components:
           title: Metadata
       type: object
       title: AccessProductCreateRequest
-    AccessEntitlementReceipt:
+    AccessX402EntitlementResponse:
       properties:
         id:
           type: string
           title: Id
+        access_app_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access App Id
+        access_product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Product Id
+        product_id:
+          type: string
+          title: Product Id
+        external_customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        status:
+          type: string
+          title: Status
+        active_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Active From
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        last_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Payment Id
         rail_id:
           type: string
           title: Rail Id
-      additionalProperties: true
+        rail:
+          type: object
+          title: Rail
+        livemode:
+          type: boolean
+          title: Livemode
+        receipt:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementReceiptReferenceResponse'
+          - type: 'null'
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementUsageResponse'
+          - type: 'null'
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
       type: object
       required:
       - id
+      - access_app_id
+      - access_product_id
+      - product_id
+      - external_customer_id
+      - wallet
+      - email
+      - status
+      - active_from
+      - expires_at
+      - receipt_id
+      - payment_id
+      - last_payment_id
       - rail_id
-      title: AccessEntitlementReceipt
+      - rail
+      - livemode
+      - receipt
+      - usage
+      - source
+      - created_at
+      - updated_at
+      title: AccessX402EntitlementResponse
+    AccessRailsResponse:
+      properties:
+        default_rail:
+          type: string
+          title: Default Rail
+        rails:
+          items:
+            $ref: '#/components/schemas/AccessRailCapability'
+          type: array
+          title: Rails
+        caller:
+          $ref: '#/components/schemas/AccessRailsCaller'
+      additionalProperties: true
+      type: object
+      required:
+      - default_rail
+      - rails
+      - caller
+      title: AccessRailsResponse
+    AccessWebhookCreateRequest:
+      properties:
+        label:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Label
+        url:
+          type: string
+          title: Url
+        subscribed_events:
+          items:
+            type: string
+          type: array
+          title: Subscribed Events
+        product_ids:
+          items:
+            type: string
+            format: uuid
+          type: array
+          title: Product Ids
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - label
+      - url
+      title: AccessWebhookCreateRequest
+    AccessRailSettingUpdateRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          default: false
+        payout_address:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Payout Address
+        label:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Label
+        mode:
+          type: string
+          title: Mode
+          default: live
+        fee_collection_mode:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Fee Collection Mode
+        fee_collection_status:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Fee Collection Status
+        fee_collector_address:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Fee Collector Address
+        fee_allowance_token_contract:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Fee Allowance Token Contract
+        fee_allowance_limit_minor_units:
+          anyOf:
+          - type: integer
+            minimum: 0
+          - type: 'null'
+          title: Fee Allowance Limit Minor Units
+        fee_allowance_spent_minor_units:
+          anyOf:
+          - type: integer
+            minimum: 0
+          - type: 'null'
+          title: Fee Allowance Spent Minor Units
+        fee_allowance_expires_at:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Fee Allowance Expires At
+        fee_allowance_tx_hash:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Fee Allowance Tx Hash
+        fee_collection_metadata:
+          type: object
+          title: Fee Collection Metadata
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      title: AccessRailSettingUpdateRequest
+    AccessMeteredDeliveryResponse:
+      properties:
+        delivery:
+          $ref: '#/components/schemas/AccessMeteredDelivery'
+        units:
+          type: integer
+          title: Units
+        unit_price_minor_units:
+          type: integer
+          title: Unit Price Minor Units
+        commit_url:
+          type: string
+          title: Commit Url
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - delivery
+      - units
+      - unit_price_minor_units
+      - commit_url
+      title: AccessMeteredDeliveryResponse
+    AccessEntitlementUsage:
+      properties:
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        granted:
+          type: integer
+          title: Granted
+        consumed:
+          type: integer
+          title: Consumed
+        remaining:
+          type: integer
+          title: Remaining
+        exhausted:
+          type: boolean
+          title: Exhausted
+      additionalProperties: true
+      type: object
+      required:
+      - unit
+      - granted
+      - consumed
+      - remaining
+      - exhausted
+      title: AccessEntitlementUsage
+    AccessBillingEntitlementResponse:
+      properties:
+        billing_entitlement:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Billing Entitlement
+        is_current:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Is Current
+        commercial_model:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Commercial Model
+        historical_billing_entitlement:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Historical Billing Entitlement
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        supported_sources:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Supported Sources
+        supported_plans:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Supported Plans
+        selection_policy:
+          $ref: '#/components/schemas/AccessBillingSelectionPolicy'
+      additionalProperties: true
+      type: object
+      required:
+      - billing_entitlement
+      - selection_policy
+      title: AccessBillingEntitlementResponse
+    AccessAgentSetupStatusRequest:
+      properties:
+        setup_token:
+          type: string
+          maxLength: 300
+          minLength: 20
+          title: Setup Token
+      type: object
+      required:
+      - setup_token
+      title: AccessAgentSetupStatusRequest
     NativeSubscriptionCancelRequirement:
       properties:
         payment_protocol:
@@ -2492,29 +1988,1391 @@ components:
       - close_authority_note
       - required_confirmation_fields
       title: NativeSubscriptionCancelRequirement
-    AccessX402ReceiptResponse:
+    AccessEntitlement:
       properties:
         id:
           type: string
           title: Id
-        tx_sig:
+        access_app_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access App Id
+        access_product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Product Id
+        product_id:
           type: string
-          title: Tx Sig
-        created:
+          title: Product Id
+        external_customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        status:
+          type: string
+          title: Status
+        active_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Active From
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        last_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Payment Id
+        rail_id:
+          type: string
+          title: Rail Id
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        livemode:
           type: boolean
-          title: Created
+          title: Livemode
+        receipt:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementReceipt'
+          - type: 'null'
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementUsage'
+          - type: 'null'
+        source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Source
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
       type: object
       required:
       - id
-      - tx_sig
-      - created
-      title: AccessX402ReceiptResponse
-    AccessProductCreateResponse:
+      - access_app_id
+      - access_product_id
+      - product_id
+      - external_customer_id
+      - wallet
+      - email
+      - status
+      - active_from
+      - expires_at
+      - receipt_id
+      - payment_id
+      - last_payment_id
+      - rail_id
+      - rail
+      - livemode
+      - receipt
+      - usage
+      - source
+      - created_at
+      - updated_at
+      title: AccessEntitlement
+    AccessMeteredDeliveryCreateRequest:
       properties:
-        access_product:
-          $ref: '#/components/schemas/AccessProduct'
-        hilt_product:
-          $ref: '#/components/schemas/HiltProductReference'
+        units:
+          type: integer
+          maximum: 1000000
+          minimum: 1
+          title: Units
+          default: 1
+        delivery_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+            minLength: 1
+          - type: 'null'
+          title: Delivery Id
+        proof:
+          anyOf:
+          - type: string
+            maxLength: 2000
+          - type: 'null'
+          title: Proof
+        ttl_seconds:
+          type: integer
+          maximum: 900
+          minimum: 30
+          title: Ttl Seconds
+          default: 300
+      type: object
+      title: AccessMeteredDeliveryCreateRequest
+    AccessMeteredEndpoints:
+      properties:
+        authorize:
+          type: string
+          title: Authorize
+        deliveries:
+          type: string
+          title: Deliveries
+        commits:
+          type: string
+          title: Commits
+        settle:
+          type: string
+          title: Settle
+      additionalProperties: true
+      type: object
+      required:
+      - authorize
+      - deliveries
+      - commits
+      - settle
+      title: AccessMeteredEndpoints
+    AccessEntitlementCheckResponse:
+      properties:
+        has_access:
+          type: boolean
+          title: Has Access
+        status:
+          type: string
+          title: Status
+        product_id:
+          type: string
+          title: Product Id
+        access_product_id:
+          type: string
+          title: Access Product Id
+        external_product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Product Id
+        rail_id:
+          type: string
+          title: Rail Id
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        livemode:
+          type: boolean
+          title: Livemode
+        external_customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        active_from:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Active From
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        receipt:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementReceipt'
+          - type: 'null'
+        reason:
+          type: string
+          title: Reason
+        last_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Payment Id
+        source:
+          type: string
+          title: Source
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementUsage'
+          - type: 'null'
+      additionalProperties: true
+      type: object
+      required:
+      - has_access
+      - status
+      - product_id
+      - access_product_id
+      - external_product_id
+      - rail_id
+      - rail
+      - livemode
+      - external_customer_id
+      - wallet
+      - email
+      - active_from
+      - expires_at
+      - receipt_id
+      - receipt
+      - reason
+      - last_payment_id
+      - source
+      title: AccessEntitlementCheckResponse
+    AccessAgentBootstrapResponse:
+      properties:
+        setup_intent:
+          $ref: '#/components/schemas/AccessSetupIntent'
+        setup_intent_id:
+          type: string
+          title: Setup Intent Id
+        owner_approval_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Owner Approval Url
+        setup_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Setup Token
+        setup_token_notice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Setup Token Notice
+        sandbox_api_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sandbox Api Key
+        sandbox_api_key_notice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sandbox Api Key Notice
+        sandbox_owner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sandbox Owner Id
+        allowed_sandbox_actions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Allowed Sandbox Actions
+        live_boundaries:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Live Boundaries
+        agent_can_continue_sandbox:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Agent Can Continue Sandbox
+        owner_action_required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Owner Action Required
+        manifest_evaluation:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Manifest Evaluation
+        pricing_recommendation:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Pricing Recommendation
+        live_api_key:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live Api Key
+        live_api_key_notice:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live Api Key Notice
+        live_key_prefix:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live Key Prefix
+        activation_boundaries:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Activation Boundaries
+        recommended_next_api_calls:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Recommended Next Api Calls
+      additionalProperties: true
+      type: object
+      required:
+      - setup_intent
+      - setup_intent_id
+      - owner_approval_url
+      title: AccessAgentBootstrapResponse
+    AccessSandboxPaymentSessionCreateRequest:
+      properties:
+        product_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Id
+        external_product_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Product Id
+        external_customer_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        rail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rail
+        ttl_minutes:
+          type: integer
+          maximum: 120
+          minimum: 5
+          title: Ttl Minutes
+          default: 30
+        confirm_sandbox_mode:
+          type: boolean
+          title: Confirm Sandbox Mode
+          default: false
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      title: AccessSandboxPaymentSessionCreateRequest
+    AccessMeteredCommitRequest:
+      properties:
+        deliveryId:
+          type: string
+          maxLength: 180
+          minLength: 1
+          title: Deliveryid
+        voucher:
+          $ref: '#/components/schemas/AccessMeteredSignedVoucher'
+      type: object
+      required:
+      - deliveryId
+      - voucher
+      title: AccessMeteredCommitRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AccessPaymentSessionResponse:
+      properties:
+        payment_session:
+          $ref: '#/components/schemas/AccessPaymentSession'
+        pending_entitlement:
+          $ref: '#/components/schemas/AccessEntitlement'
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        selected_rail:
+          $ref: '#/components/schemas/AccessEffectiveRailEntry'
+        available_rails:
+          items:
+            $ref: '#/components/schemas/AccessEffectiveRailEntry'
+          type: array
+          title: Available Rails
+        payment_session_options:
+          type: object
+          title: Payment Session Options
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - payment_session
+      - pending_entitlement
+      - rail
+      - selected_rail
+      - available_rails
+      - payment_session_options
+      title: AccessPaymentSessionResponse
+    NativeSubscriptionResponse:
+      properties:
+        authorization:
+          $ref: '#/components/schemas/NativeSubscriptionAuthorization'
+        product:
+          $ref: '#/components/schemas/NativeSubscriptionReference'
+        membership:
+          $ref: '#/components/schemas/NativeSubscriptionMembership'
+        cancel_requirement:
+          anyOf:
+          - $ref: '#/components/schemas/NativeSubscriptionCancelRequirement'
+          - type: 'null'
+      additionalProperties: true
+      type: object
+      required:
+      - authorization
+      - product
+      - membership
+      - cancel_requirement
+      title: NativeSubscriptionResponse
+    AccessFeeCollection:
+      properties:
+        mode:
+          type: string
+          title: Mode
+        status:
+          type: string
+          title: Status
+        fee_collector_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fee Collector Address
+        allowance_token_contract:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Allowance Token Contract
+        allowance_limit_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Allowance Limit Minor Units
+        allowance_spent_minor_units:
+          type: integer
+          title: Allowance Spent Minor Units
+        allowance_expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Allowance Expires At
+        allowance_tx_hash:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Allowance Tx Hash
+        metadata:
+          type: object
+          title: Metadata
+      additionalProperties: true
+      type: object
+      required:
+      - mode
+      - status
+      - fee_collector_address
+      - allowance_token_contract
+      - allowance_limit_minor_units
+      - allowance_spent_minor_units
+      - allowance_expires_at
+      - allowance_tx_hash
+      - metadata
+      title: AccessFeeCollection
+    AccessMeteredDeliveryEvidence:
+      properties:
+        delivery_id:
+          type: string
+          title: Delivery Id
+        sequence:
+          type: integer
+          title: Sequence
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        cumulative_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Cumulative Minor Units
+        status:
+          type: string
+          title: Status
+        voucher_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Voucher Signature
+        expires_at:
+          type: string
+          title: Expires At
+        committed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Committed At
+        created_at:
+          type: string
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - delivery_id
+      - sequence
+      - amount_minor_units
+      - cumulative_minor_units
+      - status
+      - voucher_signature
+      - expires_at
+      - committed_at
+      - created_at
+      title: AccessMeteredDeliveryEvidence
+    AccessMeteredVoucher:
+      properties:
+        channelId:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Channelid
+        cumulativeAmount:
+          type: string
+          maxLength: 20
+          minLength: 1
+          pattern: ^\d+$
+          title: Cumulativeamount
+        expiresAt:
+          type: integer
+          minimum: 1
+          title: Expiresat
+      type: object
+      required:
+      - channelId
+      - cumulativeAmount
+      - expiresAt
+      title: AccessMeteredVoucher
+    HiltProductReference:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        checkout_url:
+          type: string
+          title: Checkout Url
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - slug
+      - status
+      - title
+      - token_mint
+      - checkout_url
+      title: HiltProductReference
+    AccessSetupIntent:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        agent_name:
+          type: string
+          title: Agent Name
+        agent_platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Agent Platform
+        requested_use_case:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Requested Use Case
+        contact_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Contact Email
+        external_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Reference
+        requested_permissions:
+          items:
+            type: string
+          type: array
+          title: Requested Permissions
+        approved_permissions:
+          items:
+            type: string
+          type: array
+          title: Approved Permissions
+        sandbox_owner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sandbox Owner Id
+        approved_owner_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approved Owner Id
+        sandbox_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sandbox Key Id
+        live_key_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live Key Id
+        setup_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Setup Url
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        approved_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Approved At
+        live_key_issued_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Live Key Issued At
+        revoked_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Revoked At
+        metadata:
+          type: object
+          title: Metadata
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - status
+      - agent_name
+      - agent_platform
+      - requested_use_case
+      - contact_email
+      - external_reference
+      - requested_permissions
+      - approved_permissions
+      - sandbox_owner_id
+      - approved_owner_id
+      - sandbox_key_id
+      - live_key_id
+      - setup_url
+      - expires_at
+      - approved_at
+      - live_key_issued_at
+      - revoked_at
+      - metadata
+      - created_at
+      - updated_at
+      title: AccessSetupIntent
+    AccessSandboxSession:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        livemode:
+          type: boolean
+          enum:
+          - false
+          const: false
+          title: Livemode
+        sandbox_only:
+          type: boolean
+          enum:
+          - true
+          const: true
+          title: Sandbox Only
+        access_app_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access App Id
+        access_product_id:
+          type: string
+          title: Access Product Id
+        product_id:
+          type: string
+          title: Product Id
+        entitlement_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Entitlement Id
+        external_customer_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        rail_id:
+          type: string
+          title: Rail Id
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        proof_type:
+          type: string
+          title: Proof Type
+        proof_reference_preview:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proof Reference Preview
+        proof:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Proof
+        expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Expires At
+        confirmed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmed At
+        failed_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failed Reason
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - status
+      - livemode
+      - sandbox_only
+      - access_app_id
+      - access_product_id
+      - product_id
+      - entitlement_id
+      - external_customer_id
+      - wallet
+      - email
+      - rail_id
+      - rail
+      - proof_type
+      - proof_reference_preview
+      - expires_at
+      - confirmed_at
+      - failed_reason
+      - created_at
+      - updated_at
+      title: AccessSandboxSession
+    NativeSubscriptionReference:
+      properties:
+        id:
+          type: string
+          title: Id
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - slug
+      - title
+      title: NativeSubscriptionReference
+    AccessPaymentProofSubmission:
+      properties:
+        status:
+          type: string
+          title: Status
+        payment_session_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Session Id
+        payment_requirement_bound:
+          type: boolean
+          title: Payment Requirement Bound
+        payment_requirement_record:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Payment Requirement Record
+        verification_status:
+          type: string
+          title: Verification Status
+        settlement_status:
+          type: string
+          title: Settlement Status
+        receipt_mapping_status:
+          type: string
+          title: Receipt Mapping Status
+        entitlement_activation_status:
+          type: string
+          title: Entitlement Activation Status
+        next_step:
+          type: string
+          title: Next Step
+      additionalProperties: true
+      type: object
+      required:
+      - status
+      - payment_session_id
+      - payment_requirement_bound
+      - payment_requirement_record
+      - verification_status
+      - settlement_status
+      - receipt_mapping_status
+      - entitlement_activation_status
+      - next_step
+      title: AccessPaymentProofSubmission
+    AccessAppCreateRequest:
+      properties:
+        name:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Name
+        external_app_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External App Id
+        default_rail:
+          type: string
+          title: Default Rail
+          default: solana_usdc
+        rail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rail
+        live_mode:
+          type: boolean
+          title: Live Mode
+          default: false
+        confirm_live_mode:
+          type: boolean
+          title: Confirm Live Mode
+          default: false
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - name
+      title: AccessAppCreateRequest
+    AccessMeteredSettlement:
+      properties:
+        merchant_minor_units:
+          type: integer
+          title: Merchant Minor Units
+        hilt_fee_minor_units:
+          type: integer
+          title: Hilt Fee Minor Units
+        rounding_residual_minor_units:
+          type: integer
+          title: Rounding Residual Minor Units
+      additionalProperties: true
+      type: object
+      required:
+      - merchant_minor_units
+      - hilt_fee_minor_units
+      - rounding_residual_minor_units
+      title: AccessMeteredSettlement
+    AccessSandboxPaymentSessionConfirmRequest:
+      properties:
+        proof:
+          type: string
+          maxLength: 500
+          minLength: 12
+          title: Proof
+      type: object
+      required:
+      - proof
+      title: AccessSandboxPaymentSessionConfirmRequest
+    AccessPaymentProofResponse:
+      properties:
+        payment_proof:
+          $ref: '#/components/schemas/AccessPaymentProof'
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        proof_submission:
+          $ref: '#/components/schemas/AccessPaymentProofSubmission'
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - payment_proof
+      - rail
+      - proof_submission
+      title: AccessPaymentProofResponse
+    AccessX402SettleResponse:
+      properties:
+        x402Version:
+          type: integer
+          enum:
+          - 2
+          const: 2
+          title: X402Version
+        payment_session_id:
+          type: string
+          title: Payment Session Id
+        payment_proof:
+          $ref: '#/components/schemas/AccessX402PaymentProofResponse'
+        settlement_evidence:
+          $ref: '#/components/schemas/AccessX402SettlementEvidenceResponse'
+        receipt:
+          $ref: '#/components/schemas/AccessX402ReceiptResponse'
+        entitlement:
+          $ref: '#/components/schemas/AccessX402EntitlementResponse'
+        payment_response:
+          $ref: '#/components/schemas/AccessX402PaymentResponse'
+        headers:
+          $ref: '#/components/schemas/AccessX402ResponseHeaders'
+        idempotent_replay:
+          type: boolean
+          title: Idempotent Replay
+          default: false
+      type: object
+      required:
+      - x402Version
+      - payment_session_id
+      - payment_proof
+      - settlement_evidence
+      - receipt
+      - entitlement
+      - payment_response
+      - headers
+      title: AccessX402SettleResponse
+    AccessRailSettingListItem:
+      properties:
+        rail_id:
+          type: string
+          title: Rail Id
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        setting:
+          anyOf:
+          - $ref: '#/components/schemas/AccessRailSetting'
+          - type: 'null'
+        platform_setting:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Platform Setting
+        configured:
+          type: boolean
+          title: Configured
+      additionalProperties: true
+      type: object
+      required:
+      - rail_id
+      - rail
+      - setting
+      - platform_setting
+      - configured
+      title: AccessRailSettingListItem
+    AccessWebhookCreateResponse:
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/WebhookEndpoint'
+        signing_secret:
+          type: string
+          title: Signing Secret
+        supported_events:
+          items:
+            type: string
+          type: array
+          title: Supported Events
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - endpoint
+      - signing_secret
+      - supported_events
+      title: AccessWebhookCreateResponse
+    AccessX402PaymentResponse:
+      properties:
+        success:
+          type: boolean
+          enum:
+          - true
+          const: true
+          title: Success
+        transaction:
+          type: string
+          title: Transaction
+        network:
+          type: string
+          title: Network
+      type: object
+      required:
+      - success
+      - transaction
+      - network
+      title: AccessX402PaymentResponse
+    AccessMeteredCommit:
+      properties:
+        deliveryId:
+          type: string
+          title: Deliveryid
+        sessionId:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Sessionid
+        amount:
+          type: string
+          title: Amount
+        cumulative:
+          type: string
+          title: Cumulative
+        status:
+          type: string
+          title: Status
+      additionalProperties: true
+      type: object
+      required:
+      - deliveryId
+      - amount
+      - cumulative
+      - status
+      title: AccessMeteredCommit
+    AccessAgentBootstrapRequest:
+      properties:
+        agent_name:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Agent Name
+        agent_platform:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Agent Platform
+        requested_use_case:
+          anyOf:
+          - type: string
+            maxLength: 1000
+          - type: 'null'
+          title: Requested Use Case
+        contact_email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Contact Email
+        external_reference:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Reference
+        requested_permissions:
+          items:
+            type: string
+          type: array
+          title: Requested Permissions
+        ttl_hours:
+          type: integer
+          maximum: 168
+          minimum: 1
+          title: Ttl Hours
+          default: 24
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - agent_name
+      title: AccessAgentBootstrapRequest
+    NativeSubscriptionCancelResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        authorization:
+          $ref: '#/components/schemas/NativeSubscriptionAuthorization'
+        cancel_policy:
+          type: object
+          title: Cancel Policy
+        cancel_requirement:
+          anyOf:
+          - $ref: '#/components/schemas/NativeSubscriptionCancelRequirement'
+          - type: 'null'
+        cancel_verification:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Cancel Verification
+      additionalProperties: true
+      type: object
+      required:
+      - status
+      - authorization
+      - cancel_policy
+      title: NativeSubscriptionCancelResponse
+    AccessSandboxSessionConfirmResponse:
+      properties:
+        sandbox_session:
+          $ref: '#/components/schemas/AccessSandboxSession'
+        entitlement:
+          $ref: '#/components/schemas/AccessEntitlement'
+        livemode:
+          anyOf:
+          - type: boolean
+            enum:
+            - false
+            const: false
+          - type: 'null'
+          title: Livemode
+        sandbox_only:
+          anyOf:
+          - type: boolean
+            enum:
+            - true
+            const: true
+          - type: 'null'
+          title: Sandbox Only
+        message:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Message
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - sandbox_session
+      - entitlement
+      title: AccessSandboxSessionConfirmResponse
+    AccessUsageEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        units:
+          type: integer
+          title: Units
+        usage_unit:
+          type: string
+          title: Usage Unit
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - units
+      - usage_unit
+      - created_at
+      title: AccessUsageEvent
+    AccessMeteredSessionCreateResponse:
+      properties:
+        metered_session:
+          $ref: '#/components/schemas/AccessMeteredSession'
+        challenge:
+          type: string
+          title: Challenge
+        idempotent_replay:
+          type: boolean
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - metered_session
+      - challenge
+      - idempotent_replay
+      title: AccessMeteredSessionCreateResponse
+    AccessAgentSetupManifestRequest:
+      properties:
+        setup_token:
+          type: string
+          maxLength: 300
+          minLength: 20
+          title: Setup Token
+        manifest:
+          type: object
+          title: Manifest
+      type: object
+      required:
+      - setup_token
+      - manifest
+      title: AccessAgentSetupManifestRequest
+    AccessAppCreateResponse:
+      properties:
+        app:
+          $ref: '#/components/schemas/AccessApp'
         rail:
           $ref: '#/components/schemas/AccessRailCapability'
         idempotent_replay:
@@ -2525,10 +3383,331 @@ components:
       additionalProperties: true
       type: object
       required:
-      - access_product
-      - hilt_product
+      - app
       - rail
-      title: AccessProductCreateResponse
+      title: AccessAppCreateResponse
+    AccessMeteredSignedVoucher:
+      properties:
+        voucher:
+          $ref: '#/components/schemas/AccessMeteredVoucher'
+        signer:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Signer
+        signature:
+          type: string
+          maxLength: 128
+          minLength: 64
+          title: Signature
+        signatureType:
+          type: string
+          enum:
+          - ed25519
+          const: ed25519
+          title: Signaturetype
+      type: object
+      required:
+      - voucher
+      - signer
+      - signature
+      - signatureType
+      title: AccessMeteredSignedVoucher
+    AccessSetupReadinessResponse:
+      properties:
+        ready:
+          type: boolean
+          title: Ready
+        mode:
+          type: string
+          title: Mode
+        app:
+          type: object
+          title: App
+        product:
+          type: object
+          title: Product
+        rails:
+          type: object
+          title: Rails
+        webhooks:
+          type: object
+          title: Webhooks
+        blockers:
+          items:
+            type: object
+          type: array
+          title: Blockers
+        next_actions:
+          items:
+            type: object
+          type: array
+          title: Next Actions
+        agent_setup:
+          type: object
+          title: Agent Setup
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - ready
+      - mode
+      - app
+      - product
+      - rails
+      - webhooks
+      - blockers
+      - next_actions
+      - agent_setup
+      - generated_at
+      title: AccessSetupReadinessResponse
+    NativeSubscriptionAuthorization:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        product_id:
+          type: string
+          title: Product Id
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        initial_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Initial Payment Id
+        native_plan_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Native Plan Id
+        latest_collection_attempt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Collection Attempt Id
+        payer_wallet:
+          type: string
+          title: Payer Wallet
+        payer_token_account:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Token Account
+        subscription_authority_pda:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Authority Pda
+        subscription_pda:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Subscription Pda
+        plan_pda:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Plan Pda
+        token_mint:
+          type: string
+          title: Token Mint
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        period_hours:
+          type: integer
+          title: Period Hours
+        next_collection_due_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Next Collection Due At
+        last_collection_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Collection At
+        status:
+          type: string
+          title: Status
+        setup_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Setup Signature
+        cancellation_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cancellation Signature
+        settings_json:
+          type: object
+          title: Settings Json
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - product_id
+      - membership_id
+      - initial_payment_id
+      - native_plan_id
+      - latest_collection_attempt_id
+      - payer_wallet
+      - payer_token_account
+      - subscription_authority_pda
+      - subscription_pda
+      - plan_pda
+      - token_mint
+      - amount_minor_units
+      - period_hours
+      - next_collection_due_at
+      - last_collection_at
+      - status
+      - setup_signature
+      - cancellation_signature
+      - settings_json
+      - created_at
+      - updated_at
+      title: NativeSubscriptionAuthorization
+    AccessAgentSetupApproveRequest:
+      properties:
+        setup_token:
+          type: string
+          maxLength: 300
+          minLength: 20
+          title: Setup Token
+        approved_permissions:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Approved Permissions
+        issue_live_key:
+          type: boolean
+          title: Issue Live Key
+          default: true
+        live_key_name:
+          anyOf:
+          - type: string
+            maxLength: 100
+          - type: 'null'
+          title: Live Key Name
+        confirm_owner_approval:
+          type: boolean
+          title: Confirm Owner Approval
+          default: false
+      type: object
+      required:
+      - setup_token
+      title: AccessAgentSetupApproveRequest
+    AccessX402ResponseHeaders:
+      properties:
+        PAYMENT-RESPONSE:
+          type: string
+          title: Payment-Response
+      type: object
+      required:
+      - PAYMENT-RESPONSE
+      title: AccessX402ResponseHeaders
+    AccessEntitlementConsumeRequest:
+      properties:
+        product_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Id
+        external_product_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Product Id
+        external_customer_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        customer_reference:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Customer Reference
+        units:
+          type: integer
+          minimum: 1
+          title: Units
+          default: 1
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      title: AccessEntitlementConsumeRequest
+    AccessEntitlementConsumeResponse:
+      properties:
+        consumed:
+          type: boolean
+          title: Consumed
+        units:
+          type: integer
+          title: Units
+        usage_event:
+          $ref: '#/components/schemas/AccessUsageEvent'
+        entitlement:
+          $ref: '#/components/schemas/AccessEntitlement'
+        usage:
+          anyOf:
+          - $ref: '#/components/schemas/AccessEntitlementUsage'
+          - type: 'null'
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - consumed
+      - units
+      - usage_event
+      - entitlement
+      - usage
+      title: AccessEntitlementConsumeResponse
     AccessPaymentSession:
       properties:
         id:
@@ -2639,74 +3818,743 @@ components:
       - phantom_mobile
       - adapter
       title: AccessPaymentSession
-    AccessSetupReadinessResponse:
+    AccessEntitlementReceiptReferenceResponse:
       properties:
-        ready:
+        id:
+          type: string
+          title: Id
+        rail_id:
+          type: string
+          title: Rail Id
+      type: object
+      required:
+      - id
+      - rail_id
+      title: AccessEntitlementReceiptReferenceResponse
+    AccessRailSetting:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        rail_id:
+          type: string
+          title: Rail Id
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        enabled:
           type: boolean
-          title: Ready
+          title: Enabled
         mode:
           type: string
           title: Mode
-        app:
-          type: object
-          title: App
-        product:
-          type: object
-          title: Product
-        rails:
-          type: object
-          title: Rails
-        webhooks:
-          type: object
-          title: Webhooks
-        blockers:
-          items:
-            type: object
-          type: array
-          title: Blockers
-        next_actions:
-          items:
-            type: object
-          type: array
-          title: Next Actions
-        agent_setup:
-          type: object
-          title: Agent Setup
-        generated_at:
+        status:
           type: string
-          title: Generated At
+          title: Status
+        payout_address:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payout Address
+        label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Label
+        verification_status:
+          type: string
+          title: Verification Status
+        metadata:
+          type: object
+          title: Metadata
+        fee_collection:
+          $ref: '#/components/schemas/AccessFeeCollection'
+        pending_review_age_seconds:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Pending Review Age Seconds
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
       additionalProperties: true
       type: object
       required:
-      - ready
+      - id
+      - rail_id
+      - rail
+      - enabled
       - mode
-      - app
-      - product
-      - rails
-      - webhooks
-      - blockers
-      - next_actions
-      - agent_setup
-      - generated_at
-      title: AccessSetupReadinessResponse
-    AccessX402SettleRequest:
+      - status
+      - payout_address
+      - label
+      - verification_status
+      - metadata
+      - fee_collection
+      - pending_review_age_seconds
+      - created_at
+      - updated_at
+      title: AccessRailSetting
+    AccessPaymentSessionCreateRequest:
       properties:
-        payment_session_id:
-          type: string
-          maxLength: 180
-          minLength: 8
-          title: Payment Session Id
-        payment_signature:
+        product_id:
           anyOf:
           - type: string
-            maxLength: 131072
-            minLength: 8
+            format: uuid
           - type: 'null'
-          title: Payment Signature
+          title: Product Id
+        external_product_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Product Id
+        external_customer_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Customer Id
+        wallet:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
+        amount_minor_units:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Amount Minor Units
+        rail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rail
+          description: Hosted settlement rail for this session. Public live values are solana_usdc and solana_sol.
+          examples:
+          - solana_usdc
+          - solana_sol
+        payment_protocol:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Payment Protocol
+        settlement_rail:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Settlement Rail
+        settlement_rail_id:
+          anyOf:
+          - type: string
+            maxLength: 80
+          - type: 'null'
+          title: Settlement Rail Id
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      title: AccessPaymentSessionCreateRequest
+    AccessX402SettlementEvidenceResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        proof_id:
+          type: string
+          title: Proof Id
+        verification_attempt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Verification Attempt Id
+        rail_id:
+          type: string
+          title: Rail Id
+        status:
+          type: string
+          title: Status
+        settlement_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Settlement Reference
+        finality_state:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Finality State
+        confirmations:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Confirmations
+        settled_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Settled At
+        evidence:
+          type: object
+          title: Evidence
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
       type: object
       required:
-      - payment_session_id
-      title: AccessX402SettleRequest
+      - id
+      - owner_id
+      - proof_id
+      - verification_attempt_id
+      - rail_id
+      - status
+      - settlement_reference
+      - finality_state
+      - confirmations
+      - settled_at
+      - evidence
+      - created_at
+      title: AccessX402SettlementEvidenceResponse
+    AccessEntitlementReceipt:
+      properties:
+        id:
+          type: string
+          title: Id
+        rail_id:
+          type: string
+          title: Rail Id
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - rail_id
+      title: AccessEntitlementReceipt
+    AccessApp:
+      properties:
+        id:
+          type: string
+          title: Id
+        name:
+          type: string
+          title: Name
+        external_app_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External App Id
+        status:
+          type: string
+          title: Status
+        default_rail:
+          type: string
+          title: Default Rail
+        live_mode:
+          type: boolean
+          title: Live Mode
+        metadata:
+          type: object
+          title: Metadata
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - name
+      - external_app_id
+      - status
+      - default_rail
+      - live_mode
+      - metadata
+      - created_at
+      - updated_at
+      title: AccessApp
+    AccessMeteredProduct:
+      properties:
+        id:
+          type: string
+          title: Id
+        external_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: External Id
+        title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Title
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - external_id
+      - title
+      title: AccessMeteredProduct
+    WebhookEndpoint:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          title: Url
+        status:
+          type: string
+          title: Status
+        signing_secret_preview:
+          type: string
+          title: Signing Secret Preview
+        subscribed_events:
+          items:
+            type: string
+          type: array
+          title: Subscribed Events
+        product_ids:
+          items:
+            type: string
+          type: array
+          title: Product Ids
+        consecutive_failures:
+          type: integer
+          title: Consecutive Failures
+        last_success_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Success At
+        last_failure_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Failure At
+        last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Error
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - label
+      - url
+      - status
+      - signing_secret_preview
+      - subscribed_events
+      - product_ids
+      - consecutive_failures
+      - last_success_at
+      - last_failure_at
+      - last_error
+      - archived_at
+      - created_at
+      - updated_at
+      title: WebhookEndpoint
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    AccessMeteredDelivery:
+      properties:
+        deliveryId:
+          type: string
+          title: Deliveryid
+        sessionId:
+          type: string
+          title: Sessionid
+        amount:
+          type: string
+          title: Amount
+        currency:
+          type: string
+          enum:
+          - USDC
+          const: USDC
+          title: Currency
+        sequence:
+          type: integer
+          title: Sequence
+        expiresAt:
+          type: integer
+          title: Expiresat
+        commitUrl:
+          type: string
+          title: Commiturl
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        cumulative:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Cumulative
+      additionalProperties: true
+      type: object
+      required:
+      - deliveryId
+      - sessionId
+      - amount
+      - currency
+      - sequence
+      - expiresAt
+      - commitUrl
+      title: AccessMeteredDelivery
+    AccessRailsCaller:
+      properties:
+        user_id:
+          type: string
+          title: User Id
+        sandbox:
+          type: boolean
+          title: Sandbox
+      additionalProperties: true
+      type: object
+      required:
+      - user_id
+      - sandbox
+      title: AccessRailsCaller
+    AccessRailCapability:
+      properties:
+        id:
+          type: string
+          title: Id
+        rail_id:
+          type: string
+          title: Rail Id
+        display_name:
+          type: string
+          title: Display Name
+        status:
+          type: string
+          title: Status
+        network:
+          type: string
+          title: Network
+        settlement_asset:
+          type: string
+          title: Settlement Asset
+        live_capable:
+          type: boolean
+          title: Live Capable
+        default_enabled:
+          type: boolean
+          title: Default Enabled
+        supports_sandbox:
+          type: boolean
+          title: Supports Sandbox
+        supports_live:
+          type: boolean
+          title: Supports Live
+        supports_hosted_session:
+          type: boolean
+          title: Supports Hosted Session
+        supports_direct_http_402:
+          type: boolean
+          title: Supports Direct Http 402
+        docs_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Docs Url
+        capability_kind:
+          type: string
+          title: Capability Kind
+        payment_protocol:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Protocol
+        settlement_rail_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Settlement Rail Id
+        supports_mpp_session:
+          type: boolean
+          title: Supports Mpp Session
+          default: false
+        payment_channel_program:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Channel Program
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - rail_id
+      - display_name
+      - status
+      - network
+      - settlement_asset
+      - live_capable
+      - default_enabled
+      - supports_sandbox
+      - supports_live
+      - supports_hosted_session
+      - supports_direct_http_402
+      - docs_url
+      - capability_kind
+      - payment_protocol
+      - settlement_rail_id
+      title: AccessRailCapability
+    AccessMeteredChannel:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        authorized_signer:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Authorized Signer
+        highest_voucher_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Highest Voucher Signature
+        close_requested_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Close Requested At
+        settlement_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Settlement Signature
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - payer_wallet
+      - authorized_signer
+      - highest_voucher_signature
+      - close_requested_at
+      - settlement_signature
+      title: AccessMeteredChannel
+    AccessMeteredSessionCreateRequest:
+      properties:
+        product_id:
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
+          title: Product Id
+        external_product_id:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: External Product Id
+        external_customer_id:
+          type: string
+          maxLength: 180
+          minLength: 1
+          title: External Customer Id
+        cap_minor_units:
+          type: integer
+          minimum: 1
+          title: Cap Minor Units
+        expires_in_seconds:
+          type: integer
+          maximum: 86400
+          minimum: 300
+          title: Expires In Seconds
+          default: 3600
+        metadata:
+          type: object
+          title: Metadata
+      type: object
+      required:
+      - external_customer_id
+      - cap_minor_units
+      title: AccessMeteredSessionCreateRequest
+    AccessMetering:
+      properties:
+        usage_unit:
+          type: string
+          title: Usage Unit
+        units_per_payment:
+          type: integer
+          title: Units Per Payment
+      additionalProperties: true
+      type: object
+      required:
+      - usage_unit
+      - units_per_payment
+      title: AccessMetering
+    AccessProductCreateResponse:
+      properties:
+        access_product:
+          $ref: '#/components/schemas/AccessProduct'
+        hilt_product:
+          $ref: '#/components/schemas/HiltProductReference'
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
+      type: object
+      required:
+      - access_product
+      - hilt_product
+      - rail
+      title: AccessProductCreateResponse
+    NativeSubscriptionCancelIntentRequest:
+      properties:
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Reason
+        cancel_at_period_end:
+          type: boolean
+          title: Cancel At Period End
+          default: true
+      type: object
+      title: NativeSubscriptionCancelIntentRequest
+    AccessProductRailsResponse:
+      properties:
+        product:
+          $ref: '#/components/schemas/AccessProduct'
+        mode:
+          type: string
+          title: Mode
+        default_rail:
+          type: string
+          title: Default Rail
+        allowed_rails:
+          items:
+            type: string
+          type: array
+          title: Allowed Rails
+        available_rails:
+          items:
+            $ref: '#/components/schemas/AccessEffectiveRailEntry'
+          type: array
+          title: Available Rails
+        blocked_rails:
+          items:
+            $ref: '#/components/schemas/AccessEffectiveRailEntry'
+          type: array
+          title: Blocked Rails
+        payment_session_options:
+          type: object
+          title: Payment Session Options
+      additionalProperties: true
+      type: object
+      required:
+      - product
+      - mode
+      - default_rail
+      - allowed_rails
+      - available_rails
+      - blocked_rails
+      - payment_session_options
+      title: AccessProductRailsResponse
+    AccessMeteringState:
+      properties:
+        usage_unit:
+          type: string
+          title: Usage Unit
+        unit_price_minor_units:
+          type: integer
+          title: Unit Price Minor Units
+        cap_minor_units:
+          type: integer
+          title: Cap Minor Units
+        deposit_minor_units:
+          type: integer
+          title: Deposit Minor Units
+        committed_minor_units:
+          type: integer
+          title: Committed Minor Units
+        remaining_minor_units:
+          type: integer
+          title: Remaining Minor Units
+      additionalProperties: true
+      type: object
+      required:
+      - usage_unit
+      - unit_price_minor_units
+      - cap_minor_units
+      - deposit_minor_units
+      - committed_minor_units
+      - remaining_minor_units
+      title: AccessMeteringState
     AccessMeteredSession:
       properties:
         id:
@@ -2809,32 +4657,50 @@ components:
       - updated_at
       - deliveries
       title: AccessMeteredSession
-    ValidationError:
+    AccessSandboxSessionCreateResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        sandbox_session:
+          $ref: '#/components/schemas/AccessSandboxSession'
+        pending_entitlement:
+          $ref: '#/components/schemas/AccessEntitlement'
+        rail:
+          $ref: '#/components/schemas/AccessRailCapability'
+        payment_session_adapter:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Payment Session Adapter
+        livemode:
+          type: boolean
+          enum:
+          - false
+          const: false
+          title: Livemode
+        sandbox_only:
+          type: boolean
+          enum:
+          - true
+          const: true
+          title: Sandbox Only
+        message:
           type: string
           title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+        idempotent_replay:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Idempotent Replay
+      additionalProperties: true
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - sandbox_session
+      - pending_entitlement
+      - rail
+      - payment_session_adapter
+      - livemode
+      - sandbox_only
+      - message
+      title: AccessSandboxSessionCreateResponse
     AccessX402PaymentProofResponse:
       properties:
         id:
@@ -2962,68 +4828,6 @@ components:
       - created_at
       - updated_at
       title: AccessX402PaymentProofResponse
-    AccessMeteredDeliveryCreateRequest:
-      properties:
-        units:
-          type: integer
-          maximum: 1000000
-          minimum: 1
-          title: Units
-          default: 1
-        delivery_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-            minLength: 1
-          - type: 'null'
-          title: Delivery Id
-        proof:
-          anyOf:
-          - type: string
-            maxLength: 2000
-          - type: 'null'
-          title: Proof
-        ttl_seconds:
-          type: integer
-          maximum: 900
-          minimum: 30
-          title: Ttl Seconds
-          default: 300
-      type: object
-      title: AccessMeteredDeliveryCreateRequest
-    AccessEntitlementReceiptReferenceResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        rail_id:
-          type: string
-          title: Rail Id
-      type: object
-      required:
-      - id
-      - rail_id
-      title: AccessEntitlementReceiptReferenceResponse
-    AccessX402PaymentResponse:
-      properties:
-        success:
-          type: boolean
-          enum:
-          - true
-          const: true
-          title: Success
-        transaction:
-          type: string
-          title: Transaction
-        network:
-          type: string
-          title: Network
-      type: object
-      required:
-      - success
-      - transaction
-      - network
-      title: AccessX402PaymentResponse
     AccessPaymentProof:
       properties:
         id:
@@ -3152,534 +4956,90 @@ components:
       - created_at
       - updated_at
       title: AccessPaymentProof
-    NativeSubscriptionAuthorization:
+    AccessPaymentProofSubmitRequest:
       properties:
-        id:
-          type: string
-          title: Id
-        owner_id:
-          type: string
-          title: Owner Id
         product_id:
-          type: string
+          anyOf:
+          - type: string
+            format: uuid
+          - type: 'null'
           title: Product Id
-        membership_id:
+        external_product_id:
           anyOf:
           - type: string
+            maxLength: 180
           - type: 'null'
-          title: Membership Id
-        initial_payment_id:
+          title: External Product Id
+        payment_session_id:
           anyOf:
           - type: string
+            maxLength: 180
           - type: 'null'
-          title: Initial Payment Id
-        native_plan_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Native Plan Id
-        latest_collection_attempt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Collection Attempt Id
-        payer_wallet:
+          title: Payment Session Id
+        rail:
           type: string
-          title: Payer Wallet
-        payer_token_account:
+          title: Rail
+          default: solana_usdc
+        proof_type:
           anyOf:
           - type: string
+            maxLength: 120
           - type: 'null'
-          title: Payer Token Account
-        subscription_authority_pda:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subscription Authority Pda
-        subscription_pda:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Subscription Pda
-        plan_pda:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Plan Pda
-        token_mint:
-          type: string
-          title: Token Mint
-        amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        period_hours:
-          type: integer
-          title: Period Hours
-        next_collection_due_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Next Collection Due At
-        last_collection_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Collection At
-        status:
-          type: string
-          title: Status
-        setup_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Setup Signature
-        cancellation_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cancellation Signature
-        settings_json:
+          title: Proof Type
+        proof_payload:
           type: object
-          title: Settings Json
-        created_at:
+          title: Proof Payload
+        external_customer_id:
           anyOf:
           - type: string
+            maxLength: 180
           - type: 'null'
-          title: Created At
-        updated_at:
+          title: External Customer Id
+        wallet:
           anyOf:
           - type: string
+            maxLength: 180
           - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - owner_id
-      - product_id
-      - membership_id
-      - initial_payment_id
-      - native_plan_id
-      - latest_collection_attempt_id
-      - payer_wallet
-      - payer_token_account
-      - subscription_authority_pda
-      - subscription_pda
-      - plan_pda
-      - token_mint
-      - amount_minor_units
-      - period_hours
-      - next_collection_due_at
-      - last_collection_at
-      - status
-      - setup_signature
-      - cancellation_signature
-      - settings_json
-      - created_at
-      - updated_at
-      title: NativeSubscriptionAuthorization
-    AccessAgentSetupManifestRequest:
-      properties:
-        setup_token:
-          type: string
-          maxLength: 300
-          minLength: 20
-          title: Setup Token
-        manifest:
-          type: object
-          title: Manifest
-      type: object
-      required:
-      - setup_token
-      - manifest
-      title: AccessAgentSetupManifestRequest
-    AccessMeteredDeliveryEvidence:
-      properties:
-        delivery_id:
-          type: string
-          title: Delivery Id
-        sequence:
-          type: integer
-          title: Sequence
+          title: Wallet
+        email:
+          anyOf:
+          - type: string
+            maxLength: 320
+          - type: 'null'
+          title: Email
         amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        cumulative_minor_units:
           anyOf:
           - type: integer
+            minimum: 1
           - type: 'null'
-          title: Cumulative Minor Units
-        status:
-          type: string
-          title: Status
-        voucher_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Voucher Signature
-        expires_at:
-          type: string
-          title: Expires At
-        committed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Committed At
-        created_at:
-          type: string
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - delivery_id
-      - sequence
-      - amount_minor_units
-      - cumulative_minor_units
-      - status
-      - voucher_signature
-      - expires_at
-      - committed_at
-      - created_at
-      title: AccessMeteredDeliveryEvidence
-    AccessX402ResponseHeaders:
-      properties:
-        PAYMENT-RESPONSE:
-          type: string
-          title: Payment-Response
-      type: object
-      required:
-      - PAYMENT-RESPONSE
-      title: AccessX402ResponseHeaders
-    AccessMeteredDelivery:
-      properties:
-        deliveryId:
-          type: string
-          title: Deliveryid
-        sessionId:
-          type: string
-          title: Sessionid
-        amount:
-          type: string
-          title: Amount
-        currency:
-          type: string
-          enum:
-          - USDC
-          const: USDC
-          title: Currency
-        sequence:
-          type: integer
-          title: Sequence
-        expiresAt:
-          type: integer
-          title: Expiresat
-        commitUrl:
-          type: string
-          title: Commiturl
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        cumulative:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Cumulative
-      additionalProperties: true
-      type: object
-      required:
-      - deliveryId
-      - sessionId
-      - amount
-      - currency
-      - sequence
-      - expiresAt
-      - commitUrl
-      title: AccessMeteredDelivery
-    AccessRailsResponse:
-      properties:
-        default_rail:
-          type: string
-          title: Default Rail
-        rails:
-          items:
-            $ref: '#/components/schemas/AccessRailCapability'
-          type: array
-          title: Rails
-        caller:
-          $ref: '#/components/schemas/AccessRailsCaller'
-      additionalProperties: true
-      type: object
-      required:
-      - default_rail
-      - rails
-      - caller
-      title: AccessRailsResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    AccessAgentSetupApproveRequest:
-      properties:
-        setup_token:
-          type: string
-          maxLength: 300
-          minLength: 20
-          title: Setup Token
-        approved_permissions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Approved Permissions
-        issue_live_key:
+          title: Amount Minor Units
+        livemode:
           type: boolean
-          title: Issue Live Key
+          title: Livemode
           default: true
-        live_key_name:
-          anyOf:
-          - type: string
-            maxLength: 100
-          - type: 'null'
-          title: Live Key Name
-        confirm_owner_approval:
-          type: boolean
-          title: Confirm Owner Approval
-          default: false
+        metadata:
+          type: object
+          title: Metadata
       type: object
       required:
-      - setup_token
-      title: AccessAgentSetupApproveRequest
-    AccessMeteredCommitResponse:
+      - proof_payload
+      title: AccessPaymentProofSubmitRequest
+    AccessBillingSelectionPolicy:
       properties:
-        commit:
-          $ref: '#/components/schemas/AccessMeteredCommit'
-        metered_session:
-          $ref: '#/components/schemas/AccessMeteredSession'
-      additionalProperties: true
-      type: object
-      required:
-      - commit
-      - metered_session
-      title: AccessMeteredCommitResponse
-    AccessRailCapability:
-      properties:
-        id:
-          type: string
-          title: Id
-        rail_id:
-          type: string
-          title: Rail Id
-        display_name:
-          type: string
-          title: Display Name
-        status:
-          type: string
-          title: Status
-        network:
-          type: string
-          title: Network
-        settlement_asset:
-          type: string
-          title: Settlement Asset
-        live_capable:
-          type: boolean
-          title: Live Capable
-        default_enabled:
-          type: boolean
-          title: Default Enabled
-        supports_sandbox:
-          type: boolean
-          title: Supports Sandbox
-        supports_live:
-          type: boolean
-          title: Supports Live
-        supports_hosted_session:
-          type: boolean
-          title: Supports Hosted Session
-        supports_direct_http_402:
-          type: boolean
-          title: Supports Direct Http 402
-        docs_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Docs Url
-        capability_kind:
-          type: string
-          title: Capability Kind
-        payment_protocol:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Protocol
-        settlement_rail_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Settlement Rail Id
-        supports_mpp_session:
-          type: boolean
-          title: Supports Mpp Session
-          default: false
-        payment_channel_program:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Channel Program
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - rail_id
-      - display_name
-      - status
-      - network
-      - settlement_asset
-      - live_capable
-      - default_enabled
-      - supports_sandbox
-      - supports_live
-      - supports_hosted_session
-      - supports_direct_http_402
-      - docs_url
-      - capability_kind
-      - payment_protocol
-      - settlement_rail_id
-      title: AccessRailCapability
-    WebhookEndpoint:
-      properties:
-        id:
-          type: string
-          title: Id
-        owner_id:
-          type: string
-          title: Owner Id
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          title: Url
-        status:
-          type: string
-          title: Status
-        signing_secret_preview:
-          type: string
-          title: Signing Secret Preview
-        subscribed_events:
+        current_statuses:
           items:
             type: string
           type: array
-          title: Subscribed Events
-        product_ids:
-          items:
-            type: string
-          type: array
-          title: Product Ids
-        consecutive_failures:
-          type: integer
-          title: Consecutive Failures
-        last_success_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Success At
-        last_failure_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Failure At
-        last_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Error
-        archived_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Archived At
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
+          title: Current Statuses
+        current_rule:
+          type: string
+          title: Current Rule
       additionalProperties: true
       type: object
       required:
-      - id
-      - owner_id
-      - label
-      - url
-      - status
-      - signing_secret_preview
-      - subscribed_events
-      - product_ids
-      - consecutive_failures
-      - last_success_at
-      - last_failure_at
-      - last_error
-      - archived_at
-      - created_at
-      - updated_at
-      title: WebhookEndpoint
-    AccessAppCreateResponse:
-      properties:
-        app:
-          $ref: '#/components/schemas/AccessApp'
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - app
-      - rail
-      title: AccessAppCreateResponse
-    AccessMeteredSignedVoucher:
-      properties:
-        voucher:
-          $ref: '#/components/schemas/AccessMeteredVoucher'
-        signer:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Signer
-        signature:
-          type: string
-          maxLength: 128
-          minLength: 64
-          title: Signature
-        signatureType:
-          type: string
-          enum:
-          - ed25519
-          const: ed25519
-          title: Signaturetype
-      type: object
-      required:
-      - voucher
-      - signer
-      - signature
-      - signatureType
-      title: AccessMeteredSignedVoucher
+      - current_statuses
+      - current_rule
+      title: AccessBillingSelectionPolicy
     AccessEffectiveRailEntry:
       properties:
         rail_id:
@@ -3730,69 +5090,7 @@ components:
       - rail
       - payment_session
       title: AccessEffectiveRailEntry
-    AccessProductRailsResponse:
-      properties:
-        product:
-          $ref: '#/components/schemas/AccessProduct'
-        mode:
-          type: string
-          title: Mode
-        default_rail:
-          type: string
-          title: Default Rail
-        allowed_rails:
-          items:
-            type: string
-          type: array
-          title: Allowed Rails
-        available_rails:
-          items:
-            $ref: '#/components/schemas/AccessEffectiveRailEntry'
-          type: array
-          title: Available Rails
-        blocked_rails:
-          items:
-            $ref: '#/components/schemas/AccessEffectiveRailEntry'
-          type: array
-          title: Blocked Rails
-        payment_session_options:
-          type: object
-          title: Payment Session Options
-      additionalProperties: true
-      type: object
-      required:
-      - product
-      - mode
-      - default_rail
-      - allowed_rails
-      - available_rails
-      - blocked_rails
-      - payment_session_options
-      title: AccessProductRailsResponse
-    AccessMeteredVoucher:
-      properties:
-        channelId:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Channelid
-        cumulativeAmount:
-          type: string
-          maxLength: 20
-          minLength: 1
-          pattern: ^\d+$
-          title: Cumulativeamount
-        expiresAt:
-          type: integer
-          minimum: 1
-          title: Expiresat
-      type: object
-      required:
-      - channelId
-      - cumulativeAmount
-      - expiresAt
-      title: AccessMeteredVoucher
-    AccessEntitlementConsumeRequest:
+    AccessEntitlementCheckRequest:
       properties:
         product_id:
           anyOf:
@@ -3806,6 +5104,11 @@ components:
             maxLength: 180
           - type: 'null'
           title: External Product Id
+        rail:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Rail
         external_customer_id:
           anyOf:
           - type: string
@@ -3830,230 +5133,157 @@ components:
             maxLength: 180
           - type: 'null'
           title: Customer Reference
-        units:
-          type: integer
-          minimum: 1
-          title: Units
-          default: 1
-        metadata:
-          type: object
-          title: Metadata
       type: object
-      title: AccessEntitlementConsumeRequest
-    AccessAgentBootstrapResponse:
+      title: AccessEntitlementCheckRequest
+    NativeSubscriptionCancelConfirmRequest:
       properties:
-        setup_intent:
-          $ref: '#/components/schemas/AccessSetupIntent'
-        setup_intent_id:
+        cancel_tx_signature:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 16
+          - type: 'null'
+          title: Cancel Tx Signature
+        revoke_tx_signature:
+          anyOf:
+          - type: string
+            maxLength: 255
+            minLength: 16
+          - type: 'null'
+          title: Revoke Tx Signature
+        reason:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Reason
+        immediate_revoke:
+          type: boolean
+          title: Immediate Revoke
+          default: false
+        verify_onchain:
+          type: boolean
+          title: Verify Onchain
+          default: true
+      type: object
+      title: NativeSubscriptionCancelConfirmRequest
+    AccessBillingStripeCheckoutRequest:
+      properties:
+        plan:
           type: string
-          title: Setup Intent Id
-        owner_approval_url:
+          title: Plan
+        interval:
+          type: string
+          enum:
+          - monthly
+          - yearly
+          title: Interval
+          default: monthly
+        success_url:
+          type: string
+          maxLength: 1000
+          minLength: 8
+          title: Success Url
+        cancel_url:
+          type: string
+          maxLength: 1000
+          minLength: 8
+          title: Cancel Url
+        canary_discount_code:
+          anyOf:
+          - type: string
+            maxLength: 100
+            minLength: 1
+          - type: 'null'
+          title: Canary Discount Code
+        canary_target_minor_units:
+          anyOf:
+          - type: integer
+            maximum: 100000
+            minimum: 50
+          - type: 'null'
+          title: Canary Target Minor Units
+      type: object
+      required:
+      - plan
+      - success_url
+      - cancel_url
+      title: AccessBillingStripeCheckoutRequest
+    AccessMeteredSessionResponse:
+      properties:
+        metered_session:
+          $ref: '#/components/schemas/AccessMeteredSession'
+        payment_receipt:
           anyOf:
           - type: string
           - type: 'null'
-          title: Owner Approval Url
-        setup_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Setup Token
-        setup_token_notice:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Setup Token Notice
-        sandbox_api_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sandbox Api Key
-        sandbox_api_key_notice:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sandbox Api Key Notice
-        sandbox_owner_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sandbox Owner Id
-        allowed_sandbox_actions:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Allowed Sandbox Actions
-        live_boundaries:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Live Boundaries
-        agent_can_continue_sandbox:
+          title: Payment Receipt
+        idempotent_replay:
           anyOf:
           - type: boolean
           - type: 'null'
-          title: Agent Can Continue Sandbox
-        owner_action_required:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Owner Action Required
-        manifest_evaluation:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Manifest Evaluation
-        pricing_recommendation:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Pricing Recommendation
-        live_api_key:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live Api Key
-        live_api_key_notice:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live Api Key Notice
-        live_key_prefix:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live Key Prefix
-        activation_boundaries:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Activation Boundaries
-        recommended_next_api_calls:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Recommended Next Api Calls
+          title: Idempotent Replay
       additionalProperties: true
       type: object
       required:
-      - setup_intent
-      - setup_intent_id
-      - owner_approval_url
-      title: AccessAgentBootstrapResponse
-    AccessRailSettingUpdateRequest:
+      - metered_session
+      title: AccessMeteredSessionResponse
+    AccessRailSettingResponse:
       properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          default: false
-        payout_address:
+        rail_setting:
+          $ref: '#/components/schemas/AccessRailSetting'
+        idempotent_replay:
           anyOf:
-          - type: string
-            maxLength: 180
+          - type: boolean
           - type: 'null'
-          title: Payout Address
-        label:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Label
-        mode:
-          type: string
-          title: Mode
-          default: live
-        fee_collection_mode:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Fee Collection Mode
-        fee_collection_status:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Fee Collection Status
-        fee_collector_address:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Fee Collector Address
-        fee_allowance_token_contract:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Fee Allowance Token Contract
-        fee_allowance_limit_minor_units:
-          anyOf:
-          - type: integer
-            minimum: 0
-          - type: 'null'
-          title: Fee Allowance Limit Minor Units
-        fee_allowance_spent_minor_units:
-          anyOf:
-          - type: integer
-            minimum: 0
-          - type: 'null'
-          title: Fee Allowance Spent Minor Units
-        fee_allowance_expires_at:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Fee Allowance Expires At
-        fee_allowance_tx_hash:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Fee Allowance Tx Hash
-        fee_collection_metadata:
-          type: object
-          title: Fee Collection Metadata
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      title: AccessRailSettingUpdateRequest
-    AccessWebhookCreateRequest:
-      properties:
-        label:
-          type: string
-          maxLength: 120
-          minLength: 2
-          title: Label
-        url:
-          type: string
-          title: Url
-        subscribed_events:
-          items:
-            type: string
-          type: array
-          title: Subscribed Events
-        product_ids:
-          items:
-            type: string
-            format: uuid
-          type: array
-          title: Product Ids
-        metadata:
-          type: object
-          title: Metadata
+          title: Idempotent Replay
+      additionalProperties: true
       type: object
       required:
-      - label
-      - url
-      title: AccessWebhookCreateRequest
+      - rail_setting
+      title: AccessRailSettingResponse
+    NativeSubscriptionMembership:
+      properties:
+        id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Id
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        current_period_start_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period Start At
+        current_period_end_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period End At
+        platform:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform
+        platform_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Display
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - status
+      - current_period_start_at
+      - current_period_end_at
+      - platform
+      - platform_display
+      title: NativeSubscriptionMembership
     AccessRailSettingsResponse:
       properties:
         rail_settings:
@@ -4070,323 +5300,6 @@ components:
       - rail_settings
       - generated_at
       title: AccessRailSettingsResponse
-    AccessBillingEntitlementResponse:
-      properties:
-        billing_entitlement:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Billing Entitlement
-        is_current:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Is Current
-        commercial_model:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Commercial Model
-        historical_billing_entitlement:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Historical Billing Entitlement
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-        supported_sources:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Supported Sources
-        supported_plans:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Supported Plans
-        selection_policy:
-          $ref: '#/components/schemas/AccessBillingSelectionPolicy'
-      additionalProperties: true
-      type: object
-      required:
-      - billing_entitlement
-      - selection_policy
-      title: AccessBillingEntitlementResponse
-    AccessEntitlementResponse:
-      properties:
-        entitlement:
-          $ref: '#/components/schemas/AccessEntitlement'
-      additionalProperties: true
-      type: object
-      required:
-      - entitlement
-      title: AccessEntitlementResponse
-    AccessMeteredSessionCreateResponse:
-      properties:
-        metered_session:
-          $ref: '#/components/schemas/AccessMeteredSession'
-        challenge:
-          type: string
-          title: Challenge
-        idempotent_replay:
-          type: boolean
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - metered_session
-      - challenge
-      - idempotent_replay
-      title: AccessMeteredSessionCreateResponse
-    AccessMeteredCommit:
-      properties:
-        deliveryId:
-          type: string
-          title: Deliveryid
-        sessionId:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sessionid
-        amount:
-          type: string
-          title: Amount
-        cumulative:
-          type: string
-          title: Cumulative
-        status:
-          type: string
-          title: Status
-      additionalProperties: true
-      type: object
-      required:
-      - deliveryId
-      - amount
-      - cumulative
-      - status
-      title: AccessMeteredCommit
-    AccessMeteredDeliveryResponse:
-      properties:
-        delivery:
-          $ref: '#/components/schemas/AccessMeteredDelivery'
-        units:
-          type: integer
-          title: Units
-        unit_price_minor_units:
-          type: integer
-          title: Unit Price Minor Units
-        commit_url:
-          type: string
-          title: Commit Url
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - delivery
-      - units
-      - unit_price_minor_units
-      - commit_url
-      title: AccessMeteredDeliveryResponse
-    NativeSubscriptionReference:
-      properties:
-        id:
-          type: string
-          title: Id
-        slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slug
-        title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Title
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - slug
-      - title
-      title: NativeSubscriptionReference
-    NativeSubscriptionCancelResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        authorization:
-          $ref: '#/components/schemas/NativeSubscriptionAuthorization'
-        cancel_policy:
-          type: object
-          title: Cancel Policy
-        cancel_requirement:
-          anyOf:
-          - $ref: '#/components/schemas/NativeSubscriptionCancelRequirement'
-          - type: 'null'
-        cancel_verification:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Cancel Verification
-      additionalProperties: true
-      type: object
-      required:
-      - status
-      - authorization
-      - cancel_policy
-      title: NativeSubscriptionCancelResponse
-    AccessPaymentSessionResponse:
-      properties:
-        payment_session:
-          $ref: '#/components/schemas/AccessPaymentSession'
-        pending_entitlement:
-          $ref: '#/components/schemas/AccessEntitlement'
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        selected_rail:
-          $ref: '#/components/schemas/AccessEffectiveRailEntry'
-        available_rails:
-          items:
-            $ref: '#/components/schemas/AccessEffectiveRailEntry'
-          type: array
-          title: Available Rails
-        payment_session_options:
-          type: object
-          title: Payment Session Options
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - payment_session
-      - pending_entitlement
-      - rail
-      - selected_rail
-      - available_rails
-      - payment_session_options
-      title: AccessPaymentSessionResponse
-    AccessMeteringState:
-      properties:
-        usage_unit:
-          type: string
-          title: Usage Unit
-        unit_price_minor_units:
-          type: integer
-          title: Unit Price Minor Units
-        cap_minor_units:
-          type: integer
-          title: Cap Minor Units
-        deposit_minor_units:
-          type: integer
-          title: Deposit Minor Units
-        committed_minor_units:
-          type: integer
-          title: Committed Minor Units
-        remaining_minor_units:
-          type: integer
-          title: Remaining Minor Units
-      additionalProperties: true
-      type: object
-      required:
-      - usage_unit
-      - unit_price_minor_units
-      - cap_minor_units
-      - deposit_minor_units
-      - committed_minor_units
-      - remaining_minor_units
-      title: AccessMeteringState
-    AccessUsageEvent:
-      properties:
-        id:
-          type: string
-          title: Id
-        units:
-          type: integer
-          title: Units
-        usage_unit:
-          type: string
-          title: Usage Unit
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - units
-      - usage_unit
-      - created_at
-      title: AccessUsageEvent
-    AccessSandboxPaymentSessionConfirmRequest:
-      properties:
-        proof:
-          type: string
-          maxLength: 500
-          minLength: 12
-          title: Proof
-      type: object
-      required:
-      - proof
-      title: AccessSandboxPaymentSessionConfirmRequest
-    AccessX402SettleResponse:
-      properties:
-        x402Version:
-          type: integer
-          enum:
-          - 2
-          const: 2
-          title: X402Version
-        payment_session_id:
-          type: string
-          title: Payment Session Id
-        payment_proof:
-          $ref: '#/components/schemas/AccessX402PaymentProofResponse'
-        settlement_evidence:
-          $ref: '#/components/schemas/AccessX402SettlementEvidenceResponse'
-        receipt:
-          $ref: '#/components/schemas/AccessX402ReceiptResponse'
-        entitlement:
-          $ref: '#/components/schemas/AccessX402EntitlementResponse'
-        payment_response:
-          $ref: '#/components/schemas/AccessX402PaymentResponse'
-        headers:
-          $ref: '#/components/schemas/AccessX402ResponseHeaders'
-        idempotent_replay:
-          type: boolean
-          title: Idempotent Replay
-          default: false
-      type: object
-      required:
-      - x402Version
-      - payment_session_id
-      - payment_proof
-      - settlement_evidence
-      - receipt
-      - entitlement
-      - payment_response
-      - headers
-      title: AccessX402SettleResponse
     AccessProduct:
       properties:
         id:
@@ -4488,69 +5401,80 @@ components:
       - created_at
       - updated_at
       title: AccessProduct
-    AccessSandboxPaymentSessionCreateRequest:
+    AccessX402ReceiptResponse:
       properties:
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Product Id
-        external_customer_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        rail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rail
-        ttl_minutes:
-          type: integer
-          maximum: 120
-          minimum: 5
-          title: Ttl Minutes
-          default: 30
-        confirm_sandbox_mode:
-          type: boolean
-          title: Confirm Sandbox Mode
-          default: false
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      title: AccessSandboxPaymentSessionCreateRequest
-    AccessAgentSetupStatusRequest:
-      properties:
-        setup_token:
+        id:
           type: string
-          maxLength: 300
-          minLength: 20
-          title: Setup Token
+          title: Id
+        tx_sig:
+          type: string
+          title: Tx Sig
+        created:
+          type: boolean
+          title: Created
       type: object
       required:
-      - setup_token
-      title: AccessAgentSetupStatusRequest
+      - id
+      - tx_sig
+      - created
+      title: AccessX402ReceiptResponse
+    AccessMeteredFee:
+      properties:
+        bps:
+          type: integer
+          title: Bps
+        paid_from_settled_amount:
+          type: boolean
+          enum:
+          - true
+          const: true
+          title: Paid From Settled Amount
+        minor_units:
+          type: integer
+          title: Minor Units
+      additionalProperties: true
+      type: object
+      required:
+      - bps
+      - paid_from_settled_amount
+      - minor_units
+      title: AccessMeteredFee
+    AccessEntitlementResponse:
+      properties:
+        entitlement:
+          $ref: '#/components/schemas/AccessEntitlement'
+      additionalProperties: true
+      type: object
+      required:
+      - entitlement
+      title: AccessEntitlementResponse
+    AccessEntitlementUsageResponse:
+      properties:
+        unit:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Unit
+        granted:
+          type: integer
+          title: Granted
+        consumed:
+          type: integer
+          title: Consumed
+        remaining:
+          type: integer
+          title: Remaining
+        exhausted:
+          type: boolean
+          title: Exhausted
+      type: object
+      required:
+      - unit
+      - granted
+      - consumed
+      - remaining
+      - exhausted
+      title: AccessEntitlementUsageResponse
     AccessMeteredAsset:
       properties:
         symbol:
@@ -4575,1041 +5499,36 @@ components:
       - mint
       - decimals
       title: AccessMeteredAsset
-    NativeSubscriptionCancelConfirmRequest:
+    AccessX402SettleRequest:
       properties:
-        cancel_tx_signature:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 16
-          - type: 'null'
-          title: Cancel Tx Signature
-        revoke_tx_signature:
-          anyOf:
-          - type: string
-            maxLength: 255
-            minLength: 16
-          - type: 'null'
-          title: Revoke Tx Signature
-        reason:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Reason
-        immediate_revoke:
-          type: boolean
-          title: Immediate Revoke
-          default: false
-        verify_onchain:
-          type: boolean
-          title: Verify Onchain
-          default: true
-      type: object
-      title: NativeSubscriptionCancelConfirmRequest
-    AccessSandboxSessionConfirmResponse:
-      properties:
-        sandbox_session:
-          $ref: '#/components/schemas/AccessSandboxSession'
-        entitlement:
-          $ref: '#/components/schemas/AccessEntitlement'
-        livemode:
-          anyOf:
-          - type: boolean
-            enum:
-            - false
-            const: false
-          - type: 'null'
-          title: Livemode
-        sandbox_only:
-          anyOf:
-          - type: boolean
-            enum:
-            - true
-            const: true
-          - type: 'null'
-          title: Sandbox Only
-        message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Message
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - sandbox_session
-      - entitlement
-      title: AccessSandboxSessionConfirmResponse
-    AccessFeeCollection:
-      properties:
-        mode:
-          type: string
-          title: Mode
-        status:
-          type: string
-          title: Status
-        fee_collector_address:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fee Collector Address
-        allowance_token_contract:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Allowance Token Contract
-        allowance_limit_minor_units:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Allowance Limit Minor Units
-        allowance_spent_minor_units:
-          type: integer
-          title: Allowance Spent Minor Units
-        allowance_expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Allowance Expires At
-        allowance_tx_hash:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Allowance Tx Hash
-        metadata:
-          type: object
-          title: Metadata
-      additionalProperties: true
-      type: object
-      required:
-      - mode
-      - status
-      - fee_collector_address
-      - allowance_token_contract
-      - allowance_limit_minor_units
-      - allowance_spent_minor_units
-      - allowance_expires_at
-      - allowance_tx_hash
-      - metadata
-      title: AccessFeeCollection
-    AccessPaymentSessionCreateRequest:
-      properties:
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Product Id
-        external_customer_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        amount_minor_units:
-          anyOf:
-          - type: integer
-            minimum: 1
-          - type: 'null'
-          title: Amount Minor Units
-        rail:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Rail
-          description: Hosted settlement rail for this session. Public live values are solana_usdc and solana_sol.
-          examples:
-          - solana_usdc
-          - solana_sol
-        payment_protocol:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Payment Protocol
-        settlement_rail:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Settlement Rail
-        settlement_rail_id:
-          anyOf:
-          - type: string
-            maxLength: 80
-          - type: 'null'
-          title: Settlement Rail Id
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      title: AccessPaymentSessionCreateRequest
-    NativeSubscriptionCancelIntentRequest:
-      properties:
-        reason:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Reason
-        cancel_at_period_end:
-          type: boolean
-          title: Cancel At Period End
-          default: true
-      type: object
-      title: NativeSubscriptionCancelIntentRequest
-    AccessEntitlement:
-      properties:
-        id:
-          type: string
-          title: Id
-        access_app_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access App Id
-        access_product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access Product Id
-        product_id:
-          type: string
-          title: Product Id
-        external_customer_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        status:
-          type: string
-          title: Status
-        active_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Active From
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expires At
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        last_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Payment Id
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        livemode:
-          type: boolean
-          title: Livemode
-        receipt:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementReceipt'
-          - type: 'null'
-        usage:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementUsage'
-          - type: 'null'
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - access_app_id
-      - access_product_id
-      - product_id
-      - external_customer_id
-      - wallet
-      - email
-      - status
-      - active_from
-      - expires_at
-      - receipt_id
-      - payment_id
-      - last_payment_id
-      - rail_id
-      - rail
-      - livemode
-      - receipt
-      - usage
-      - source
-      - created_at
-      - updated_at
-      title: AccessEntitlement
-    AccessMeteredSettlement:
-      properties:
-        merchant_minor_units:
-          type: integer
-          title: Merchant Minor Units
-        hilt_fee_minor_units:
-          type: integer
-          title: Hilt Fee Minor Units
-        rounding_residual_minor_units:
-          type: integer
-          title: Rounding Residual Minor Units
-      additionalProperties: true
-      type: object
-      required:
-      - merchant_minor_units
-      - hilt_fee_minor_units
-      - rounding_residual_minor_units
-      title: AccessMeteredSettlement
-    AccessMeteredSessionCreateRequest:
-      properties:
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Product Id
-        external_customer_id:
+        payment_session_id:
           type: string
           maxLength: 180
-          minLength: 1
-          title: External Customer Id
-        cap_minor_units:
-          type: integer
-          minimum: 1
-          title: Cap Minor Units
-        expires_in_seconds:
-          type: integer
-          maximum: 86400
-          minimum: 300
-          title: Expires In Seconds
-          default: 3600
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - external_customer_id
-      - cap_minor_units
-      title: AccessMeteredSessionCreateRequest
-    AccessApp:
-      properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        external_app_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External App Id
-        status:
-          type: string
-          title: Status
-        default_rail:
-          type: string
-          title: Default Rail
-        live_mode:
-          type: boolean
-          title: Live Mode
-        metadata:
-          type: object
-          title: Metadata
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - name
-      - external_app_id
-      - status
-      - default_rail
-      - live_mode
-      - metadata
-      - created_at
-      - updated_at
-      title: AccessApp
-    AccessPaymentProofSubmission:
-      properties:
-        status:
-          type: string
-          title: Status
-        payment_session_id:
-          anyOf:
-          - type: string
-          - type: 'null'
+          minLength: 8
           title: Payment Session Id
-        payment_requirement_bound:
-          type: boolean
-          title: Payment Requirement Bound
-        payment_requirement_record:
+        payment_signature:
           anyOf:
-          - type: object
+          - type: string
+            maxLength: 131072
+            minLength: 8
           - type: 'null'
-          title: Payment Requirement Record
-        verification_status:
-          type: string
-          title: Verification Status
-        settlement_status:
-          type: string
-          title: Settlement Status
-        receipt_mapping_status:
-          type: string
-          title: Receipt Mapping Status
-        entitlement_activation_status:
-          type: string
-          title: Entitlement Activation Status
-        next_step:
-          type: string
-          title: Next Step
-      additionalProperties: true
+          title: Payment Signature
       type: object
       required:
-      - status
       - payment_session_id
-      - payment_requirement_bound
-      - payment_requirement_record
-      - verification_status
-      - settlement_status
-      - receipt_mapping_status
-      - entitlement_activation_status
-      - next_step
-      title: AccessPaymentProofSubmission
-    AccessMeteredFee:
+      title: AccessX402SettleRequest
+    AccessMeteredCommitResponse:
       properties:
-        bps:
-          type: integer
-          title: Bps
-        paid_from_settled_amount:
-          type: boolean
-          enum:
-          - true
-          const: true
-          title: Paid From Settled Amount
-        minor_units:
-          type: integer
-          title: Minor Units
+        commit:
+          $ref: '#/components/schemas/AccessMeteredCommit'
+        metered_session:
+          $ref: '#/components/schemas/AccessMeteredSession'
       additionalProperties: true
       type: object
       required:
-      - bps
-      - paid_from_settled_amount
-      - minor_units
-      title: AccessMeteredFee
-    AccessBillingStripeCheckoutRequest:
-      properties:
-        plan:
-          type: string
-          title: Plan
-        interval:
-          type: string
-          enum:
-          - monthly
-          - yearly
-          title: Interval
-          default: monthly
-        success_url:
-          type: string
-          maxLength: 1000
-          minLength: 8
-          title: Success Url
-        cancel_url:
-          type: string
-          maxLength: 1000
-          minLength: 8
-          title: Cancel Url
-        canary_discount_code:
-          anyOf:
-          - type: string
-            maxLength: 100
-            minLength: 1
-          - type: 'null'
-          title: Canary Discount Code
-        canary_target_minor_units:
-          anyOf:
-          - type: integer
-            maximum: 100000
-            minimum: 50
-          - type: 'null'
-          title: Canary Target Minor Units
-      type: object
-      required:
-      - plan
-      - success_url
-      - cancel_url
-      title: AccessBillingStripeCheckoutRequest
-    AccessX402EntitlementResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        access_app_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access App Id
-        access_product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access Product Id
-        product_id:
-          type: string
-          title: Product Id
-        external_customer_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        status:
-          type: string
-          title: Status
-        active_from:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Active From
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expires At
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        last_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Payment Id
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          type: object
-          title: Rail
-        livemode:
-          type: boolean
-          title: Livemode
-        receipt:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementReceiptReferenceResponse'
-          - type: 'null'
-        usage:
-          anyOf:
-          - $ref: '#/components/schemas/AccessEntitlementUsageResponse'
-          - type: 'null'
-        source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Source
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      type: object
-      required:
-      - id
-      - access_app_id
-      - access_product_id
-      - product_id
-      - external_customer_id
-      - wallet
-      - email
-      - status
-      - active_from
-      - expires_at
-      - receipt_id
-      - payment_id
-      - last_payment_id
-      - rail_id
-      - rail
-      - livemode
-      - receipt
-      - usage
-      - source
-      - created_at
-      - updated_at
-      title: AccessX402EntitlementResponse
-    AccessMeteredEndpoints:
-      properties:
-        authorize:
-          type: string
-          title: Authorize
-        deliveries:
-          type: string
-          title: Deliveries
-        commits:
-          type: string
-          title: Commits
-        settle:
-          type: string
-          title: Settle
-      additionalProperties: true
-      type: object
-      required:
-      - authorize
-      - deliveries
-      - commits
-      - settle
-      title: AccessMeteredEndpoints
-    AccessSandboxSession:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        livemode:
-          type: boolean
-          enum:
-          - false
-          const: false
-          title: Livemode
-        sandbox_only:
-          type: boolean
-          enum:
-          - true
-          const: true
-          title: Sandbox Only
-        access_app_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access App Id
-        access_product_id:
-          type: string
-          title: Access Product Id
-        product_id:
-          type: string
-          title: Product Id
-        entitlement_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Entitlement Id
-        external_customer_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        proof_type:
-          type: string
-          title: Proof Type
-        proof_reference_preview:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proof Reference Preview
-        proof:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Proof
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expires At
-        confirmed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confirmed At
-        failed_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Failed Reason
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - status
-      - livemode
-      - sandbox_only
-      - access_app_id
-      - access_product_id
-      - product_id
-      - entitlement_id
-      - external_customer_id
-      - wallet
-      - email
-      - rail_id
-      - rail
-      - proof_type
-      - proof_reference_preview
-      - expires_at
-      - confirmed_at
-      - failed_reason
-      - created_at
-      - updated_at
-      title: AccessSandboxSession
-    AccessPaymentProofResponse:
-      properties:
-        payment_proof:
-          $ref: '#/components/schemas/AccessPaymentProof'
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        proof_submission:
-          $ref: '#/components/schemas/AccessPaymentProofSubmission'
-        idempotent_replay:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Idempotent Replay
-      additionalProperties: true
-      type: object
-      required:
-      - payment_proof
-      - rail
-      - proof_submission
-      title: AccessPaymentProofResponse
-    AccessPaymentProofSubmitRequest:
-      properties:
-        product_id:
-          anyOf:
-          - type: string
-            format: uuid
-          - type: 'null'
-          title: Product Id
-        external_product_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Product Id
-        payment_session_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Payment Session Id
-        rail:
-          type: string
-          title: Rail
-          default: solana_usdc
-        proof_type:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Proof Type
-        proof_payload:
-          type: object
-          title: Proof Payload
-        external_customer_id:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: External Customer Id
-        wallet:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Wallet
-        email:
-          anyOf:
-          - type: string
-            maxLength: 320
-          - type: 'null'
-          title: Email
-        amount_minor_units:
-          anyOf:
-          - type: integer
-            minimum: 1
-          - type: 'null'
-          title: Amount Minor Units
-        livemode:
-          type: boolean
-          title: Livemode
-          default: true
-        metadata:
-          type: object
-          title: Metadata
-      type: object
-      required:
-      - proof_payload
-      title: AccessPaymentProofSubmitRequest
-    AccessSetupIntent:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        agent_name:
-          type: string
-          title: Agent Name
-        agent_platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Agent Platform
-        requested_use_case:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Requested Use Case
-        contact_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Contact Email
-        external_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: External Reference
-        requested_permissions:
-          items:
-            type: string
-          type: array
-          title: Requested Permissions
-        approved_permissions:
-          items:
-            type: string
-          type: array
-          title: Approved Permissions
-        sandbox_owner_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sandbox Owner Id
-        approved_owner_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Approved Owner Id
-        sandbox_key_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Sandbox Key Id
-        live_key_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live Key Id
-        setup_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Setup Url
-        expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Expires At
-        approved_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Approved At
-        live_key_issued_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Live Key Issued At
-        revoked_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Revoked At
-        metadata:
-          type: object
-          title: Metadata
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - status
-      - agent_name
-      - agent_platform
-      - requested_use_case
-      - contact_email
-      - external_reference
-      - requested_permissions
-      - approved_permissions
-      - sandbox_owner_id
-      - approved_owner_id
-      - sandbox_key_id
-      - live_key_id
-      - setup_url
-      - expires_at
-      - approved_at
-      - live_key_issued_at
-      - revoked_at
-      - metadata
-      - created_at
-      - updated_at
-      title: AccessSetupIntent
-    AccessRailSettingListItem:
-      properties:
-        rail_id:
-          type: string
-          title: Rail Id
-        rail:
-          $ref: '#/components/schemas/AccessRailCapability'
-        setting:
-          anyOf:
-          - $ref: '#/components/schemas/AccessRailSetting'
-          - type: 'null'
-        platform_setting:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Platform Setting
-        configured:
-          type: boolean
-          title: Configured
-      additionalProperties: true
-      type: object
-      required:
-      - rail_id
-      - rail
-      - setting
-      - platform_setting
-      - configured
-      title: AccessRailSettingListItem
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
+      - commit
+      - metered_session
+      title: AccessMeteredCommitResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

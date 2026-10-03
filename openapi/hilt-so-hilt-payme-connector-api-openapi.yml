@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Hilt PayMe Connector API
+  title: Hilt PayMe Connector API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged Hilt PayMe Connector across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -65,8 +65,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay-me/connector-connections:
     get:
       tags:
@@ -80,8 +78,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConnectorConnectionListResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay-me/connector-connections/{connection_id}:
     delete:
       tags:
@@ -105,8 +101,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay-me/payment-requests:
     post:
       tags:
@@ -132,8 +126,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay-me/payment-requests/{public_id}:
     get:
       tags:
@@ -160,8 +152,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay-me/payment-intents/{public_id}:
     get:
       tags:
@@ -188,153 +178,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    ConnectorAuthorizationComplete:
+    ConnectorClientSummary:
       properties:
-        request:
+        id:
           type: string
-          maxLength: 8000
-          minLength: 20
-          title: Request
-        approved:
-          type: boolean
-          title: Approved
-          default: true
-      type: object
-      required:
-      - request
-      title: ConnectorAuthorizationComplete
-    PaymentIntentEnvelope:
-      properties:
-        payment:
-          $ref: '#/components/schemas/PaymentIntentResponse'
-      type: object
-      required:
-      - payment
-      title: PaymentIntentEnvelope
-    ConnectorAuthorizationResponse:
-      properties:
-        client:
-          $ref: '#/components/schemas/ConnectorClientSummary'
-        scopes:
-          items:
-            type: string
-          type: array
-          title: Scopes
-        requiresX:
-          type: boolean
-          title: Requiresx
-        requiresWallet:
-          type: boolean
-          title: Requireswallet
-        identity:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Identity
-        profile:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Profile
-        zeroCustody:
-          $ref: '#/components/schemas/ConnectorZeroCustodySummary'
-      type: object
-      required:
-      - client
-      - scopes
-      - requiresX
-      - requiresWallet
-      - identity
-      - profile
-      - zeroCustody
-      title: ConnectorAuthorizationResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+          title: Id
+        name:
           type: string
-          title: Message
-        type:
+          title: Name
+        redirectHost:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PaymentRequestEnvelope:
-      properties:
-        paymentRequest:
-          $ref: '#/components/schemas/PaymentRequestResponse'
-      type: object
-      required:
-      - paymentRequest
-      title: PaymentRequestEnvelope
-    PaymentRequestCreate:
-      properties:
-        amount:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Amount
-        asset:
-          type: string
-          maxLength: 12
-          title: Asset
-          default: USDC
-        from_x_handle:
-          type: string
-          maxLength: 16
-          title: From X Handle
+          title: Redirecthost
           default: ''
-        note:
-          type: string
-          maxLength: 240
-          title: Note
-          default: ''
-        expires_in_hours:
-          type: integer
-          maximum: 168
-          minimum: 1
-          title: Expires In Hours
-          default: 72
       type: object
       required:
-      - amount
-      title: PaymentRequestCreate
-    PaymentIntentFeePreviewResponse:
+      - id
+      - name
+      title: ConnectorClientSummary
+    HTTPValidationError:
       properties:
-        hiltFeeAmount:
-          type: string
-          title: Hiltfeeamount
-        buyerTotal:
-          type: string
-          title: Buyertotal
-        platformFeePercent:
-          type: string
-          title: Platformfeepercent
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - hiltFeeAmount
-      - buyerTotal
-      - platformFeePercent
-      title: PaymentIntentFeePreviewResponse
+      title: HTTPValidationError
     ConnectorConnectionResponse:
       properties:
         id:
@@ -361,6 +232,25 @@ components:
       - connectedAt
       - lastUsedAt
       title: ConnectorConnectionResponse
+    ConnectorConnectionListResponse:
+      properties:
+        connections:
+          items:
+            $ref: '#/components/schemas/ConnectorConnectionResponse'
+          type: array
+          title: Connections
+      type: object
+      required:
+      - connections
+      title: ConnectorConnectionListResponse
+    PaymentRequestEnvelope:
+      properties:
+        paymentRequest:
+          $ref: '#/components/schemas/PaymentRequestResponse'
+      type: object
+      required:
+      - paymentRequest
+      title: PaymentRequestEnvelope
     PaymentRequestResponse:
       properties:
         id:
@@ -416,6 +306,43 @@ components:
       - expiresAt
       - paidAt
       title: PaymentRequestResponse
+    ConnectorAuthorizationResponse:
+      properties:
+        client:
+          $ref: '#/components/schemas/ConnectorClientSummary'
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        requiresX:
+          type: boolean
+          title: Requiresx
+        requiresWallet:
+          type: boolean
+          title: Requireswallet
+        identity:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Identity
+        profile:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Profile
+        zeroCustody:
+          $ref: '#/components/schemas/ConnectorZeroCustodySummary'
+      type: object
+      required:
+      - client
+      - scopes
+      - requiresX
+      - requiresWallet
+      - identity
+      - profile
+      - zeroCustody
+      title: ConnectorAuthorizationResponse
     PaymentRequestAssetResponse:
       properties:
         mint:
@@ -437,6 +364,87 @@ components:
       - name
       - decimals
       title: PaymentRequestAssetResponse
+    PaymentRequestCreate:
+      properties:
+        amount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Amount
+        asset:
+          type: string
+          maxLength: 12
+          title: Asset
+          default: USDC
+        from_x_handle:
+          type: string
+          maxLength: 16
+          title: From X Handle
+          default: ''
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        expires_in_hours:
+          type: integer
+          maximum: 168
+          minimum: 1
+          title: Expires In Hours
+          default: 72
+      type: object
+      required:
+      - amount
+      title: PaymentRequestCreate
+    ConnectorZeroCustodySummary:
+      properties:
+        canPrepare:
+          type: boolean
+          title: Canprepare
+        canSign:
+          type: boolean
+          title: Cansign
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
+      type: object
+      required:
+      - canPrepare
+      - canSign
+      - walletApprovalRequired
+      title: ConnectorZeroCustodySummary
+    PaymentIntentFeePreviewResponse:
+      properties:
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        buyerTotal:
+          type: string
+          title: Buyertotal
+        platformFeePercent:
+          type: string
+          title: Platformfeepercent
+      type: object
+      required:
+      - hiltFeeAmount
+      - buyerTotal
+      - platformFeePercent
+      title: PaymentIntentFeePreviewResponse
+    ConnectorAuthorizationComplete:
+      properties:
+        request:
+          type: string
+          maxLength: 8000
+          minLength: 20
+          title: Request
+        approved:
+          type: boolean
+          title: Approved
+          default: true
+      type: object
+      required:
+      - request
+      title: ConnectorAuthorizationComplete
     PaymentIntentResponse:
       properties:
         id:
@@ -503,34 +511,32 @@ components:
       - confirmedAt
       - walletApprovalRequired
       title: PaymentIntentResponse
-    ConnectorClientSummary:
+    ValidationError:
       properties:
-        id:
-          type: string
-          title: Id
-        name:
-          type: string
-          title: Name
-        redirectHost:
-          type: string
-          title: Redirecthost
-          default: ''
-      type: object
-      required:
-      - id
-      - name
-      title: ConnectorClientSummary
-    ConnectorConnectionListResponse:
-      properties:
-        connections:
+        loc:
           items:
-            $ref: '#/components/schemas/ConnectorConnectionResponse'
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Connections
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - connections
-      title: ConnectorConnectionListResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PaymentRequestRecipientResponse:
       properties:
         name:
@@ -560,23 +566,14 @@ components:
       - identityVerified
       - walletVerified
       title: PaymentRequestRecipientResponse
-    ConnectorZeroCustodySummary:
+    PaymentIntentEnvelope:
       properties:
-        canPrepare:
-          type: boolean
-          title: Canprepare
-        canSign:
-          type: boolean
-          title: Cansign
-        walletApprovalRequired:
-          type: boolean
-          title: Walletapprovalrequired
+        payment:
+          $ref: '#/components/schemas/PaymentIntentResponse'
       type: object
       required:
-      - canPrepare
-      - canSign
-      - walletApprovalRequired
-      title: ConnectorZeroCustodySummary
+      - payment
+      title: PaymentIntentEnvelope
     ConnectorAuthorizationRedirectResponse:
       properties:
         redirectUrl:
@@ -586,18 +583,6 @@ components:
       required:
       - redirectUrl
       title: ConnectorAuthorizationRedirectResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

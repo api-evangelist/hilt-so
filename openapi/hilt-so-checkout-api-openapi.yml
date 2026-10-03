@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Checkout API
+  title: Hilt Checkout API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged checkout across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -38,8 +38,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/automatic-renew/setup:
     post:
       tags:
@@ -65,8 +63,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/identity/start:
     post:
       tags:
@@ -92,8 +88,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/identity/complete:
     post:
       tags:
@@ -119,8 +113,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/connect/callback:
     post:
       tags:
@@ -146,8 +138,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/message-url:
     post:
       tags:
@@ -173,8 +163,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/renewal-message-url:
     post:
       tags:
@@ -200,8 +188,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/message/callback:
     post:
       tags:
@@ -227,8 +213,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/renewal-message/callback:
     post:
       tags:
@@ -254,8 +238,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/transaction-url:
     post:
       tags:
@@ -281,8 +263,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/phantom/transaction/callback:
     post:
       tags:
@@ -308,8 +288,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/pay/confirm:
     post:
       tags:
@@ -335,78 +313,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    AutomaticRenewSetupRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-      type: object
-      required:
-      - payment_id
-      title: AutomaticRenewSetupRequest
-    IdentityHandshakeStartResponse:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        status:
-          type: string
-          title: Status
-        wallet_address:
-          type: string
-          title: Wallet Address
-        wallet_source:
-          type: string
-          title: Wallet Source
-        identity_type:
-          type: string
-          title: Identity Type
-        identity_value:
-          type: string
-          title: Identity Value
-        identity_display:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Identity Display
-        challenge_message:
-          type: string
-          title: Challenge Message
-        expires_at:
-          type: string
-          title: Expires At
-      type: object
-      required:
-      - session_id
-      - status
-      - wallet_address
-      - wallet_source
-      - identity_type
-      - identity_value
-      - challenge_message
-      - expires_at
-      title: IdentityHandshakeStartResponse
-    PhantomTransactionCallbackRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        nonce:
-          type: string
-          title: Nonce
-        data:
-          type: string
-          title: Data
-      type: object
-      required:
-      - payment_id
-      - nonce
-      - data
-      title: PhantomTransactionCallbackRequest
     PhantomMessageCallbackResponse:
       properties:
         payment_id:
@@ -428,46 +336,59 @@ components:
       - wallet_address
       - verified_at
       title: PhantomMessageCallbackResponse
-    IdentityHandshakeStartRequest:
-      properties:
-        slug:
-          type: string
-          title: Slug
-        wallet_address:
-          type: string
-          title: Wallet Address
-        wallet_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet Source
-        customer_reference_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Reference Type
-        customer_reference_value:
-          type: string
-          title: Customer Reference Value
-        customer_reference_display:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Reference Display
-      type: object
-      required:
-      - slug
-      - wallet_address
-      - customer_reference_value
-      title: IdentityHandshakeStartRequest
-    PhantomRenewalMessageUrlRequest:
+    BroadcastResponse:
       properties:
         payment_id:
           type: string
           title: Payment Id
-        automatic_renew_setup_key:
+        status:
           type: string
-          title: Automatic Renew Setup Key
+          title: Status
+        tx_signature:
+          type: string
+          title: Tx Signature
+      type: object
+      required:
+      - payment_id
+      - status
+      - tx_signature
+      title: BroadcastResponse
+    AutomaticRenewSetupResponse:
+      properties:
+        setup_key:
+          type: string
+          title: Setup Key
+        instructions:
+          items:
+            type: object
+          type: array
+          title: Instructions
+        mandate_message:
+          type: string
+          title: Mandate Message
+        renewal_terms:
+          type: object
+          title: Renewal Terms
+        native_subscription:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Native Subscription
+      type: object
+      required:
+      - setup_key
+      - instructions
+      - mandate_message
+      - renewal_terms
+      title: AutomaticRenewSetupResponse
+    PhantomTransactionUrlRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        serialized_transaction_b58:
+          type: string
+          title: Serialized Transaction B58
         handoff_token:
           anyOf:
           - type: string
@@ -476,39 +397,13 @@ components:
       type: object
       required:
       - payment_id
-      - automatic_renew_setup_key
-      title: PhantomRenewalMessageUrlRequest
-    BroadcastRequest:
+      - serialized_transaction_b58
+      title: PhantomTransactionUrlRequest
+    PhantomTransactionCallbackRequest:
       properties:
         payment_id:
           type: string
           title: Payment Id
-        tx_signature:
-          type: string
-          title: Tx Signature
-        payer_wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payer Wallet
-        wallet_source:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet Source
-      type: object
-      required:
-      - payment_id
-      - tx_signature
-      title: BroadcastRequest
-    PhantomConnectCallbackRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        phantom_encryption_public_key:
-          type: string
-          title: Phantom Encryption Public Key
         nonce:
           type: string
           title: Nonce
@@ -518,10 +413,51 @@ components:
       type: object
       required:
       - payment_id
-      - phantom_encryption_public_key
       - nonce
       - data
-      title: PhantomConnectCallbackRequest
+      title: PhantomTransactionCallbackRequest
+    PhantomMessageCallbackRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        identity_session_id:
+          type: string
+          title: Identity Session Id
+        nonce:
+          type: string
+          title: Nonce
+        data:
+          type: string
+          title: Data
+      type: object
+      required:
+      - payment_id
+      - identity_session_id
+      - nonce
+      - data
+      title: PhantomMessageCallbackRequest
+    PhantomConnectCallbackResponse:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        wallet_address:
+          type: string
+          title: Wallet Address
+        wallet_source:
+          type: string
+          title: Wallet Source
+        session_stored:
+          type: boolean
+          title: Session Stored
+      type: object
+      required:
+      - payment_id
+      - wallet_address
+      - wallet_source
+      - session_stored
+      title: PhantomConnectCallbackResponse
     ValidationError:
       properties:
         loc:
@@ -548,48 +484,14 @@ components:
       - msg
       - type
       title: ValidationError
-    PhantomDeeplinkResponse:
+    PhantomConnectCallbackRequest:
       properties:
         payment_id:
           type: string
           title: Payment Id
-        deeplink_url:
+        phantom_encryption_public_key:
           type: string
-          title: Deeplink Url
-      type: object
-      required:
-      - payment_id
-      - deeplink_url
-      title: PhantomDeeplinkResponse
-    PhantomConnectCallbackResponse:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        wallet_address:
-          type: string
-          title: Wallet Address
-        wallet_source:
-          type: string
-          title: Wallet Source
-        session_stored:
-          type: boolean
-          title: Session Stored
-      type: object
-      required:
-      - payment_id
-      - wallet_address
-      - wallet_source
-      - session_stored
-      title: PhantomConnectCallbackResponse
-    PhantomMessageCallbackRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        identity_session_id:
-          type: string
-          title: Identity Session Id
+          title: Phantom Encryption Public Key
         nonce:
           type: string
           title: Nonce
@@ -599,10 +501,52 @@ components:
       type: object
       required:
       - payment_id
-      - identity_session_id
+      - phantom_encryption_public_key
       - nonce
       - data
-      title: PhantomMessageCallbackRequest
+      title: PhantomConnectCallbackRequest
+    IdentityHandshakeCompleteResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        status:
+          type: string
+          title: Status
+        wallet_address:
+          type: string
+          title: Wallet Address
+        wallet_source:
+          type: string
+          title: Wallet Source
+        identity_type:
+          type: string
+          title: Identity Type
+        identity_value:
+          type: string
+          title: Identity Value
+        identity_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Display
+        verified_at:
+          type: string
+          title: Verified At
+        expires_at:
+          type: string
+          title: Expires At
+      type: object
+      required:
+      - session_id
+      - status
+      - wallet_address
+      - wallet_source
+      - identity_type
+      - identity_value
+      - verified_at
+      - expires_at
+      title: IdentityHandshakeCompleteResponse
     ConfirmResponse:
       properties:
         status:
@@ -660,51 +604,6 @@ components:
       - payment_id
       - amount_minor_units
       title: ConfirmResponse
-    AutomaticRenewSetupResponse:
-      properties:
-        setup_key:
-          type: string
-          title: Setup Key
-        instructions:
-          items:
-            type: object
-          type: array
-          title: Instructions
-        mandate_message:
-          type: string
-          title: Mandate Message
-        renewal_terms:
-          type: object
-          title: Renewal Terms
-        native_subscription:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Native Subscription
-      type: object
-      required:
-      - setup_key
-      - instructions
-      - mandate_message
-      - renewal_terms
-      title: AutomaticRenewSetupResponse
-    BroadcastResponse:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        status:
-          type: string
-          title: Status
-        tx_signature:
-          type: string
-          title: Tx Signature
-      type: object
-      required:
-      - payment_id
-      - status
-      - tx_signature
-      title: BroadcastResponse
     PhantomRenewalMessageCallbackResponse:
       properties:
         payment_id:
@@ -726,7 +625,7 @@ components:
       - wallet_address
       - signed_message_b64
       title: PhantomRenewalMessageCallbackResponse
-    PhantomRenewalMessageCallbackRequest:
+    PhantomRenewalMessageUrlRequest:
       properties:
         payment_id:
           type: string
@@ -734,19 +633,16 @@ components:
         automatic_renew_setup_key:
           type: string
           title: Automatic Renew Setup Key
-        nonce:
-          type: string
-          title: Nonce
-        data:
-          type: string
-          title: Data
+        handoff_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Handoff Token
       type: object
       required:
       - payment_id
       - automatic_renew_setup_key
-      - nonce
-      - data
-      title: PhantomRenewalMessageCallbackRequest
+      title: PhantomRenewalMessageUrlRequest
     ConfirmRequest:
       properties:
         slug:
@@ -835,77 +731,7 @@ components:
       - tx_signature
       - payer_wallet
       title: ConfirmRequest
-    PhantomTransactionCallbackResponse:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        wallet_address:
-          type: string
-          title: Wallet Address
-        serialized_transaction_b64:
-          type: string
-          title: Serialized Transaction B64
-      type: object
-      required:
-      - payment_id
-      - wallet_address
-      - serialized_transaction_b64
-      title: PhantomTransactionCallbackResponse
-    PhantomMessageUrlRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        identity_session_id:
-          type: string
-          title: Identity Session Id
-        handoff_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Handoff Token
-      type: object
-      required:
-      - payment_id
-      - identity_session_id
-      title: PhantomMessageUrlRequest
-    IdentityHandshakeCompleteRequest:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        wallet_address:
-          type: string
-          title: Wallet Address
-        signed_message_b64:
-          type: string
-          title: Signed Message B64
-      type: object
-      required:
-      - session_id
-      - wallet_address
-      - signed_message_b64
-      title: IdentityHandshakeCompleteRequest
-    PhantomTransactionUrlRequest:
-      properties:
-        payment_id:
-          type: string
-          title: Payment Id
-        serialized_transaction_b58:
-          type: string
-          title: Serialized Transaction B58
-        handoff_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Handoff Token
-      type: object
-      required:
-      - payment_id
-      - serialized_transaction_b58
-      title: PhantomTransactionUrlRequest
-    IdentityHandshakeCompleteResponse:
+    IdentityHandshakeStartResponse:
       properties:
         session_id:
           type: string
@@ -930,9 +756,9 @@ components:
           - type: string
           - type: 'null'
           title: Identity Display
-        verified_at:
+        challenge_message:
           type: string
-          title: Verified At
+          title: Challenge Message
         expires_at:
           type: string
           title: Expires At
@@ -944,9 +770,123 @@ components:
       - wallet_source
       - identity_type
       - identity_value
-      - verified_at
+      - challenge_message
       - expires_at
-      title: IdentityHandshakeCompleteResponse
+      title: IdentityHandshakeStartResponse
+    PhantomTransactionCallbackResponse:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        wallet_address:
+          type: string
+          title: Wallet Address
+        serialized_transaction_b64:
+          type: string
+          title: Serialized Transaction B64
+      type: object
+      required:
+      - payment_id
+      - wallet_address
+      - serialized_transaction_b64
+      title: PhantomTransactionCallbackResponse
+    IdentityHandshakeCompleteRequest:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        wallet_address:
+          type: string
+          title: Wallet Address
+        signed_message_b64:
+          type: string
+          title: Signed Message B64
+      type: object
+      required:
+      - session_id
+      - wallet_address
+      - signed_message_b64
+      title: IdentityHandshakeCompleteRequest
+    PhantomRenewalMessageCallbackRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        automatic_renew_setup_key:
+          type: string
+          title: Automatic Renew Setup Key
+        nonce:
+          type: string
+          title: Nonce
+        data:
+          type: string
+          title: Data
+      type: object
+      required:
+      - payment_id
+      - automatic_renew_setup_key
+      - nonce
+      - data
+      title: PhantomRenewalMessageCallbackRequest
+    IdentityHandshakeStartRequest:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        wallet_address:
+          type: string
+          title: Wallet Address
+        wallet_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet Source
+        customer_reference_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Type
+        customer_reference_value:
+          type: string
+          title: Customer Reference Value
+        customer_reference_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Display
+      type: object
+      required:
+      - slug
+      - wallet_address
+      - customer_reference_value
+      title: IdentityHandshakeStartRequest
+    AutomaticRenewSetupRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+      type: object
+      required:
+      - payment_id
+      title: AutomaticRenewSetupRequest
+    PhantomMessageUrlRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        identity_session_id:
+          type: string
+          title: Identity Session Id
+        handoff_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Handoff Token
+      type: object
+      required:
+      - payment_id
+      - identity_session_id
+      title: PhantomMessageUrlRequest
     HTTPValidationError:
       properties:
         detail:
@@ -956,9 +896,42 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
+    PhantomDeeplinkResponse:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        deeplink_url:
+          type: string
+          title: Deeplink Url
+      type: object
+      required:
+      - payment_id
+      - deeplink_url
+      title: PhantomDeeplinkResponse
+    BroadcastRequest:
+      properties:
+        payment_id:
+          type: string
+          title: Payment Id
+        tx_signature:
+          type: string
+          title: Tx Signature
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        wallet_source:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet Source
+      type: object
+      required:
+      - payment_id
+      - tx_signature
+      title: BroadcastRequest
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

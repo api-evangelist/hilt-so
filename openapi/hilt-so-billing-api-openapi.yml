@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Billing API
+  title: Hilt Billing API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged billing across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -26,8 +26,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BillingSummaryResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/billing/checkout/stripe:
     post:
       tags:
@@ -53,8 +51,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/billing/portal/stripe:
     post:
       tags:
@@ -80,8 +76,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
   /v1/billing/refresh/stripe:
     post:
       tags:
@@ -95,8 +89,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StripeRefreshResponse'
-    servers:
-    - url: https://api.hilt.so
   /v1/billing/webhooks/stripe:
     post:
       tags:
@@ -125,141 +117,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    StripeCheckoutResponse:
+    StripePortalResponse:
       properties:
-        session_id:
+        portal_url:
           type: string
-          title: Session Id
-        checkout_url:
-          type: string
-          title: Checkout Url
+          title: Portal Url
       type: object
       required:
-      - session_id
-      - checkout_url
-      title: StripeCheckoutResponse
-    BillingPlanCardResponse:
+      - portal_url
+      title: StripePortalResponse
+    HTTPValidationError:
       properties:
-        slug:
-          type: string
-          title: Slug
-        label:
-          type: string
-          title: Label
-        description:
-          type: string
-          title: Description
-        monthly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Monthly Price Usd
-        yearly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Yearly Price Usd
-        annual_discount_pct:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Annual Discount Pct
-        transaction_fee_pct:
-          type: number
-          title: Transaction Fee Pct
-        transaction_fee_flat_usd_cents:
-          type: integer
-          title: Transaction Fee Flat Usd Cents
-        live_link_limit:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Live Link Limit
-        seats_included:
-          type: integer
-          title: Seats Included
-        manual_renewals:
-          type: boolean
-          title: Manual Renewals
-        automatic_renewals:
-          type: boolean
-          title: Automatic Renewals
-        merchant_analytics:
-          type: boolean
-          title: Merchant Analytics
-        buy_notifications:
-          type: boolean
-          title: Buy Notifications
-        receipt_exports:
-          type: boolean
-          title: Receipt Exports
-        tax_exports:
-          type: boolean
-          title: Tax Exports
-        custom_checkout_domains:
-          type: boolean
-          title: Custom Checkout Domains
-      type: object
-      required:
-      - slug
-      - label
-      - description
-      - monthly_price_usd
-      - yearly_price_usd
-      - annual_discount_pct
-      - transaction_fee_pct
-      - transaction_fee_flat_usd_cents
-      - live_link_limit
-      - seats_included
-      - manual_renewals
-      - automatic_renewals
-      - merchant_analytics
-      - buy_notifications
-      - receipt_exports
-      - tax_exports
-      - custom_checkout_domains
-      title: BillingPlanCardResponse
-    StripePortalRequest:
-      properties:
-        return_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Return Url
-      type: object
-      required:
-      - return_url
-      title: StripePortalRequest
-    ValidationError:
-      properties:
-        loc:
+        detail:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Detail
       type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      title: HTTPValidationError
     BillingSummaryResponse:
       properties:
         tier:
@@ -407,6 +284,226 @@ components:
       - gross_sol_equivalent
       - stripe_history
       title: BillingSummaryResponse
+    StripeRefreshResponse:
+      properties:
+        refreshed:
+          type: boolean
+          title: Refreshed
+        tier:
+          type: string
+          title: Tier
+        billing_status:
+          type: string
+          title: Billing Status
+        stripe_subscription_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Subscription Id
+        stripe_price_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Price Id
+        current_period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period End
+      type: object
+      required:
+      - refreshed
+      - tier
+      - billing_status
+      title: StripeRefreshResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    StripeCheckoutResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        checkout_url:
+          type: string
+          title: Checkout Url
+      type: object
+      required:
+      - session_id
+      - checkout_url
+      title: StripeCheckoutResponse
+    StripeCheckoutRequest:
+      properties:
+        plan:
+          type: string
+          enum:
+          - starter
+          - growth
+          - scale
+          title: Plan
+        interval:
+          type: string
+          enum:
+          - monthly
+          - yearly
+          title: Interval
+          default: monthly
+        success_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Success Url
+        cancel_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Cancel Url
+      type: object
+      required:
+      - plan
+      - success_url
+      - cancel_url
+      title: StripeCheckoutRequest
+    StripePortalRequest:
+      properties:
+        return_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Return Url
+      type: object
+      required:
+      - return_url
+      title: StripePortalRequest
+    StripeWebhookResponse:
+      properties:
+        received:
+          type: boolean
+          title: Received
+        ignored:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Ignored
+        reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Reason
+        duplicate:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Duplicate
+      additionalProperties: true
+      type: object
+      required:
+      - received
+      title: StripeWebhookResponse
+    BillingPlanCardResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        monthly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Monthly Price Usd
+        yearly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Yearly Price Usd
+        annual_discount_pct:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Annual Discount Pct
+        transaction_fee_pct:
+          type: number
+          title: Transaction Fee Pct
+        transaction_fee_flat_usd_cents:
+          type: integer
+          title: Transaction Fee Flat Usd Cents
+        live_link_limit:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Live Link Limit
+        seats_included:
+          type: integer
+          title: Seats Included
+        manual_renewals:
+          type: boolean
+          title: Manual Renewals
+        automatic_renewals:
+          type: boolean
+          title: Automatic Renewals
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+      type: object
+      required:
+      - slug
+      - label
+      - description
+      - monthly_price_usd
+      - yearly_price_usd
+      - annual_discount_pct
+      - transaction_fee_pct
+      - transaction_fee_flat_usd_cents
+      - live_link_limit
+      - seats_included
+      - manual_renewals
+      - automatic_renewals
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      title: BillingPlanCardResponse
     BillingAssetSummaryResponse:
       properties:
         token_mint:
@@ -441,79 +538,6 @@ components:
       - net_minor_units
       - fee_minor_units
       title: BillingAssetSummaryResponse
-    StripePortalResponse:
-      properties:
-        portal_url:
-          type: string
-          title: Portal Url
-      type: object
-      required:
-      - portal_url
-      title: StripePortalResponse
-    StripeCheckoutRequest:
-      properties:
-        plan:
-          type: string
-          enum:
-          - starter
-          - growth
-          - scale
-          title: Plan
-        interval:
-          type: string
-          enum:
-          - monthly
-          - yearly
-          title: Interval
-          default: monthly
-        success_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Success Url
-        cancel_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Cancel Url
-      type: object
-      required:
-      - plan
-      - success_url
-      - cancel_url
-      title: StripeCheckoutRequest
-    StripeRefreshResponse:
-      properties:
-        refreshed:
-          type: boolean
-          title: Refreshed
-        tier:
-          type: string
-          title: Tier
-        billing_status:
-          type: string
-          title: Billing Status
-        stripe_subscription_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stripe Subscription Id
-        stripe_price_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stripe Price Id
-        current_period_end:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period End
-      type: object
-      required:
-      - refreshed
-      - tier
-      - billing_status
-      title: StripeRefreshResponse
     StripeInvoiceHistoryResponse:
       properties:
         invoice_id:
@@ -570,43 +594,6 @@ components:
       - amount_due_minor_units
       - amount_paid_minor_units
       title: StripeInvoiceHistoryResponse
-    StripeWebhookResponse:
-      properties:
-        received:
-          type: boolean
-          title: Received
-        ignored:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Ignored
-        reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Reason
-        duplicate:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Duplicate
-      additionalProperties: true
-      type: object
-      required:
-      - received
-      title: StripeWebhookResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

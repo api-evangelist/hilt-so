@@ -1,13 +1,13 @@
 openapi: 3.2.0
 info:
-  title: Hilt So Checkout Domains API
+  title: Hilt Checkout Domains API
+  description: Hilt Pay Workspace and Hilt Pay API routes for zero-custody Solana checkout, MPP metered payment channels, receipts, memberships, entitlements, native subscriptions, webhooks, and support context.
   version: 1.0.0
   contact:
     name: Hilt
     url: https://www.hilt.so
     email: hello@hilt.so
   x-guidance: Start with POST /v1/access/agent-bootstrap. An agent can purchase 30 days of Starter, Growth, or Scale through the matching x402 V2 activation endpoint paid in Solana USDC. For metered integrations, settle PAYMENT-SIGNATURE through POST /v1/access/x402/settle and atomically consume through POST /v1/access/entitlements/consume before serving. Never send private keys, seed phrases, or wallet secrets.
-  description: 'Operations tagged checkout-domains across 2 of this provider''s published API definitions: hilt-so-api-openapi.json, hilt-so-openapi.yml. Each path carries the servers of the definition it was published in.'
 servers:
 - url: https://api.hilt.so
 tags:
@@ -50,76 +50,17 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/HTTPValidationError'
-    servers:
-    - url: https://api.hilt.so
 components:
   schemas:
-    CheckoutDomainListResponse:
+    HTTPValidationError:
       properties:
-        items:
+        detail:
           items:
-            $ref: '#/components/schemas/CheckoutDomain'
+            $ref: '#/components/schemas/ValidationError'
           type: array
-          title: Items
-        routing_enabled:
-          type: boolean
-          title: Routing Enabled
-      additionalProperties: true
+          title: Detail
       type: object
-      required:
-      - items
-      - routing_enabled
-      title: CheckoutDomainListResponse
-    CheckoutDomainCreateResponse:
-      properties:
-        item:
-          $ref: '#/components/schemas/CheckoutDomain'
-        routing_enabled:
-          type: boolean
-          title: Routing Enabled
-      additionalProperties: true
-      type: object
-      required:
-      - item
-      - routing_enabled
-      title: CheckoutDomainCreateResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    CheckoutDomainRequest:
-      properties:
-        domain:
-          type: string
-          maxLength: 253
-          minLength: 3
-          title: Domain
-      type: object
-      required:
-      - domain
-      title: CheckoutDomainRequest
+      title: HTTPValidationError
     CheckoutDomain:
       properties:
         id:
@@ -216,18 +157,72 @@ components:
       - created_at
       - updated_at
       title: CheckoutDomain
-    HTTPValidationError:
+    CheckoutDomainCreateResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        item:
+          $ref: '#/components/schemas/CheckoutDomain'
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
       type: object
-      title: HTTPValidationError
-x-refined-from:
-- hilt-so-api-openapi.json
-- hilt-so-openapi.yml
+      required:
+      - item
+      - routing_enabled
+      title: CheckoutDomainCreateResponse
+    CheckoutDomainListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CheckoutDomain'
+          type: array
+          title: Items
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
+      type: object
+      required:
+      - items
+      - routing_enabled
+      title: CheckoutDomainListResponse
+    CheckoutDomainRequest:
+      properties:
+        domain:
+          type: string
+          maxLength: 253
+          minLength: 3
+          title: Domain
+      type: object
+      required:
+      - domain
+      title: CheckoutDomainRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json
