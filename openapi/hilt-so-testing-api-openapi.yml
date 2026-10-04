@@ -107,6 +107,282 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    WebhookEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        event_version:
+          type: string
+          title: Event Version
+        source_type:
+          type: string
+          title: Source Type
+        source_id:
+          type: string
+          title: Source Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        support_ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Support Ticket Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        payload:
+          type: object
+          title: Payload
+        deliveries:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WebhookDelivery'
+            type: array
+          - type: 'null'
+          title: Deliveries
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - event_type
+      - event_version
+      - source_type
+      - source_id
+      - product_id
+      - payment_id
+      - membership_id
+      - receipt_id
+      - support_ticket_id
+      - created_at
+      - payload
+      title: WebhookEvent
+    SandboxScenario:
+      properties:
+        id:
+          type: string
+          title: Id
+        title:
+          type: string
+          title: Title
+        summary:
+          type: string
+          title: Summary
+        events:
+          items:
+            type: string
+          type: array
+          title: Events
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - title
+      - summary
+      - events
+      title: SandboxScenario
+    SandboxSessionCreateRequest:
+      properties:
+        scenario:
+          type: string
+          maxLength: 80
+          minLength: 2
+          title: Scenario
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        amount_minor_units:
+          anyOf:
+          - type: integer
+            minimum: 1
+          - type: 'null'
+          title: Amount Minor Units
+        payer_wallet:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Payer Wallet
+        identity_display:
+          anyOf:
+          - type: string
+            maxLength: 160
+          - type: 'null'
+          title: Identity Display
+      type: object
+      required:
+      - scenario
+      title: SandboxSessionCreateRequest
+    SandboxScenariosResponse:
+      properties:
+        scenarios:
+          items:
+            $ref: '#/components/schemas/SandboxScenario'
+          type: array
+          title: Scenarios
+        count:
+          type: integer
+          title: Count
+      additionalProperties: true
+      type: object
+      required:
+      - scenarios
+      - count
+      title: SandboxScenariosResponse
+    TestingSandboxSession:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        scenario:
+          type: string
+          title: Scenario
+        status:
+          type: string
+          title: Status
+        fake_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fake Payment Id
+        fake_membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fake Membership Id
+        fake_receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fake Receipt Id
+        fake_support_ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fake Support Ticket Id
+        event_count:
+          type: integer
+          title: Event Count
+        delivery_count:
+          type: integer
+          title: Delivery Count
+        request:
+          type: object
+          title: Request
+        timeline:
+          anyOf:
+          - items:
+              type: object
+            type: array
+          - type: 'null'
+          title: Timeline
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - product_id
+      - scenario
+      - status
+      - fake_payment_id
+      - fake_membership_id
+      - fake_receipt_id
+      - fake_support_ticket_id
+      - event_count
+      - delivery_count
+      - request
+      - created_at
+      - updated_at
+      title: TestingSandboxSession
+    TestingSandboxListResponse:
+      properties:
+        sessions:
+          items:
+            $ref: '#/components/schemas/TestingSandboxSession'
+          type: array
+          title: Sessions
+        count:
+          type: integer
+          title: Count
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - sessions
+      - count
+      - generated_at
+      title: TestingSandboxListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     HTTPValidationError:
       properties:
         detail:
@@ -116,6 +392,21 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
+    TestingSandboxDetailResponse:
+      properties:
+        session:
+          $ref: '#/components/schemas/TestingSandboxSession'
+        supported_scenarios:
+          items:
+            $ref: '#/components/schemas/SandboxScenario'
+          type: array
+          title: Supported Scenarios
+      additionalProperties: true
+      type: object
+      required:
+      - session
+      - supported_scenarios
+      title: TestingSandboxDetailResponse
     WebhookDelivery:
       properties:
         id:
@@ -234,76 +525,6 @@ components:
       - created_at
       - updated_at
       title: WebhookDelivery
-    SandboxSessionCreateRequest:
-      properties:
-        scenario:
-          type: string
-          maxLength: 80
-          minLength: 2
-          title: Scenario
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        amount_minor_units:
-          anyOf:
-          - type: integer
-            minimum: 1
-          - type: 'null'
-          title: Amount Minor Units
-        payer_wallet:
-          anyOf:
-          - type: string
-            maxLength: 160
-          - type: 'null'
-          title: Payer Wallet
-        identity_display:
-          anyOf:
-          - type: string
-            maxLength: 160
-          - type: 'null'
-          title: Identity Display
-      type: object
-      required:
-      - scenario
-      title: SandboxSessionCreateRequest
-    SandboxScenariosResponse:
-      properties:
-        scenarios:
-          items:
-            $ref: '#/components/schemas/SandboxScenario'
-          type: array
-          title: Scenarios
-        count:
-          type: integer
-          title: Count
-      additionalProperties: true
-      type: object
-      required:
-      - scenarios
-      - count
-      title: SandboxScenariosResponse
-    TestingSandboxListResponse:
-      properties:
-        sessions:
-          items:
-            $ref: '#/components/schemas/TestingSandboxSession'
-          type: array
-          title: Sessions
-        count:
-          type: integer
-          title: Count
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - sessions
-      - count
-      - generated_at
-      title: TestingSandboxListResponse
     TestingSandboxCreateResponse:
       properties:
         session:
@@ -334,227 +555,6 @@ components:
       - delivery_results
       - supported_events
       title: TestingSandboxCreateResponse
-    WebhookEvent:
-      properties:
-        id:
-          type: string
-          title: Id
-        event_type:
-          type: string
-          title: Event Type
-        event_version:
-          type: string
-          title: Event Version
-        source_type:
-          type: string
-          title: Source Type
-        source_id:
-          type: string
-          title: Source Id
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        membership_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Id
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-        support_ticket_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Support Ticket Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        payload:
-          type: object
-          title: Payload
-        deliveries:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/WebhookDelivery'
-            type: array
-          - type: 'null'
-          title: Deliveries
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - event_type
-      - event_version
-      - source_type
-      - source_id
-      - product_id
-      - payment_id
-      - membership_id
-      - receipt_id
-      - support_ticket_id
-      - created_at
-      - payload
-      title: WebhookEvent
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    TestingSandboxSession:
-      properties:
-        id:
-          type: string
-          title: Id
-        owner_id:
-          type: string
-          title: Owner Id
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        scenario:
-          type: string
-          title: Scenario
-        status:
-          type: string
-          title: Status
-        fake_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fake Payment Id
-        fake_membership_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fake Membership Id
-        fake_receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fake Receipt Id
-        fake_support_ticket_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fake Support Ticket Id
-        event_count:
-          type: integer
-          title: Event Count
-        delivery_count:
-          type: integer
-          title: Delivery Count
-        request:
-          type: object
-          title: Request
-        timeline:
-          anyOf:
-          - items:
-              type: object
-            type: array
-          - type: 'null'
-          title: Timeline
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - owner_id
-      - product_id
-      - scenario
-      - status
-      - fake_payment_id
-      - fake_membership_id
-      - fake_receipt_id
-      - fake_support_ticket_id
-      - event_count
-      - delivery_count
-      - request
-      - created_at
-      - updated_at
-      title: TestingSandboxSession
-    TestingSandboxDetailResponse:
-      properties:
-        session:
-          $ref: '#/components/schemas/TestingSandboxSession'
-        supported_scenarios:
-          items:
-            $ref: '#/components/schemas/SandboxScenario'
-          type: array
-          title: Supported Scenarios
-      additionalProperties: true
-      type: object
-      required:
-      - session
-      - supported_scenarios
-      title: TestingSandboxDetailResponse
-    SandboxScenario:
-      properties:
-        id:
-          type: string
-          title: Id
-        title:
-          type: string
-          title: Title
-        summary:
-          type: string
-          title: Summary
-        events:
-          items:
-            type: string
-          type: array
-          title: Events
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - title
-      - summary
-      - events
-      title: SandboxScenario
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

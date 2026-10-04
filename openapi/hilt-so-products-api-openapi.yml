@@ -436,50 +436,24 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PaymentResponse:
+    ConnectRequest:
       properties:
-        id:
-          type: string
-          title: Id
-        product_id:
-          type: string
-          title: Product Id
         payer_wallet:
           anyOf:
           - type: string
           - type: 'null'
           title: Payer Wallet
         amount_minor_units:
-          type: integer
+          anyOf:
+          - type: integer
+            exclusiveMinimum: 0
+          - type: 'null'
           title: Amount Minor Units
-        merchant_amount_lamports:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Merchant Amount Lamports
-        fee_lamports:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Fee Lamports
-        token_mint:
+        identity_session_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Token Mint
-        status:
-          type: string
-          title: Status
-        tx_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tx Signature
-        membership_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Id
+          title: Identity Session Id
         customer_reference_type:
           anyOf:
           - type: string
@@ -488,227 +462,57 @@ components:
         customer_reference_value:
           anyOf:
           - type: string
+            maxLength: 160
           - type: 'null'
           title: Customer Reference Value
         customer_reference_display:
           anyOf:
           - type: string
+            maxLength: 160
           - type: 'null'
           title: Customer Reference Display
-        delivery_status:
+        handoff_token:
           anyOf:
           - type: string
+            maxLength: 4096
           - type: 'null'
-          title: Delivery Status
-        delivery_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Error
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        confirmed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confirmed At
-        failed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Failed At
-        delivery_sent_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Sent At
-        deep_link_expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deep Link Expires At
-        delivery_attempted_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Attempted At
-      additionalProperties: true
+          title: Handoff Token
       type: object
-      required:
-      - id
-      - product_id
-      - payer_wallet
-      - amount_minor_units
-      - token_mint
-      - status
-      - created_at
-      title: PaymentResponse
-    PublicPaymentStatusResponse:
+      title: ConnectRequest
+    CheckoutHandoffCreateRequest:
       properties:
-        id:
+        identity_value:
           type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        token_mint:
+          maxLength: 160
+          minLength: 1
+          title: Identity Value
+        identity_display:
           anyOf:
           - type: string
+            maxLength: 160
           - type: 'null'
-          title: Token Mint
-        tx_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tx Signature
-        confirmed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Confirmed At
-        failed_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Failed At
-        failure_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Failure Reason
-        delivery_sent_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Sent At
-        deep_link_expires_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Deep Link Expires At
-        delivery_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Status
-        delivery_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Error
-        delivery_attempted_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Attempted At
-        membership_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Id
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - status
-      - amount_minor_units
-      - token_mint
-      - tx_signature
-      - confirmed_at
-      - failed_at
-      - failure_reason
-      - delivery_sent_at
-      - deep_link_expires_at
-      - delivery_status
-      - delivery_error
-      - delivery_attempted_at
-      - membership_id
-      title: PublicPaymentStatusResponse
-    MembershipConfigRequest:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-          default: true
-        platform:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform
-        access_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access Mode
+          title: Identity Display
         identity_type:
           anyOf:
           - type: string
           - type: 'null'
           title: Identity Type
-        identity_label:
+        return_url:
           anyOf:
           - type: string
+            maxLength: 2048
           - type: 'null'
-          title: Identity Label
-        identity_required:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Identity Required
-        renewal_mode:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Renewal Mode
-        billing_interval_days:
-          anyOf:
-          - type: integer
-            maximum: 3660
-            exclusiveMinimum: 0
-          - type: 'null'
-          title: Billing Interval Days
-        grace_period_days:
-          anyOf:
-          - type: integer
-            maximum: 365
-            minimum: 0
-          - type: 'null'
-          title: Grace Period Days
-        renewal_reminder_offsets_days:
-          anyOf:
-          - items:
-              type: integer
-            type: array
-          - type: 'null'
-          title: Renewal Reminder Offsets Days
-        platform_target_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Target Id
-        platform_target_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Target Label
-        allow_multiple_active:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Allow Multiple Active
-        settings_json:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Settings Json
+          title: Return Url
+        expires_in_minutes:
+          type: integer
+          maximum: 1440
+          minimum: 1
+          title: Expires In Minutes
+          default: 30
       type: object
-      title: MembershipConfigRequest
+      required:
+      - identity_value
+      title: CheckoutHandoffCreateRequest
     UpdateProductRequest:
       properties:
         title:
@@ -772,75 +576,66 @@ components:
           - type: 'null'
       type: object
       title: UpdateProductRequest
-    CheckoutHandoffResolveRequest:
+    CheckoutPaymentSessionResponse:
       properties:
-        handoff_token:
+        payment_id:
           type: string
-          minLength: 1
-          title: Handoff Token
-      type: object
-      required:
-      - handoff_token
-      title: CheckoutHandoffResolveRequest
-    CheckoutHandoffResponse:
-      properties:
-        handoff_token:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Handoff Token
+          title: Payment Id
+        nonce:
+          type: string
+          title: Nonce
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        merchant_amount_minor_units:
+          type: integer
+          title: Merchant Amount Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+        fee_wallet:
+          type: string
+          title: Fee Wallet
+        token_mint:
+          type: string
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        merchant_wallet:
+          type: string
+          title: Merchant Wallet
         expires_at:
           type: string
           title: Expires At
-        identity_type:
+        status:
+          type: string
+          title: Status
+        phantom_mobile:
           anyOf:
-          - type: string
+          - type: object
           - type: 'null'
-          title: Identity Type
-        identity_value:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Identity Value
-        identity_display:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Identity Display
-        return_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Return Url
-        checkout_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Checkout Url
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Slug
+          title: Phantom Mobile
       additionalProperties: true
       type: object
       required:
+      - payment_id
+      - nonce
+      - amount_minor_units
+      - merchant_amount_minor_units
+      - fee_minor_units
+      - fee_wallet
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - merchant_wallet
       - expires_at
-      title: CheckoutHandoffResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - status
+      - phantom_mobile
+      title: CheckoutPaymentSessionResponse
     ProductResponse:
       properties:
         id:
@@ -1003,66 +798,166 @@ components:
       - slug
       - created_at
       title: ProductResponse
-    CheckoutHandoffCreateRequest:
+    PaymentResponse:
       properties:
-        identity_value:
+        id:
           type: string
-          maxLength: 160
-          minLength: 1
-          title: Identity Value
-        identity_display:
+          title: Id
+        product_id:
+          type: string
+          title: Product Id
+        payer_wallet:
           anyOf:
           - type: string
-            maxLength: 160
           - type: 'null'
-          title: Identity Display
+          title: Payer Wallet
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        merchant_amount_lamports:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Merchant Amount Lamports
+        fee_lamports:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Fee Lamports
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        status:
+          type: string
+          title: Status
+        tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Signature
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        customer_reference_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Type
+        customer_reference_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Value
+        customer_reference_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Reference Display
+        delivery_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Status
+        delivery_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Error
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        confirmed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmed At
+        failed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failed At
+        delivery_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Sent At
+        deep_link_expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Link Expires At
+        delivery_attempted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Attempted At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - product_id
+      - payer_wallet
+      - amount_minor_units
+      - token_mint
+      - status
+      - created_at
+      title: PaymentResponse
+    CheckoutHandoffResponse:
+      properties:
+        handoff_token:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Handoff Token
+        expires_at:
+          type: string
+          title: Expires At
         identity_type:
           anyOf:
           - type: string
           - type: 'null'
           title: Identity Type
+        identity_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Value
+        identity_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Display
         return_url:
           anyOf:
           - type: string
-            maxLength: 2048
           - type: 'null'
           title: Return Url
-        expires_in_minutes:
-          type: integer
-          maximum: 1440
-          minimum: 1
-          title: Expires In Minutes
-          default: 30
+        checkout_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Checkout Url
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Slug
+      additionalProperties: true
       type: object
       required:
-      - identity_value
-      title: CheckoutHandoffCreateRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - expires_at
+      title: CheckoutHandoffResponse
     ProductListResponse:
       items:
         $ref: '#/components/schemas/ProductResponse'
@@ -1139,49 +1034,120 @@ components:
         $ref: '#/components/schemas/PaymentResponse'
       type: array
       title: PaymentListResponse
-    ConnectRequest:
+    ValidationError:
       properties:
-        payer_wallet:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MembershipConfigRequest:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+          default: true
+        platform:
           anyOf:
           - type: string
           - type: 'null'
-          title: Payer Wallet
-        amount_minor_units:
+          title: Platform
+        access_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Mode
+        identity_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Type
+        identity_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Identity Label
+        identity_required:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Identity Required
+        renewal_mode:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Renewal Mode
+        billing_interval_days:
           anyOf:
           - type: integer
+            maximum: 3660
             exclusiveMinimum: 0
           - type: 'null'
-          title: Amount Minor Units
-        identity_session_id:
+          title: Billing Interval Days
+        grace_period_days:
+          anyOf:
+          - type: integer
+            maximum: 365
+            minimum: 0
+          - type: 'null'
+          title: Grace Period Days
+        renewal_reminder_offsets_days:
+          anyOf:
+          - items:
+              type: integer
+            type: array
+          - type: 'null'
+          title: Renewal Reminder Offsets Days
+        platform_target_id:
           anyOf:
           - type: string
           - type: 'null'
-          title: Identity Session Id
-        customer_reference_type:
+          title: Platform Target Id
+        platform_target_label:
           anyOf:
           - type: string
           - type: 'null'
-          title: Customer Reference Type
-        customer_reference_value:
+          title: Platform Target Label
+        allow_multiple_active:
           anyOf:
-          - type: string
-            maxLength: 160
+          - type: boolean
           - type: 'null'
-          title: Customer Reference Value
-        customer_reference_display:
+          title: Allow Multiple Active
+        settings_json:
           anyOf:
-          - type: string
-            maxLength: 160
+          - type: object
           - type: 'null'
-          title: Customer Reference Display
-        handoff_token:
-          anyOf:
-          - type: string
-            maxLength: 4096
-          - type: 'null'
-          title: Handoff Token
+          title: Settings Json
       type: object
-      title: ConnectRequest
+      title: MembershipConfigRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     ProductAnalyticsResponse:
       properties:
         product_id:
@@ -1376,66 +1342,100 @@ components:
       - funnel_daily
       - generated_at
       title: ProductAnalyticsResponse
-    CheckoutPaymentSessionResponse:
+    CheckoutHandoffResolveRequest:
       properties:
-        payment_id:
+        handoff_token:
           type: string
-          title: Payment Id
-        nonce:
+          minLength: 1
+          title: Handoff Token
+      type: object
+      required:
+      - handoff_token
+      title: CheckoutHandoffResolveRequest
+    PublicPaymentStatusResponse:
+      properties:
+        id:
           type: string
-          title: Nonce
-        amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        merchant_amount_minor_units:
-          type: integer
-          title: Merchant Amount Minor Units
-        fee_minor_units:
-          type: integer
-          title: Fee Minor Units
-        fee_wallet:
-          type: string
-          title: Fee Wallet
-        token_mint:
-          type: string
-          title: Token Mint
-        asset_symbol:
-          type: string
-          title: Asset Symbol
-        asset_decimals:
-          type: integer
-          title: Asset Decimals
-        merchant_wallet:
-          type: string
-          title: Merchant Wallet
-        expires_at:
-          type: string
-          title: Expires At
+          title: Id
         status:
           type: string
           title: Status
-        phantom_mobile:
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        token_mint:
           anyOf:
-          - type: object
+          - type: string
           - type: 'null'
-          title: Phantom Mobile
+          title: Token Mint
+        tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Signature
+        confirmed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Confirmed At
+        failed_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failed At
+        failure_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Failure Reason
+        delivery_sent_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Sent At
+        deep_link_expires_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Deep Link Expires At
+        delivery_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Status
+        delivery_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Error
+        delivery_attempted_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Attempted At
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
       additionalProperties: true
       type: object
       required:
-      - payment_id
-      - nonce
-      - amount_minor_units
-      - merchant_amount_minor_units
-      - fee_minor_units
-      - fee_wallet
-      - token_mint
-      - asset_symbol
-      - asset_decimals
-      - merchant_wallet
-      - expires_at
+      - id
       - status
-      - phantom_mobile
-      title: CheckoutPaymentSessionResponse
+      - amount_minor_units
+      - token_mint
+      - tx_signature
+      - confirmed_at
+      - failed_at
+      - failure_reason
+      - delivery_sent_at
+      - deep_link_expires_at
+      - delivery_status
+      - delivery_error
+      - delivery_attempted_at
+      - membership_id
+      title: PublicPaymentStatusResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

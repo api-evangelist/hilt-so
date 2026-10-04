@@ -59,22 +59,6 @@ paths:
       - Solana
 components:
   schemas:
-    TransactionEvidenceRequest:
-      type: object
-      additionalProperties: false
-      required:
-      - request_id
-      - transaction_signature
-      properties:
-        request_id:
-          type: string
-          minLength: 8
-          maxLength: 120
-          pattern: ^[A-Za-z0-9._:-]{8,120}$
-          description: Fresh retry key for one paid lookup. Reuse it only when retrying that same request.
-        transaction_signature:
-          type: string
-          description: Solana transaction signature to inspect at finalized commitment.
     TransactionEvidenceResponse:
       type: object
       required:
@@ -140,3 +124,19 @@ components:
             type: string
         boundary:
           type: string
+    TransactionEvidenceRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - request_id
+      - transaction_signature
+      properties:
+        request_id:
+          type: string
+          minLength: 8
+          maxLength: 120
+          pattern: ^[A-Za-z0-9._:-]{8,120}$
+          description: Fresh retry key for one paid lookup. Reuse it only when retrying that same request.
+        transaction_signature:
+          type: string
+          description: Solana transaction signature to inspect at finalized commitment.

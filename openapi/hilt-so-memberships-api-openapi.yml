@@ -400,15 +400,251 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    MembershipProfileRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        platform_display:
+          type: string
+          title: Platform Display
+          default: ''
       type: object
-      title: HTTPValidationError
+      title: MembershipProfileRequest
+    MembershipDeliveryDiagnosticsResponse:
+      properties:
+        membership_id:
+          type: string
+          title: Membership Id
+        owner_id:
+          type: string
+          title: Owner Id
+        product_id:
+          type: string
+          title: Product Id
+        product_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Title
+        product_slug:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Slug
+        platform:
+          type: string
+          title: Platform
+        platform_user_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform User Id
+        platform_display:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Platform Display
+        membership_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Status
+        delivery_status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Status
+        delivery_last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Delivery Last Error
+        latest_payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Payment Id
+        latest_tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Tx Signature
+        automation_ready:
+          type: boolean
+          title: Automation Ready
+        fallback_ready:
+          type: boolean
+          title: Fallback Ready
+        fallback_value:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Fallback Value
+        overall_status:
+          type: string
+          title: Overall Status
+        summary:
+          type: string
+          title: Summary
+        provider_state:
+          type: object
+          title: Provider State
+        checks:
+          items:
+            type: object
+          type: array
+          title: Checks
+        actions:
+          additionalProperties:
+            type: boolean
+          type: object
+          title: Actions
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - membership_id
+      - owner_id
+      - product_id
+      - product_title
+      - product_slug
+      - platform
+      - platform_user_id
+      - platform_display
+      - membership_status
+      - delivery_status
+      - delivery_last_error
+      - latest_payment_id
+      - latest_tx_signature
+      - automation_ready
+      - fallback_ready
+      - fallback_value
+      - overall_status
+      - summary
+      - provider_state
+      - checks
+      - actions
+      - generated_at
+      title: MembershipDeliveryDiagnosticsResponse
+    MembershipEvent:
+      properties:
+        id:
+          type: integer
+          title: Id
+        membership_id:
+          type: string
+          title: Membership Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        event_type:
+          type: string
+          title: Event Type
+        actor_type:
+          type: string
+          title: Actor Type
+        actor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor Id
+        payload_json:
+          type: object
+          title: Payload Json
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - membership_id
+      - payment_id
+      - event_type
+      - actor_type
+      - actor_id
+      - payload_json
+      - created_at
+      title: MembershipEvent
+    MembershipDeliveryResponse:
+      properties:
+        membership:
+          $ref: '#/components/schemas/Membership'
+        delivery:
+          type: object
+          title: Delivery
+      additionalProperties: true
+      type: object
+      required:
+      - membership
+      - delivery
+      title: MembershipDeliveryResponse
+    MembershipSupportTicketResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        created:
+          type: boolean
+          title: Created
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - created
+      title: MembershipSupportTicketResponse
+    MembershipDetailResponse:
+      properties:
+        membership:
+          $ref: '#/components/schemas/Membership'
+        periods:
+          items:
+            $ref: '#/components/schemas/MembershipPeriod'
+          type: array
+          title: Periods
+        events:
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+          type: array
+          title: Events
+        auto_renew:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Auto Renew
+      additionalProperties: true
+      type: object
+      required:
+      - membership
+      - periods
+      - events
+      - auto_renew
+      title: MembershipDetailResponse
+    MembershipGiftRequest:
+      properties:
+        days:
+          type: integer
+          title: Days
+        note:
+          type: string
+          title: Note
+          default: ''
+      type: object
+      required:
+      - days
+      title: MembershipGiftRequest
+    MembershipNotesRequest:
+      properties:
+        notes:
+          type: string
+          title: Notes
+          default: ''
+      type: object
+      title: MembershipNotesRequest
     MembershipReactivationResponse:
       properties:
         membership_id:
@@ -483,6 +719,141 @@ components:
       - templates
       - generated_at
       title: MembershipReactivationResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MembershipPeriod:
+      properties:
+        id:
+          type: string
+          title: Id
+        membership_id:
+          type: string
+          title: Membership Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        tx_signature:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Tx Signature
+        amount_lamports:
+          type: integer
+          title: Amount Lamports
+        token_mint:
+          type: string
+          title: Token Mint
+        period_start_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period Start At
+        period_end_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Period End At
+        status:
+          type: string
+          title: Status
+        activated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Activated At
+        revoked_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Revoked At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - membership_id
+      - payment_id
+      - tx_signature
+      - amount_lamports
+      - token_mint
+      - period_start_at
+      - period_end_at
+      - status
+      - activated_at
+      - revoked_at
+      - created_at
+      title: MembershipPeriod
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    MembershipRenewalIntelligenceResponse:
+      properties:
+        summary:
+          type: object
+          title: Summary
+        expiring_memberships:
+          items:
+            type: object
+          type: array
+          title: Expiring Memberships
+        product_reports:
+          items:
+            type: object
+          type: array
+          title: Product Reports
+        recent_events:
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+          type: array
+          title: Recent Events
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - summary
+      - expiring_memberships
+      - product_reports
+      - recent_events
+      - generated_at
+      title: MembershipRenewalIntelligenceResponse
     MembershipListResponse:
       properties:
         items:
@@ -615,377 +986,6 @@ components:
       - created_at
       - updated_at
       title: Membership
-    MembershipPeriod:
-      properties:
-        id:
-          type: string
-          title: Id
-        membership_id:
-          type: string
-          title: Membership Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        tx_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Tx Signature
-        amount_lamports:
-          type: integer
-          title: Amount Lamports
-        token_mint:
-          type: string
-          title: Token Mint
-        period_start_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period Start At
-        period_end_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Period End At
-        status:
-          type: string
-          title: Status
-        activated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Activated At
-        revoked_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Revoked At
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - membership_id
-      - payment_id
-      - tx_signature
-      - amount_lamports
-      - token_mint
-      - period_start_at
-      - period_end_at
-      - status
-      - activated_at
-      - revoked_at
-      - created_at
-      title: MembershipPeriod
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    MembershipNotesRequest:
-      properties:
-        notes:
-          type: string
-          title: Notes
-          default: ''
-      type: object
-      title: MembershipNotesRequest
-    MembershipDeliveryResponse:
-      properties:
-        membership:
-          $ref: '#/components/schemas/Membership'
-        delivery:
-          type: object
-          title: Delivery
-      additionalProperties: true
-      type: object
-      required:
-      - membership
-      - delivery
-      title: MembershipDeliveryResponse
-    MembershipEvent:
-      properties:
-        id:
-          type: integer
-          title: Id
-        membership_id:
-          type: string
-          title: Membership Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        event_type:
-          type: string
-          title: Event Type
-        actor_type:
-          type: string
-          title: Actor Type
-        actor_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actor Id
-        payload_json:
-          type: object
-          title: Payload Json
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - membership_id
-      - payment_id
-      - event_type
-      - actor_type
-      - actor_id
-      - payload_json
-      - created_at
-      title: MembershipEvent
-    MembershipRenewalIntelligenceResponse:
-      properties:
-        summary:
-          type: object
-          title: Summary
-        expiring_memberships:
-          items:
-            type: object
-          type: array
-          title: Expiring Memberships
-        product_reports:
-          items:
-            type: object
-          type: array
-          title: Product Reports
-        recent_events:
-          items:
-            $ref: '#/components/schemas/MembershipEvent'
-          type: array
-          title: Recent Events
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - summary
-      - expiring_memberships
-      - product_reports
-      - recent_events
-      - generated_at
-      title: MembershipRenewalIntelligenceResponse
-    MembershipDetailResponse:
-      properties:
-        membership:
-          $ref: '#/components/schemas/Membership'
-        periods:
-          items:
-            $ref: '#/components/schemas/MembershipPeriod'
-          type: array
-          title: Periods
-        events:
-          items:
-            $ref: '#/components/schemas/MembershipEvent'
-          type: array
-          title: Events
-        auto_renew:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Auto Renew
-      additionalProperties: true
-      type: object
-      required:
-      - membership
-      - periods
-      - events
-      - auto_renew
-      title: MembershipDetailResponse
-    MembershipDeliveryDiagnosticsResponse:
-      properties:
-        membership_id:
-          type: string
-          title: Membership Id
-        owner_id:
-          type: string
-          title: Owner Id
-        product_id:
-          type: string
-          title: Product Id
-        product_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Title
-        product_slug:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Slug
-        platform:
-          type: string
-          title: Platform
-        platform_user_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform User Id
-        platform_display:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Platform Display
-        membership_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Status
-        delivery_status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Status
-        delivery_last_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Delivery Last Error
-        latest_payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Payment Id
-        latest_tx_signature:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Tx Signature
-        automation_ready:
-          type: boolean
-          title: Automation Ready
-        fallback_ready:
-          type: boolean
-          title: Fallback Ready
-        fallback_value:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Fallback Value
-        overall_status:
-          type: string
-          title: Overall Status
-        summary:
-          type: string
-          title: Summary
-        provider_state:
-          type: object
-          title: Provider State
-        checks:
-          items:
-            type: object
-          type: array
-          title: Checks
-        actions:
-          additionalProperties:
-            type: boolean
-          type: object
-          title: Actions
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - membership_id
-      - owner_id
-      - product_id
-      - product_title
-      - product_slug
-      - platform
-      - platform_user_id
-      - platform_display
-      - membership_status
-      - delivery_status
-      - delivery_last_error
-      - latest_payment_id
-      - latest_tx_signature
-      - automation_ready
-      - fallback_ready
-      - fallback_value
-      - overall_status
-      - summary
-      - provider_state
-      - checks
-      - actions
-      - generated_at
-      title: MembershipDeliveryDiagnosticsResponse
-    MembershipGiftRequest:
-      properties:
-        days:
-          type: integer
-          title: Days
-        note:
-          type: string
-          title: Note
-          default: ''
-      type: object
-      required:
-      - days
-      title: MembershipGiftRequest
-    MembershipSupportTicketResponse:
-      properties:
-        ticket_id:
-          type: string
-          title: Ticket Id
-        created:
-          type: boolean
-          title: Created
-      additionalProperties: true
-      type: object
-      required:
-      - ticket_id
-      - created
-      title: MembershipSupportTicketResponse
-    MembershipProfileRequest:
-      properties:
-        platform_display:
-          type: string
-          title: Platform Display
-          default: ''
-      type: object
-      title: MembershipProfileRequest
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

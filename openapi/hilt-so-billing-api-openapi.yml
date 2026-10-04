@@ -119,6 +119,49 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    StripePortalRequest:
+      properties:
+        return_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Return Url
+      type: object
+      required:
+      - return_url
+      title: StripePortalRequest
+    StripeCheckoutRequest:
+      properties:
+        plan:
+          type: string
+          enum:
+          - starter
+          - growth
+          - scale
+          title: Plan
+        interval:
+          type: string
+          enum:
+          - monthly
+          - yearly
+          title: Interval
+          default: monthly
+        success_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Success Url
+        cancel_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Cancel Url
+      type: object
+      required:
+      - plan
+      - success_url
+      - cancel_url
+      title: StripeCheckoutRequest
     StripePortalResponse:
       properties:
         portal_url:
@@ -128,15 +171,166 @@ components:
       required:
       - portal_url
       title: StripePortalResponse
-    HTTPValidationError:
+    StripeRefreshResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        refreshed:
+          type: boolean
+          title: Refreshed
+        tier:
+          type: string
+          title: Tier
+        billing_status:
+          type: string
+          title: Billing Status
+        stripe_subscription_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Subscription Id
+        stripe_price_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Stripe Price Id
+        current_period_end:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Current Period End
       type: object
-      title: HTTPValidationError
+      required:
+      - refreshed
+      - tier
+      - billing_status
+      title: StripeRefreshResponse
+    BillingPlanCardResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        label:
+          type: string
+          title: Label
+        description:
+          type: string
+          title: Description
+        monthly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Monthly Price Usd
+        yearly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Yearly Price Usd
+        annual_discount_pct:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Annual Discount Pct
+        transaction_fee_pct:
+          type: number
+          title: Transaction Fee Pct
+        transaction_fee_flat_usd_cents:
+          type: integer
+          title: Transaction Fee Flat Usd Cents
+        live_link_limit:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Live Link Limit
+        seats_included:
+          type: integer
+          title: Seats Included
+        manual_renewals:
+          type: boolean
+          title: Manual Renewals
+        automatic_renewals:
+          type: boolean
+          title: Automatic Renewals
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+      type: object
+      required:
+      - slug
+      - label
+      - description
+      - monthly_price_usd
+      - yearly_price_usd
+      - annual_discount_pct
+      - transaction_fee_pct
+      - transaction_fee_flat_usd_cents
+      - live_link_limit
+      - seats_included
+      - manual_renewals
+      - automatic_renewals
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      title: BillingPlanCardResponse
+    StripeCheckoutResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        checkout_url:
+          type: string
+          title: Checkout Url
+      type: object
+      required:
+      - session_id
+      - checkout_url
+      title: StripeCheckoutResponse
+    BillingAssetSummaryResponse:
+      properties:
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        confirmed_payments:
+          type: integer
+          title: Confirmed Payments
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+      type: object
+      required:
+      - asset_symbol
+      - asset_decimals
+      - confirmed_payments
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      title: BillingAssetSummaryResponse
     BillingSummaryResponse:
       properties:
         tier:
@@ -284,38 +478,6 @@ components:
       - gross_sol_equivalent
       - stripe_history
       title: BillingSummaryResponse
-    StripeRefreshResponse:
-      properties:
-        refreshed:
-          type: boolean
-          title: Refreshed
-        tier:
-          type: string
-          title: Tier
-        billing_status:
-          type: string
-          title: Billing Status
-        stripe_subscription_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stripe Subscription Id
-        stripe_price_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Stripe Price Id
-        current_period_end:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Current Period End
-      type: object
-      required:
-      - refreshed
-      - tier
-      - billing_status
-      title: StripeRefreshResponse
     ValidationError:
       properties:
         loc:
@@ -342,62 +504,15 @@ components:
       - msg
       - type
       title: ValidationError
-    StripeCheckoutResponse:
+    HTTPValidationError:
       properties:
-        session_id:
-          type: string
-          title: Session Id
-        checkout_url:
-          type: string
-          title: Checkout Url
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
       type: object
-      required:
-      - session_id
-      - checkout_url
-      title: StripeCheckoutResponse
-    StripeCheckoutRequest:
-      properties:
-        plan:
-          type: string
-          enum:
-          - starter
-          - growth
-          - scale
-          title: Plan
-        interval:
-          type: string
-          enum:
-          - monthly
-          - yearly
-          title: Interval
-          default: monthly
-        success_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Success Url
-        cancel_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Cancel Url
-      type: object
-      required:
-      - plan
-      - success_url
-      - cancel_url
-      title: StripeCheckoutRequest
-    StripePortalRequest:
-      properties:
-        return_url:
-          type: string
-          maxLength: 2048
-          minLength: 8
-          title: Return Url
-      type: object
-      required:
-      - return_url
-      title: StripePortalRequest
+      title: HTTPValidationError
     StripeWebhookResponse:
       properties:
         received:
@@ -423,121 +538,6 @@ components:
       required:
       - received
       title: StripeWebhookResponse
-    BillingPlanCardResponse:
-      properties:
-        slug:
-          type: string
-          title: Slug
-        label:
-          type: string
-          title: Label
-        description:
-          type: string
-          title: Description
-        monthly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Monthly Price Usd
-        yearly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Yearly Price Usd
-        annual_discount_pct:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Annual Discount Pct
-        transaction_fee_pct:
-          type: number
-          title: Transaction Fee Pct
-        transaction_fee_flat_usd_cents:
-          type: integer
-          title: Transaction Fee Flat Usd Cents
-        live_link_limit:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Live Link Limit
-        seats_included:
-          type: integer
-          title: Seats Included
-        manual_renewals:
-          type: boolean
-          title: Manual Renewals
-        automatic_renewals:
-          type: boolean
-          title: Automatic Renewals
-        merchant_analytics:
-          type: boolean
-          title: Merchant Analytics
-        buy_notifications:
-          type: boolean
-          title: Buy Notifications
-        receipt_exports:
-          type: boolean
-          title: Receipt Exports
-        tax_exports:
-          type: boolean
-          title: Tax Exports
-        custom_checkout_domains:
-          type: boolean
-          title: Custom Checkout Domains
-      type: object
-      required:
-      - slug
-      - label
-      - description
-      - monthly_price_usd
-      - yearly_price_usd
-      - annual_discount_pct
-      - transaction_fee_pct
-      - transaction_fee_flat_usd_cents
-      - live_link_limit
-      - seats_included
-      - manual_renewals
-      - automatic_renewals
-      - merchant_analytics
-      - buy_notifications
-      - receipt_exports
-      - tax_exports
-      - custom_checkout_domains
-      title: BillingPlanCardResponse
-    BillingAssetSummaryResponse:
-      properties:
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-        asset_symbol:
-          type: string
-          title: Asset Symbol
-        asset_decimals:
-          type: integer
-          title: Asset Decimals
-        confirmed_payments:
-          type: integer
-          title: Confirmed Payments
-        gross_minor_units:
-          type: integer
-          title: Gross Minor Units
-        net_minor_units:
-          type: integer
-          title: Net Minor Units
-        fee_minor_units:
-          type: integer
-          title: Fee Minor Units
-      type: object
-      required:
-      - asset_symbol
-      - asset_decimals
-      - confirmed_payments
-      - gross_minor_units
-      - net_minor_units
-      - fee_minor_units
-      title: BillingAssetSummaryResponse
     StripeInvoiceHistoryResponse:
       properties:
         invoice_id:

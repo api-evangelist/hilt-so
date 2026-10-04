@@ -197,15 +197,89 @@ components:
       - id
       - name
       title: ConnectorClientSummary
-    HTTPValidationError:
+    ConnectorZeroCustodySummary:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        canPrepare:
+          type: boolean
+          title: Canprepare
+        canSign:
+          type: boolean
+          title: Cansign
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
       type: object
-      title: HTTPValidationError
+      required:
+      - canPrepare
+      - canSign
+      - walletApprovalRequired
+      title: ConnectorZeroCustodySummary
+    PaymentIntentResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        direction:
+          type: string
+          title: Direction
+        status:
+          type: string
+          title: Status
+        recipient:
+          $ref: '#/components/schemas/PaymentRequestRecipientResponse'
+        asset:
+          $ref: '#/components/schemas/PaymentRequestAssetResponse'
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        feePreview:
+          $ref: '#/components/schemas/PaymentIntentFeePreviewResponse'
+        note:
+          type: string
+          title: Note
+        approvalUrl:
+          type: string
+          title: Approvalurl
+        txSignature:
+          type: string
+          title: Txsignature
+        solscanUrl:
+          type: string
+          title: Solscanurl
+        createdAt:
+          type: string
+          title: Createdat
+        expiresAt:
+          type: string
+          title: Expiresat
+        authorizedAt:
+          type: string
+          title: Authorizedat
+        confirmedAt:
+          type: string
+          title: Confirmedat
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
+      type: object
+      required:
+      - id
+      - direction
+      - status
+      - recipient
+      - asset
+      - recipientAmount
+      - feePreview
+      - note
+      - approvalUrl
+      - txSignature
+      - solscanUrl
+      - createdAt
+      - expiresAt
+      - authorizedAt
+      - confirmedAt
+      - walletApprovalRequired
+      title: PaymentIntentResponse
     ConnectorConnectionResponse:
       properties:
         id:
@@ -232,6 +306,27 @@ components:
       - connectedAt
       - lastUsedAt
       title: ConnectorConnectionResponse
+    PaymentRequestAssetResponse:
+      properties:
+        mint:
+          type: string
+          title: Mint
+        symbol:
+          type: string
+          title: Symbol
+        name:
+          type: string
+          title: Name
+        decimals:
+          type: integer
+          title: Decimals
+      type: object
+      required:
+      - mint
+      - symbol
+      - name
+      - decimals
+      title: PaymentRequestAssetResponse
     ConnectorConnectionListResponse:
       properties:
         connections:
@@ -243,14 +338,151 @@ components:
       required:
       - connections
       title: ConnectorConnectionListResponse
-    PaymentRequestEnvelope:
+    ConnectorAuthorizationRedirectResponse:
       properties:
-        paymentRequest:
-          $ref: '#/components/schemas/PaymentRequestResponse'
+        redirectUrl:
+          type: string
+          title: Redirecturl
       type: object
       required:
-      - paymentRequest
-      title: PaymentRequestEnvelope
+      - redirectUrl
+      title: ConnectorAuthorizationRedirectResponse
+    PaymentIntentFeePreviewResponse:
+      properties:
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        buyerTotal:
+          type: string
+          title: Buyertotal
+        platformFeePercent:
+          type: string
+          title: Platformfeepercent
+      type: object
+      required:
+      - hiltFeeAmount
+      - buyerTotal
+      - platformFeePercent
+      title: PaymentIntentFeePreviewResponse
+    PaymentRequestRecipientResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        xHandle:
+          type: string
+          title: Xhandle
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        identityVerified:
+          type: boolean
+          title: Identityverified
+        walletVerified:
+          type: boolean
+          title: Walletverified
+      type: object
+      required:
+      - name
+      - xHandle
+      - xProfileUrl
+      - recipientWallet
+      - identityVerified
+      - walletVerified
+      title: PaymentRequestRecipientResponse
+    PaymentIntentEnvelope:
+      properties:
+        payment:
+          $ref: '#/components/schemas/PaymentIntentResponse'
+      type: object
+      required:
+      - payment
+      title: PaymentIntentEnvelope
+    PaymentRequestCreate:
+      properties:
+        amount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Amount
+        asset:
+          type: string
+          maxLength: 12
+          title: Asset
+          default: USDC
+        from_x_handle:
+          type: string
+          maxLength: 16
+          title: From X Handle
+          default: ''
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        expires_in_hours:
+          type: integer
+          maximum: 168
+          minimum: 1
+          title: Expires In Hours
+          default: 72
+      type: object
+      required:
+      - amount
+      title: PaymentRequestCreate
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    ConnectorAuthorizationComplete:
+      properties:
+        request:
+          type: string
+          maxLength: 8000
+          minLength: 20
+          title: Request
+        approved:
+          type: boolean
+          title: Approved
+          default: true
+      type: object
+      required:
+      - request
+      title: ConnectorAuthorizationComplete
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     PaymentRequestResponse:
       properties:
         id:
@@ -343,246 +575,14 @@ components:
       - profile
       - zeroCustody
       title: ConnectorAuthorizationResponse
-    PaymentRequestAssetResponse:
+    PaymentRequestEnvelope:
       properties:
-        mint:
-          type: string
-          title: Mint
-        symbol:
-          type: string
-          title: Symbol
-        name:
-          type: string
-          title: Name
-        decimals:
-          type: integer
-          title: Decimals
+        paymentRequest:
+          $ref: '#/components/schemas/PaymentRequestResponse'
       type: object
       required:
-      - mint
-      - symbol
-      - name
-      - decimals
-      title: PaymentRequestAssetResponse
-    PaymentRequestCreate:
-      properties:
-        amount:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Amount
-        asset:
-          type: string
-          maxLength: 12
-          title: Asset
-          default: USDC
-        from_x_handle:
-          type: string
-          maxLength: 16
-          title: From X Handle
-          default: ''
-        note:
-          type: string
-          maxLength: 240
-          title: Note
-          default: ''
-        expires_in_hours:
-          type: integer
-          maximum: 168
-          minimum: 1
-          title: Expires In Hours
-          default: 72
-      type: object
-      required:
-      - amount
-      title: PaymentRequestCreate
-    ConnectorZeroCustodySummary:
-      properties:
-        canPrepare:
-          type: boolean
-          title: Canprepare
-        canSign:
-          type: boolean
-          title: Cansign
-        walletApprovalRequired:
-          type: boolean
-          title: Walletapprovalrequired
-      type: object
-      required:
-      - canPrepare
-      - canSign
-      - walletApprovalRequired
-      title: ConnectorZeroCustodySummary
-    PaymentIntentFeePreviewResponse:
-      properties:
-        hiltFeeAmount:
-          type: string
-          title: Hiltfeeamount
-        buyerTotal:
-          type: string
-          title: Buyertotal
-        platformFeePercent:
-          type: string
-          title: Platformfeepercent
-      type: object
-      required:
-      - hiltFeeAmount
-      - buyerTotal
-      - platformFeePercent
-      title: PaymentIntentFeePreviewResponse
-    ConnectorAuthorizationComplete:
-      properties:
-        request:
-          type: string
-          maxLength: 8000
-          minLength: 20
-          title: Request
-        approved:
-          type: boolean
-          title: Approved
-          default: true
-      type: object
-      required:
-      - request
-      title: ConnectorAuthorizationComplete
-    PaymentIntentResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        direction:
-          type: string
-          title: Direction
-        status:
-          type: string
-          title: Status
-        recipient:
-          $ref: '#/components/schemas/PaymentRequestRecipientResponse'
-        asset:
-          $ref: '#/components/schemas/PaymentRequestAssetResponse'
-        recipientAmount:
-          type: string
-          title: Recipientamount
-        feePreview:
-          $ref: '#/components/schemas/PaymentIntentFeePreviewResponse'
-        note:
-          type: string
-          title: Note
-        approvalUrl:
-          type: string
-          title: Approvalurl
-        txSignature:
-          type: string
-          title: Txsignature
-        solscanUrl:
-          type: string
-          title: Solscanurl
-        createdAt:
-          type: string
-          title: Createdat
-        expiresAt:
-          type: string
-          title: Expiresat
-        authorizedAt:
-          type: string
-          title: Authorizedat
-        confirmedAt:
-          type: string
-          title: Confirmedat
-        walletApprovalRequired:
-          type: boolean
-          title: Walletapprovalrequired
-      type: object
-      required:
-      - id
-      - direction
-      - status
-      - recipient
-      - asset
-      - recipientAmount
-      - feePreview
-      - note
-      - approvalUrl
-      - txSignature
-      - solscanUrl
-      - createdAt
-      - expiresAt
-      - authorizedAt
-      - confirmedAt
-      - walletApprovalRequired
-      title: PaymentIntentResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PaymentRequestRecipientResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-        xHandle:
-          type: string
-          title: Xhandle
-        xProfileUrl:
-          type: string
-          title: Xprofileurl
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        identityVerified:
-          type: boolean
-          title: Identityverified
-        walletVerified:
-          type: boolean
-          title: Walletverified
-      type: object
-      required:
-      - name
-      - xHandle
-      - xProfileUrl
-      - recipientWallet
-      - identityVerified
-      - walletVerified
-      title: PaymentRequestRecipientResponse
-    PaymentIntentEnvelope:
-      properties:
-        payment:
-          $ref: '#/components/schemas/PaymentIntentResponse'
-      type: object
-      required:
-      - payment
-      title: PaymentIntentEnvelope
-    ConnectorAuthorizationRedirectResponse:
-      properties:
-        redirectUrl:
-          type: string
-          title: Redirecturl
-      type: object
-      required:
-      - redirectUrl
-      title: ConnectorAuthorizationRedirectResponse
+      - paymentRequest
+      title: PaymentRequestEnvelope
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

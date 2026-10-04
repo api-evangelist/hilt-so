@@ -142,63 +142,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    SupportMessageCreateResponse:
-      properties:
-        ticket_id:
-          type: string
-          title: Ticket Id
-        message:
-          type: string
-          title: Message
-      additionalProperties: true
-      type: object
-      required:
-      - ticket_id
-      - message
-      title: SupportMessageCreateResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    SupportMessage:
-      properties:
-        id:
-          type: string
-          title: Id
-        ticket_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Ticket Id
-        author_type:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Author Type
-        author_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Author Id
-        body:
-          type: string
-          title: Body
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - body
-      title: SupportMessage
     SupportTicketThreadResponse:
       properties:
         id:
@@ -260,28 +203,6 @@ components:
       - status
       - messages
       title: SupportTicketThreadResponse
-    SupportTicketCreateResponse:
-      properties:
-        ticket_id:
-          type: string
-          title: Ticket Id
-        status:
-          type: string
-          title: Status
-        subject:
-          type: string
-          title: Subject
-        category:
-          type: string
-          title: Category
-      additionalProperties: true
-      type: object
-      required:
-      - ticket_id
-      - status
-      - subject
-      - category
-      title: SupportTicketCreateResponse
     SupportTicket:
       properties:
         id:
@@ -337,6 +258,85 @@ components:
       - category
       - status
       title: SupportTicket
+    SupportTicketCreateResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        status:
+          type: string
+          title: Status
+        subject:
+          type: string
+          title: Subject
+        category:
+          type: string
+          title: Category
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - status
+      - subject
+      - category
+      title: SupportTicketCreateResponse
+    SupportMessage:
+      properties:
+        id:
+          type: string
+          title: Id
+        ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Ticket Id
+        author_type:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Type
+        author_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Author Id
+        body:
+          type: string
+          title: Body
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - body
+      title: SupportMessage
+    SupportMessageCreateResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        message:
+          type: string
+          title: Message
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - message
+      title: SupportMessageCreateResponse
+    AddMessageRequest:
+      properties:
+        body:
+          type: string
+          title: Body
+      type: object
+      required:
+      - body
+      title: AddMessageRequest
     CreateTicketRequest:
       properties:
         subject:
@@ -385,6 +385,15 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     SupportTicketListResponse:
       properties:
         total:
@@ -405,15 +414,6 @@ components:
       - page
       - tickets
       title: SupportTicketListResponse
-    AddMessageRequest:
-      properties:
-        body:
-          type: string
-          title: Body
-      type: object
-      required:
-      - body
-      title: AddMessageRequest
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

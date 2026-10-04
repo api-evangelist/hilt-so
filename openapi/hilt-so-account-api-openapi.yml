@@ -208,77 +208,6 @@ paths:
                 $ref: '#/components/schemas/DetailResponse'
 components:
   schemas:
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    DeliveryTestResponse:
-      properties:
-        provider:
-          type: string
-          title: Provider
-        status:
-          type: string
-          title: Status
-        summary:
-          type: string
-          title: Summary
-        checks:
-          items:
-            type: object
-          type: array
-          title: Checks
-        checked_at:
-          type: string
-          title: Checked At
-      additionalProperties: true
-      type: object
-      required:
-      - provider
-      - status
-      - summary
-      - checks
-      - checked_at
-      title: DeliveryTestResponse
-    DeliveryReadinessDefaults:
-      properties:
-        payout_wallet_configured:
-          type: boolean
-          title: Payout Wallet Configured
-        default_redirect_url_configured:
-          type: boolean
-          title: Default Redirect Url Configured
-        default_support_url_configured:
-          type: boolean
-          title: Default Support Url Configured
-      additionalProperties: true
-      type: object
-      required:
-      - payout_wallet_configured
-      - default_redirect_url_configured
-      - default_support_url_configured
-      title: DeliveryReadinessDefaults
-    UpdatedFieldsResponse:
-      properties:
-        detail:
-          type: string
-          title: Detail
-        updated_fields:
-          items:
-            type: string
-          type: array
-          title: Updated Fields
-      additionalProperties: true
-      type: object
-      required:
-      - detail
-      - updated_fields
-      title: UpdatedFieldsResponse
     AccountSecurityUpdateRequest:
       properties:
         email:
@@ -299,16 +228,124 @@ components:
           title: New Password
       type: object
       title: AccountSecurityUpdateRequest
-    DetailResponse:
+    AccountAssetSummary:
       properties:
-        detail:
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        asset_symbol:
           type: string
-          title: Detail
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        confirmed_payments:
+          type: integer
+          title: Confirmed Payments
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+      type: object
+      required:
+      - token_mint
+      - asset_symbol
+      - asset_decimals
+      - confirmed_payments
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      title: AccountAssetSummary
+    AccountUpdateRequest:
+      properties:
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        timezone:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Timezone
+        notification_prefs:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Notification Prefs
+        merchant_settings:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Merchant Settings
+      type: object
+      title: AccountUpdateRequest
+    DeliveryReadinessDefaults:
+      properties:
+        payout_wallet_configured:
+          type: boolean
+          title: Payout Wallet Configured
+        default_redirect_url_configured:
+          type: boolean
+          title: Default Redirect Url Configured
+        default_support_url_configured:
+          type: boolean
+          title: Default Support Url Configured
       additionalProperties: true
       type: object
       required:
-      - detail
-      title: DetailResponse
+      - payout_wallet_configured
+      - default_redirect_url_configured
+      - default_support_url_configured
+      title: DeliveryReadinessDefaults
+    AccountClaims:
+      properties:
+        hilt_score:
+          type: boolean
+          title: Hilt Score
+        hilt_pay:
+          type: boolean
+          title: Hilt Pay
+        hilt_ops:
+          type: boolean
+          title: Hilt Ops
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
+        is_staff:
+          type: boolean
+          title: Is Staff
+      type: object
+      required:
+      - hilt_score
+      - hilt_pay
+      - hilt_ops
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      - is_staff
+      title: AccountClaims
     DeliveryReadinessResponse:
       properties:
         merchant_name:
@@ -354,6 +391,32 @@ components:
       - warnings
       - checked_at
       title: DeliveryReadinessResponse
+    UpdatedFieldsResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+        updated_fields:
+          items:
+            type: string
+          type: array
+          title: Updated Fields
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      - updated_fields
+      title: UpdatedFieldsResponse
+    DetailResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      title: DetailResponse
     AccountSummaryResponse:
       properties:
         active_templates:
@@ -399,179 +462,34 @@ components:
       - overall_assets
       - today_assets
       title: AccountSummaryResponse
-    AccountUpdateRequest:
-      properties:
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        timezone:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Timezone
-        notification_prefs:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Notification Prefs
-        merchant_settings:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Merchant Settings
-      type: object
-      title: AccountUpdateRequest
-    AccountAssetSummary:
-      properties:
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-        asset_symbol:
-          type: string
-          title: Asset Symbol
-        asset_decimals:
-          type: integer
-          title: Asset Decimals
-        confirmed_payments:
-          type: integer
-          title: Confirmed Payments
-        gross_minor_units:
-          type: integer
-          title: Gross Minor Units
-        net_minor_units:
-          type: integer
-          title: Net Minor Units
-        fee_minor_units:
-          type: integer
-          title: Fee Minor Units
-      type: object
-      required:
-      - token_mint
-      - asset_symbol
-      - asset_decimals
-      - confirmed_payments
-      - gross_minor_units
-      - net_minor_units
-      - fee_minor_units
-      title: AccountAssetSummary
-    DeliveryTestRequest:
+    DeliveryTestResponse:
       properties:
         provider:
           type: string
           title: Provider
-      type: object
-      required:
-      - provider
-      title: DeliveryTestRequest
-    AccountClaims:
-      properties:
-        hilt_score:
-          type: boolean
-          title: Hilt Score
-        hilt_pay:
-          type: boolean
-          title: Hilt Pay
-        hilt_ops:
-          type: boolean
-          title: Hilt Ops
-        merchant_analytics:
-          type: boolean
-          title: Merchant Analytics
-        buy_notifications:
-          type: boolean
-          title: Buy Notifications
-        receipt_exports:
-          type: boolean
-          title: Receipt Exports
-        tax_exports:
-          type: boolean
-          title: Tax Exports
-        custom_checkout_domains:
-          type: boolean
-          title: Custom Checkout Domains
-        is_staff:
-          type: boolean
-          title: Is Staff
-      type: object
-      required:
-      - hilt_score
-      - hilt_pay
-      - hilt_ops
-      - merchant_analytics
-      - buy_notifications
-      - receipt_exports
-      - tax_exports
-      - custom_checkout_domains
-      - is_staff
-      title: AccountClaims
-    WorkspaceAnalyticsResponse:
-      properties:
+        status:
+          type: string
+          title: Status
         summary:
-          type: object
+          type: string
           title: Summary
-        window_assets:
+        checks:
           items:
             type: object
           type: array
-          title: Window Assets
-        funnel_daily:
-          items:
-            type: object
-          type: array
-          title: Funnel Daily
-        revenue_trend_daily:
-          items:
-            type: object
-          type: array
-          title: Revenue Trend Daily
-        source_rows:
-          items:
-            type: object
-          type: array
-          title: Source Rows
-        product_reports:
-          items:
-            type: object
-          type: array
-          title: Product Reports
-        attention_items:
-          items:
-            type: object
-          type: array
-          title: Attention Items
-        expiring_memberships:
-          items:
-            type: object
-          type: array
-          title: Expiring Memberships
-        range_start_date:
+          title: Checks
+        checked_at:
           type: string
-          title: Range Start Date
-        range_end_date:
-          type: string
-          title: Range End Date
-        generated_at:
-          type: string
-          title: Generated At
+          title: Checked At
       additionalProperties: true
       type: object
       required:
+      - provider
+      - status
       - summary
-      - window_assets
-      - funnel_daily
-      - revenue_trend_daily
-      - source_rows
-      - product_reports
-      - attention_items
-      - expiring_memberships
-      - range_start_date
-      - range_end_date
-      - generated_at
-      title: WorkspaceAnalyticsResponse
+      - checks
+      - checked_at
+      title: DeliveryTestResponse
     ValidationError:
       properties:
         loc:
@@ -675,6 +593,88 @@ components:
       - merchant_settings
       - claims
       title: AccountResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    DeliveryTestRequest:
+      properties:
+        provider:
+          type: string
+          title: Provider
+      type: object
+      required:
+      - provider
+      title: DeliveryTestRequest
+    WorkspaceAnalyticsResponse:
+      properties:
+        summary:
+          type: object
+          title: Summary
+        window_assets:
+          items:
+            type: object
+          type: array
+          title: Window Assets
+        funnel_daily:
+          items:
+            type: object
+          type: array
+          title: Funnel Daily
+        revenue_trend_daily:
+          items:
+            type: object
+          type: array
+          title: Revenue Trend Daily
+        source_rows:
+          items:
+            type: object
+          type: array
+          title: Source Rows
+        product_reports:
+          items:
+            type: object
+          type: array
+          title: Product Reports
+        attention_items:
+          items:
+            type: object
+          type: array
+          title: Attention Items
+        expiring_memberships:
+          items:
+            type: object
+          type: array
+          title: Expiring Memberships
+        range_start_date:
+          type: string
+          title: Range Start Date
+        range_end_date:
+          type: string
+          title: Range End Date
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - summary
+      - window_assets
+      - funnel_daily
+      - revenue_trend_daily
+      - source_rows
+      - product_reports
+      - attention_items
+      - expiring_memberships
+      - range_start_date
+      - range_end_date
+      - generated_at
+      title: WorkspaceAnalyticsResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

@@ -261,32 +261,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    OAuthStartResponse:
-      properties:
-        provider:
-          type: string
-          title: Provider
-        callback_url:
-          type: string
-          title: Callback Url
-        authorization_url:
-          type: string
-          title: Authorization Url
-      type: object
-      required:
-      - provider
-      - callback_url
-      - authorization_url
-      title: OAuthStartResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
     LoginRequest:
       properties:
         email:
@@ -301,30 +275,6 @@ components:
       - email
       - password
       title: LoginRequest
-    RegisterRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        password:
-          type: string
-          title: Password
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        referral_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Referral Code
-      type: object
-      required:
-      - email
-      - password
-      title: RegisterRequest
     AuthResponse:
       properties:
         token:
@@ -351,6 +301,88 @@ components:
       - email
       - claims
       title: AuthResponse
+    OAuthProviderStatusResponse:
+      properties:
+        google:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+        github:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+        x:
+          $ref: '#/components/schemas/OAuthProviderInfo'
+      type: object
+      required:
+      - google
+      - github
+      - x
+      title: OAuthProviderStatusResponse
+    OAuthStartResponse:
+      properties:
+        provider:
+          type: string
+          title: Provider
+        callback_url:
+          type: string
+          title: Callback Url
+        authorization_url:
+          type: string
+          title: Authorization Url
+      type: object
+      required:
+      - provider
+      - callback_url
+      - authorization_url
+      title: OAuthStartResponse
+    OAuthProviderInfo:
+      properties:
+        enabled:
+          type: boolean
+          title: Enabled
+        callback_url:
+          type: string
+          title: Callback Url
+        app_base_url:
+          type: string
+          title: App Base Url
+        uses_app_secret_fallback:
+          type: boolean
+          title: Uses App Secret Fallback
+          default: false
+        missing:
+          items:
+            type: string
+          type: array
+          title: Missing
+      type: object
+      required:
+      - enabled
+      - callback_url
+      - app_base_url
+      - missing
+      title: OAuthProviderInfo
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        referral_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referral Code
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
     DetailResponse:
       properties:
         detail:
@@ -361,6 +393,67 @@ components:
       required:
       - detail
       title: DetailResponse
+    WalletAuthRequest:
+      properties:
+        wallet_address:
+          type: string
+          title: Wallet Address
+        signed_message:
+          type: string
+          title: Signed Message
+        message_nonce:
+          type: string
+          title: Message Nonce
+      type: object
+      required:
+      - wallet_address
+      - signed_message
+      - message_nonce
+      title: WalletAuthRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RefreshRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: RefreshRequest
     EntitlementClaims:
       properties:
         hilt_score:
@@ -402,99 +495,6 @@ components:
       - custom_checkout_domains
       - is_staff
       title: EntitlementClaims
-    RefreshRequest:
-      properties:
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - token
-      title: RefreshRequest
-    WalletAuthRequest:
-      properties:
-        wallet_address:
-          type: string
-          title: Wallet Address
-        signed_message:
-          type: string
-          title: Signed Message
-        message_nonce:
-          type: string
-          title: Message Nonce
-      type: object
-      required:
-      - wallet_address
-      - signed_message
-      - message_nonce
-      title: WalletAuthRequest
-    OAuthProviderInfo:
-      properties:
-        enabled:
-          type: boolean
-          title: Enabled
-        callback_url:
-          type: string
-          title: Callback Url
-        app_base_url:
-          type: string
-          title: App Base Url
-        uses_app_secret_fallback:
-          type: boolean
-          title: Uses App Secret Fallback
-          default: false
-        missing:
-          items:
-            type: string
-          type: array
-          title: Missing
-      type: object
-      required:
-      - enabled
-      - callback_url
-      - app_base_url
-      - missing
-      title: OAuthProviderInfo
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    OAuthProviderStatusResponse:
-      properties:
-        google:
-          $ref: '#/components/schemas/OAuthProviderInfo'
-        github:
-          $ref: '#/components/schemas/OAuthProviderInfo'
-        x:
-          $ref: '#/components/schemas/OAuthProviderInfo'
-      type: object
-      required:
-      - google
-      - github
-      - x
-      title: OAuthProviderStatusResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

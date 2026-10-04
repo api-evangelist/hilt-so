@@ -314,15 +314,316 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    WebhookEndpointCreateResponse:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        endpoint:
+          $ref: '#/components/schemas/WebhookEndpoint'
+        signing_secret:
+          type: string
+          title: Signing Secret
+        supported_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Supported Events
+      additionalProperties: true
       type: object
-      title: HTTPValidationError
+      required:
+      - endpoint
+      - signing_secret
+      title: WebhookEndpointCreateResponse
+    WebhookEvent:
+      properties:
+        id:
+          type: string
+          title: Id
+        event_type:
+          type: string
+          title: Event Type
+        event_version:
+          type: string
+          title: Event Version
+        source_type:
+          type: string
+          title: Source Type
+        source_id:
+          type: string
+          title: Source Id
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        membership_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Id
+        receipt_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Receipt Id
+        support_ticket_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Support Ticket Id
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        payload:
+          type: object
+          title: Payload
+        deliveries:
+          anyOf:
+          - items:
+              $ref: '#/components/schemas/WebhookDelivery'
+            type: array
+          - type: 'null'
+          title: Deliveries
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - event_type
+      - event_version
+      - source_type
+      - source_id
+      - product_id
+      - payment_id
+      - membership_id
+      - receipt_id
+      - support_ticket_id
+      - created_at
+      - payload
+      title: WebhookEvent
+    WebhookTestEventRequest:
+      properties:
+        event_type:
+          type: string
+          title: Event Type
+          default: payment.confirmed
+      type: object
+      title: WebhookTestEventRequest
+    WebhookTestResponse:
+      properties:
+        event:
+          anyOf:
+          - $ref: '#/components/schemas/WebhookEvent'
+          - type: 'null'
+        delivery:
+          anyOf:
+          - $ref: '#/components/schemas/WebhookDelivery'
+          - type: 'null'
+        delivered:
+          anyOf:
+          - type: boolean
+          - type: 'null'
+          title: Delivered
+        result:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Result
+      additionalProperties: true
+      type: object
+      title: WebhookTestResponse
+    WebhookEventsResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        events:
+          items:
+            $ref: '#/components/schemas/WebhookEvent'
+          type: array
+          title: Events
+        supported_events:
+          items:
+            type: string
+          type: array
+          title: Supported Events
+      additionalProperties: true
+      type: object
+      required:
+      - total
+      - page
+      - events
+      - supported_events
+      title: WebhookEventsResponse
+    WebhookEndpointCreateRequest:
+      properties:
+        label:
+          type: string
+          maxLength: 120
+          minLength: 2
+          title: Label
+        url:
+          type: string
+          title: Url
+        subscribed_events:
+          items:
+            type: string
+          type: array
+          title: Subscribed Events
+        product_ids:
+          items:
+            type: string
+          type: array
+          title: Product Ids
+      type: object
+      required:
+      - label
+      - url
+      title: WebhookEndpointCreateRequest
+    WebhookEndpoint:
+      properties:
+        id:
+          type: string
+          title: Id
+        owner_id:
+          type: string
+          title: Owner Id
+        label:
+          type: string
+          title: Label
+        url:
+          type: string
+          title: Url
+        status:
+          type: string
+          title: Status
+        signing_secret_preview:
+          type: string
+          title: Signing Secret Preview
+        subscribed_events:
+          items:
+            type: string
+          type: array
+          title: Subscribed Events
+        product_ids:
+          items:
+            type: string
+          type: array
+          title: Product Ids
+        consecutive_failures:
+          type: integer
+          title: Consecutive Failures
+        last_success_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Success At
+        last_failure_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Failure At
+        last_error:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Last Error
+        archived_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Archived At
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        updated_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Updated At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - owner_id
+      - label
+      - url
+      - status
+      - signing_secret_preview
+      - subscribed_events
+      - product_ids
+      - consecutive_failures
+      - last_success_at
+      - last_failure_at
+      - last_error
+      - archived_at
+      - created_at
+      - updated_at
+      title: WebhookEndpoint
+    WebhookEndpointUpdateRequest:
+      properties:
+        label:
+          anyOf:
+          - type: string
+            maxLength: 120
+            minLength: 2
+          - type: 'null'
+          title: Label
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+        status:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Status
+        subscribed_events:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Subscribed Events
+        product_ids:
+          anyOf:
+          - items:
+              type: string
+            type: array
+          - type: 'null'
+          title: Product Ids
+        rotate_signing_secret:
+          type: boolean
+          title: Rotate Signing Secret
+          default: false
+      type: object
+      title: WebhookEndpointUpdateRequest
+    WebhookEndpointResponse:
+      properties:
+        endpoint:
+          $ref: '#/components/schemas/WebhookEndpoint'
+        signing_secret:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Signing Secret
+      additionalProperties: true
+      type: object
+      required:
+      - endpoint
+      title: WebhookEndpointResponse
     WebhookTimelineResponse:
       properties:
         payment_id:
@@ -355,6 +656,53 @@ components:
       - count
       - generated_at
       title: WebhookTimelineResponse
+    WebhookEndpointListResponse:
+      properties:
+        endpoints:
+          items:
+            $ref: '#/components/schemas/WebhookEndpoint'
+          type: array
+          title: Endpoints
+      additionalProperties: true
+      type: object
+      required:
+      - endpoints
+      title: WebhookEndpointListResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     WebhookDelivery:
       properties:
         id:
@@ -473,57 +821,6 @@ components:
       - created_at
       - updated_at
       title: WebhookDelivery
-    WebhookEndpointUpdateRequest:
-      properties:
-        label:
-          anyOf:
-          - type: string
-            maxLength: 120
-            minLength: 2
-          - type: 'null'
-          title: Label
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-        status:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Status
-        subscribed_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Subscribed Events
-        product_ids:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Product Ids
-        rotate_signing_secret:
-          type: boolean
-          title: Rotate Signing Secret
-          default: false
-      type: object
-      title: WebhookEndpointUpdateRequest
-    WebhookEndpointListResponse:
-      properties:
-        endpoints:
-          items:
-            $ref: '#/components/schemas/WebhookEndpoint'
-          type: array
-          title: Endpoints
-      additionalProperties: true
-      type: object
-      required:
-      - endpoints
-      title: WebhookEndpointListResponse
     WebhookDeliveryResponse:
       properties:
         delivery:
@@ -533,283 +830,6 @@ components:
       required:
       - delivery
       title: WebhookDeliveryResponse
-    WebhookTestEventRequest:
-      properties:
-        event_type:
-          type: string
-          title: Event Type
-          default: payment.confirmed
-      type: object
-      title: WebhookTestEventRequest
-    WebhookEndpointCreateRequest:
-      properties:
-        label:
-          type: string
-          maxLength: 120
-          minLength: 2
-          title: Label
-        url:
-          type: string
-          title: Url
-        subscribed_events:
-          items:
-            type: string
-          type: array
-          title: Subscribed Events
-        product_ids:
-          items:
-            type: string
-          type: array
-          title: Product Ids
-      type: object
-      required:
-      - label
-      - url
-      title: WebhookEndpointCreateRequest
-    WebhookEndpoint:
-      properties:
-        id:
-          type: string
-          title: Id
-        owner_id:
-          type: string
-          title: Owner Id
-        label:
-          type: string
-          title: Label
-        url:
-          type: string
-          title: Url
-        status:
-          type: string
-          title: Status
-        signing_secret_preview:
-          type: string
-          title: Signing Secret Preview
-        subscribed_events:
-          items:
-            type: string
-          type: array
-          title: Subscribed Events
-        product_ids:
-          items:
-            type: string
-          type: array
-          title: Product Ids
-        consecutive_failures:
-          type: integer
-          title: Consecutive Failures
-        last_success_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Success At
-        last_failure_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Failure At
-        last_error:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Last Error
-        archived_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Archived At
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        updated_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Updated At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - owner_id
-      - label
-      - url
-      - status
-      - signing_secret_preview
-      - subscribed_events
-      - product_ids
-      - consecutive_failures
-      - last_success_at
-      - last_failure_at
-      - last_error
-      - archived_at
-      - created_at
-      - updated_at
-      title: WebhookEndpoint
-    WebhookTestResponse:
-      properties:
-        event:
-          anyOf:
-          - $ref: '#/components/schemas/WebhookEvent'
-          - type: 'null'
-        delivery:
-          anyOf:
-          - $ref: '#/components/schemas/WebhookDelivery'
-          - type: 'null'
-        delivered:
-          anyOf:
-          - type: boolean
-          - type: 'null'
-          title: Delivered
-        result:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Result
-      additionalProperties: true
-      type: object
-      title: WebhookTestResponse
-    WebhookEvent:
-      properties:
-        id:
-          type: string
-          title: Id
-        event_type:
-          type: string
-          title: Event Type
-        event_version:
-          type: string
-          title: Event Version
-        source_type:
-          type: string
-          title: Source Type
-        source_id:
-          type: string
-          title: Source Id
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        membership_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Id
-        receipt_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Receipt Id
-        support_ticket_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Support Ticket Id
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        payload:
-          type: object
-          title: Payload
-        deliveries:
-          anyOf:
-          - items:
-              $ref: '#/components/schemas/WebhookDelivery'
-            type: array
-          - type: 'null'
-          title: Deliveries
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - event_type
-      - event_version
-      - source_type
-      - source_id
-      - product_id
-      - payment_id
-      - membership_id
-      - receipt_id
-      - support_ticket_id
-      - created_at
-      - payload
-      title: WebhookEvent
-    WebhookEndpointResponse:
-      properties:
-        endpoint:
-          $ref: '#/components/schemas/WebhookEndpoint'
-        signing_secret:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Signing Secret
-      additionalProperties: true
-      type: object
-      required:
-      - endpoint
-      title: WebhookEndpointResponse
-    WebhookEventsResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        events:
-          items:
-            $ref: '#/components/schemas/WebhookEvent'
-          type: array
-          title: Events
-        supported_events:
-          items:
-            type: string
-          type: array
-          title: Supported Events
-      additionalProperties: true
-      type: object
-      required:
-      - total
-      - page
-      - events
-      - supported_events
-      title: WebhookEventsResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     WebhookDeliveriesResponse:
       properties:
         total:
@@ -830,26 +850,6 @@ components:
       - page
       - deliveries
       title: WebhookDeliveriesResponse
-    WebhookEndpointCreateResponse:
-      properties:
-        endpoint:
-          $ref: '#/components/schemas/WebhookEndpoint'
-        signing_secret:
-          type: string
-          title: Signing Secret
-        supported_events:
-          anyOf:
-          - items:
-              type: string
-            type: array
-          - type: 'null'
-          title: Supported Events
-      additionalProperties: true
-      type: object
-      required:
-      - endpoint
-      - signing_secret
-      title: WebhookEndpointCreateResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

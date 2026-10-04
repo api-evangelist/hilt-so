@@ -373,6 +373,272 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    ReceiptListResponse:
+      properties:
+        total:
+          type: integer
+          title: Total
+        page:
+          type: integer
+          title: Page
+        per_page:
+          type: integer
+          title: Per Page
+        receipts:
+          items:
+            $ref: '#/components/schemas/ReceiptListItem'
+          type: array
+          title: Receipts
+      additionalProperties: true
+      type: object
+      required:
+      - total
+      - page
+      - per_page
+      - receipts
+      title: ReceiptListResponse
+    ReceiptSendProofRequest:
+      properties:
+        email:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Email
+        note:
+          anyOf:
+          - type: string
+            maxLength: 500
+          - type: 'null'
+          title: Note
+      type: object
+      title: ReceiptSendProofRequest
+    ReceiptListItem:
+      properties:
+        receipt_id:
+          type: string
+          title: Receipt Id
+        tx_sig:
+          type: string
+          title: Tx Sig
+        receipt_hash:
+          type: string
+          title: Receipt Hash
+        schema_version:
+          type: string
+          title: Schema Version
+        created_at:
+          type: string
+          title: Created At
+        verify_url:
+          type: string
+          title: Verify Url
+        product_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Id
+        product_title:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Product Title
+        payer_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payer Wallet
+        amount_minor_units:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Minor Units
+        amount_display:
+          type: string
+          title: Amount Display
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+      additionalProperties: true
+      type: object
+      required:
+      - receipt_id
+      - tx_sig
+      - receipt_hash
+      - schema_version
+      - created_at
+      - verify_url
+      - product_id
+      - product_title
+      - payer_wallet
+      - amount_minor_units
+      - amount_display
+      - invoice_number
+      title: ReceiptListItem
+    ReceiptInvoiceMetadataRequest:
+      properties:
+        invoice_number:
+          anyOf:
+          - type: string
+            maxLength: 120
+          - type: 'null'
+          title: Invoice Number
+        customer_name:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Customer Name
+        customer_email:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Customer Email
+        billing_reference:
+          anyOf:
+          - type: string
+            maxLength: 180
+          - type: 'null'
+          title: Billing Reference
+        notes:
+          anyOf:
+          - type: string
+            maxLength: 1200
+          - type: 'null'
+          title: Notes
+      type: object
+      title: ReceiptInvoiceMetadataRequest
+    ReceiptProofEmailResponse:
+      properties:
+        sent:
+          type: boolean
+          title: Sent
+        email:
+          type: string
+          title: Email
+        verify_url:
+          type: string
+          title: Verify Url
+        pdf_url:
+          type: string
+          title: Pdf Url
+      additionalProperties: true
+      type: object
+      required:
+      - sent
+      - email
+      - verify_url
+      - pdf_url
+      title: ReceiptProofEmailResponse
+    ReceiptRequest:
+      properties:
+        tx_sig:
+          type: string
+          title: Tx Sig
+          description: Solana transaction signature
+        wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Wallet
+          description: Signer wallet address
+        counterparty_wallet:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Counterparty Wallet
+          description: Counterparty wallet address
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+          description: Token mint address
+        amount_raw:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Amount Raw
+          description: Raw token amount (lamports or base units)
+        memo:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Memo
+          description: Human-readable memo
+      type: object
+      required:
+      - tx_sig
+      title: ReceiptRequest
+    ReceiptInvoiceMetadata:
+      properties:
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+        customer_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Name
+        customer_email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Customer Email
+        billing_reference:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Reference
+        notes:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Notes
+        metadata_json:
+          type: object
+          title: Metadata Json
+      additionalProperties: true
+      type: object
+      required:
+      - invoice_number
+      - customer_name
+      - customer_email
+      - billing_reference
+      - notes
+      - metadata_json
+      title: ReceiptInvoiceMetadata
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
     PublicReceiptResponse:
       properties:
         receipt_id:
@@ -500,54 +766,6 @@ components:
       - verify_url
       - verification
       title: PublicReceiptResponse
-    VerifyReceiptResponse:
-      properties:
-        valid:
-          type: boolean
-          title: Valid
-        hash_valid:
-          type: boolean
-          title: Hash Valid
-        signature_valid:
-          type: boolean
-          title: Signature Valid
-        signature_required:
-          type: boolean
-          title: Signature Required
-        computed_hash:
-          type: string
-          title: Computed Hash
-        stored_hash:
-          type: string
-          title: Stored Hash
-        on_chain_anchor:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: On Chain Anchor
-        checked_at:
-          type: string
-          title: Checked At
-        receipt_id:
-          type: string
-          title: Receipt Id
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - valid
-      - hash_valid
-      - signature_valid
-      - signature_required
-      - computed_hash
-      - stored_hash
-      - on_chain_anchor
-      - checked_at
-      - receipt_id
-      - generated_at
-      title: VerifyReceiptResponse
     HTTPValidationError:
       properties:
         detail:
@@ -557,30 +775,6 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    ReceiptListResponse:
-      properties:
-        total:
-          type: integer
-          title: Total
-        page:
-          type: integer
-          title: Page
-        per_page:
-          type: integer
-          title: Per Page
-        receipts:
-          items:
-            $ref: '#/components/schemas/ReceiptListItem'
-          type: array
-          title: Receipts
-      additionalProperties: true
-      type: object
-      required:
-      - total
-      - page
-      - per_page
-      - receipts
-      title: ReceiptListResponse
     ReceiptResponse:
       properties:
         receipt_id:
@@ -705,257 +899,6 @@ components:
       - schema_version
       - verify_url
       title: ReceiptResponse
-    ReceiptUpdateResponse:
-      properties:
-        receipt:
-          $ref: '#/components/schemas/ReceiptResponse'
-      additionalProperties: true
-      type: object
-      required:
-      - receipt
-      title: ReceiptUpdateResponse
-    ReceiptListItem:
-      properties:
-        receipt_id:
-          type: string
-          title: Receipt Id
-        tx_sig:
-          type: string
-          title: Tx Sig
-        receipt_hash:
-          type: string
-          title: Receipt Hash
-        schema_version:
-          type: string
-          title: Schema Version
-        created_at:
-          type: string
-          title: Created At
-        verify_url:
-          type: string
-          title: Verify Url
-        product_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Id
-        product_title:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Product Title
-        payer_wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payer Wallet
-        amount_minor_units:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Amount Minor Units
-        amount_display:
-          type: string
-          title: Amount Display
-        invoice_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Number
-      additionalProperties: true
-      type: object
-      required:
-      - receipt_id
-      - tx_sig
-      - receipt_hash
-      - schema_version
-      - created_at
-      - verify_url
-      - product_id
-      - product_title
-      - payer_wallet
-      - amount_minor_units
-      - amount_display
-      - invoice_number
-      title: ReceiptListItem
-    ReceiptSendProofRequest:
-      properties:
-        email:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Email
-        note:
-          anyOf:
-          - type: string
-            maxLength: 500
-          - type: 'null'
-          title: Note
-      type: object
-      title: ReceiptSendProofRequest
-    ReceiptInvoiceMetadata:
-      properties:
-        invoice_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Number
-        customer_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Name
-        customer_email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Customer Email
-        billing_reference:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Reference
-        notes:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Notes
-        metadata_json:
-          type: object
-          title: Metadata Json
-      additionalProperties: true
-      type: object
-      required:
-      - invoice_number
-      - customer_name
-      - customer_email
-      - billing_reference
-      - notes
-      - metadata_json
-      title: ReceiptInvoiceMetadata
-    ReceiptInvoiceMetadataRequest:
-      properties:
-        invoice_number:
-          anyOf:
-          - type: string
-            maxLength: 120
-          - type: 'null'
-          title: Invoice Number
-        customer_name:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Customer Name
-        customer_email:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Customer Email
-        billing_reference:
-          anyOf:
-          - type: string
-            maxLength: 180
-          - type: 'null'
-          title: Billing Reference
-        notes:
-          anyOf:
-          - type: string
-            maxLength: 1200
-          - type: 'null'
-          title: Notes
-      type: object
-      title: ReceiptInvoiceMetadataRequest
-    ReceiptRequest:
-      properties:
-        tx_sig:
-          type: string
-          title: Tx Sig
-          description: Solana transaction signature
-        wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Wallet
-          description: Signer wallet address
-        counterparty_wallet:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Counterparty Wallet
-          description: Counterparty wallet address
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-          description: Token mint address
-        amount_raw:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Amount Raw
-          description: Raw token amount (lamports or base units)
-        memo:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Memo
-          description: Human-readable memo
-      type: object
-      required:
-      - tx_sig
-      title: ReceiptRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    ReceiptProofEmailResponse:
-      properties:
-        sent:
-          type: boolean
-          title: Sent
-        email:
-          type: string
-          title: Email
-        verify_url:
-          type: string
-          title: Verify Url
-        pdf_url:
-          type: string
-          title: Pdf Url
-      additionalProperties: true
-      type: object
-      required:
-      - sent
-      - email
-      - verify_url
-      - pdf_url
-      title: ReceiptProofEmailResponse
     ReceiptVerification:
       properties:
         valid:
@@ -996,6 +939,63 @@ components:
       - on_chain_anchor
       - checked_at
       title: ReceiptVerification
+    ReceiptUpdateResponse:
+      properties:
+        receipt:
+          $ref: '#/components/schemas/ReceiptResponse'
+      additionalProperties: true
+      type: object
+      required:
+      - receipt
+      title: ReceiptUpdateResponse
+    VerifyReceiptResponse:
+      properties:
+        valid:
+          type: boolean
+          title: Valid
+        hash_valid:
+          type: boolean
+          title: Hash Valid
+        signature_valid:
+          type: boolean
+          title: Signature Valid
+        signature_required:
+          type: boolean
+          title: Signature Required
+        computed_hash:
+          type: string
+          title: Computed Hash
+        stored_hash:
+          type: string
+          title: Stored Hash
+        on_chain_anchor:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: On Chain Anchor
+        checked_at:
+          type: string
+          title: Checked At
+        receipt_id:
+          type: string
+          title: Receipt Id
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - valid
+      - hash_valid
+      - signature_valid
+      - signature_required
+      - computed_hash
+      - stored_hash
+      - on_chain_anchor
+      - checked_at
+      - receipt_id
+      - generated_at
+      title: VerifyReceiptResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

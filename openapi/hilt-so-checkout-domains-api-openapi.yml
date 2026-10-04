@@ -52,15 +52,33 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    HTTPValidationError:
+    CheckoutDomainRequest:
       properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
+        domain:
+          type: string
+          maxLength: 253
+          minLength: 3
+          title: Domain
       type: object
-      title: HTTPValidationError
+      required:
+      - domain
+      title: CheckoutDomainRequest
+    CheckoutDomainListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/CheckoutDomain'
+          type: array
+          title: Items
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
+      type: object
+      required:
+      - items
+      - routing_enabled
+      title: CheckoutDomainListResponse
     CheckoutDomain:
       properties:
         id:
@@ -157,46 +175,6 @@ components:
       - created_at
       - updated_at
       title: CheckoutDomain
-    CheckoutDomainCreateResponse:
-      properties:
-        item:
-          $ref: '#/components/schemas/CheckoutDomain'
-        routing_enabled:
-          type: boolean
-          title: Routing Enabled
-      additionalProperties: true
-      type: object
-      required:
-      - item
-      - routing_enabled
-      title: CheckoutDomainCreateResponse
-    CheckoutDomainListResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/CheckoutDomain'
-          type: array
-          title: Items
-        routing_enabled:
-          type: boolean
-          title: Routing Enabled
-      additionalProperties: true
-      type: object
-      required:
-      - items
-      - routing_enabled
-      title: CheckoutDomainListResponse
-    CheckoutDomainRequest:
-      properties:
-        domain:
-          type: string
-          maxLength: 253
-          minLength: 3
-          title: Domain
-      type: object
-      required:
-      - domain
-      title: CheckoutDomainRequest
     ValidationError:
       properties:
         loc:
@@ -223,6 +201,28 @@ components:
       - msg
       - type
       title: ValidationError
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    CheckoutDomainCreateResponse:
+      properties:
+        item:
+          $ref: '#/components/schemas/CheckoutDomain'
+        routing_enabled:
+          type: boolean
+          title: Routing Enabled
+      additionalProperties: true
+      type: object
+      required:
+      - item
+      - routing_enabled
+      title: CheckoutDomainCreateResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

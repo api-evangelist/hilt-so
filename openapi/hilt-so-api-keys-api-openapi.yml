@@ -86,6 +86,48 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
+    CreateKeyResponse:
+      properties:
+        key:
+          $ref: '#/components/schemas/KeySummary'
+        raw_key:
+          type: string
+          title: Raw Key
+      type: object
+      required:
+      - key
+      - raw_key
+      title: CreateKeyResponse
+    KeyUsageSummary:
+      properties:
+        total_calls:
+          type: integer
+          title: Total Calls
+          default: 0
+        success_calls:
+          type: integer
+          title: Success Calls
+          default: 0
+        error_calls:
+          type: integer
+          title: Error Calls
+          default: 0
+        credits_burned:
+          type: integer
+          title: Credits Burned
+          default: 0
+        latest_activity_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Activity At
+        latest_endpoint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Latest Endpoint
+      type: object
+      title: KeyUsageSummary
     CreateKeyRequest:
       properties:
         name:
@@ -107,52 +149,32 @@ components:
       required:
       - name
       title: CreateKeyRequest
-    KeyActivityItem:
+    ValidationError:
       properties:
-        endpoint:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Endpoint
-        http_method:
+          title: Message
+        type:
           type: string
-          title: Http Method
-        status_code:
-          type: integer
-          title: Status Code
-        credits_burned:
-          type: integer
-          title: Credits Burned
-        duration_ms:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Duration Ms
-        error_message:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Error Message
-        created_at:
-          type: string
-          title: Created At
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - endpoint
-      - http_method
-      - status_code
-      - credits_burned
-      - duration_ms
-      - error_message
-      - created_at
-      title: KeyActivityItem
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - loc
+      - msg
+      - type
+      title: ValidationError
     KeySummary:
       properties:
         id:
@@ -209,74 +231,52 @@ components:
       - created_at
       - revoked_at
       title: KeySummary
-    KeyUsageSummary:
+    HTTPValidationError:
       properties:
-        total_calls:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    KeyActivityItem:
+      properties:
+        endpoint:
+          type: string
+          title: Endpoint
+        http_method:
+          type: string
+          title: Http Method
+        status_code:
           type: integer
-          title: Total Calls
-          default: 0
-        success_calls:
-          type: integer
-          title: Success Calls
-          default: 0
-        error_calls:
-          type: integer
-          title: Error Calls
-          default: 0
+          title: Status Code
         credits_burned:
           type: integer
           title: Credits Burned
-          default: 0
-        latest_activity_at:
+        duration_ms:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Duration Ms
+        error_message:
           anyOf:
           - type: string
           - type: 'null'
-          title: Latest Activity At
-        latest_endpoint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Latest Endpoint
-      type: object
-      title: KeyUsageSummary
-    CreateKeyResponse:
-      properties:
-        key:
-          $ref: '#/components/schemas/KeySummary'
-        raw_key:
+          title: Error Message
+        created_at:
           type: string
-          title: Raw Key
+          title: Created At
       type: object
       required:
-      - key
-      - raw_key
-      title: CreateKeyResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - endpoint
+      - http_method
+      - status_code
+      - credits_burned
+      - duration_ms
+      - error_message
+      - created_at
+      title: KeyActivityItem
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json
