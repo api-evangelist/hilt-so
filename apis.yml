@@ -28,6 +28,9 @@ x-company:
 specificationVersion: '0.20'
 created: '2026-09-19'
 modified: '2026-09-19'
+x-docs-platform: mintlify
+x-docs-platform-confidence: medium
+x-docs-platform-checked: 2026-10-03
 tags:
 - Payments
 - Solana
@@ -155,6 +158,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Account
+  tags_raw:
   - account
   properties:
   - type: OpenAPI
@@ -219,6 +224,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Agentic Commerce
+  tags_raw:
   - Agent Commerce
   properties:
   - type: OpenAPI
@@ -283,6 +290,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - APIKeys
+  tags_raw:
   - api-keys
   properties:
   - type: OpenAPI
@@ -347,6 +356,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -411,6 +422,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Billing
+  tags_raw:
   - billing
   properties:
   - type: OpenAPI
@@ -475,6 +488,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Checkout
+  tags_raw:
   - checkout
   properties:
   - type: OpenAPI
@@ -731,6 +746,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Integration
+  tags_raw:
   - integrations
   properties:
   - type: OpenAPI
@@ -795,6 +812,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Membership
+  tags_raw:
   - memberships
   properties:
   - type: OpenAPI
@@ -859,6 +878,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - PayMe
+  tags_raw:
   - pay-me
   properties:
   - type: OpenAPI
@@ -923,6 +944,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Product
+  tags_raw:
   - products
   properties:
   - type: OpenAPI
@@ -1179,6 +1202,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - System
+  tags_raw:
   - system
   properties:
   - type: OpenAPI
@@ -1243,6 +1268,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Testing
+  tags_raw:
   - testing
   properties:
   - type: OpenAPI
@@ -1307,6 +1334,8 @@ apis:
   humanURL: https://docs.hilt.so/developers/access
   baseURL: https://api.hilt.so
   tags:
+  - Webhook
+  tags_raw:
   - webhooks
   properties:
   - type: OpenAPI
@@ -1371,6 +1400,9 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: CapabilityMap
+  url: capabilities/hilt-so-capability-edges.yml
+  name: Hilt Business Capability Map
 - type: Website
   url: https://www.hilt.so/
 - type: DeveloperPortal
