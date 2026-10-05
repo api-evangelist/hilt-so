@@ -1,0 +1,12 @@
+{
+ "url": "https://api.hilt.so/openapi.json",
+ "requested_url": "https://api.hilt.so/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 316578,
+ "sha256": "1f1af0902e2a17ccdfd55e1900e4108c644dab14d39ab7b071ac62d6f504e98d",
+ "fetched_at": "2026-10-04",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "equivalent",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the provider's current document describes the same operations (Jaccard 0.994), but the bytes differ, so the archive is an earlier or reformatted copy."
+}
