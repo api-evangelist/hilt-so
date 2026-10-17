@@ -261,46 +261,6 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    LoginRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        password:
-          type: string
-          title: Password
-      type: object
-      required:
-      - email
-      - password
-      title: LoginRequest
-    AuthResponse:
-      properties:
-        token:
-          type: string
-          title: Token
-        user_id:
-          type: string
-          title: User Id
-        tier:
-          type: string
-          title: Tier
-        email:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Email
-        claims:
-          $ref: '#/components/schemas/EntitlementClaims'
-      type: object
-      required:
-      - token
-      - user_id
-      - tier
-      - email
-      - claims
-      title: AuthResponse
     OAuthProviderStatusResponse:
       properties:
         google:
@@ -332,6 +292,48 @@ components:
       - callback_url
       - authorization_url
       title: OAuthStartResponse
+    RefreshRequest:
+      properties:
+        token:
+          type: string
+          title: Token
+      type: object
+      required:
+      - token
+      title: RefreshRequest
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    RegisterRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+        display_name:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Display Name
+        referral_code:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Referral Code
+      type: object
+      required:
+      - email
+      - password
+      title: RegisterRequest
     OAuthProviderInfo:
       properties:
         enabled:
@@ -359,101 +361,6 @@ components:
       - app_base_url
       - missing
       title: OAuthProviderInfo
-    RegisterRequest:
-      properties:
-        email:
-          type: string
-          format: email
-          title: Email
-        password:
-          type: string
-          title: Password
-        display_name:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Display Name
-        referral_code:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Referral Code
-      type: object
-      required:
-      - email
-      - password
-      title: RegisterRequest
-    DetailResponse:
-      properties:
-        detail:
-          type: string
-          title: Detail
-      additionalProperties: true
-      type: object
-      required:
-      - detail
-      title: DetailResponse
-    WalletAuthRequest:
-      properties:
-        wallet_address:
-          type: string
-          title: Wallet Address
-        signed_message:
-          type: string
-          title: Signed Message
-        message_nonce:
-          type: string
-          title: Message Nonce
-      type: object
-      required:
-      - wallet_address
-      - signed_message
-      - message_nonce
-      title: WalletAuthRequest
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
-    RefreshRequest:
-      properties:
-        token:
-          type: string
-          title: Token
-      type: object
-      required:
-      - token
-      title: RefreshRequest
     EntitlementClaims:
       properties:
         hilt_score:
@@ -495,6 +402,99 @@ components:
       - custom_checkout_domains
       - is_staff
       title: EntitlementClaims
+    WalletAuthRequest:
+      properties:
+        wallet_address:
+          type: string
+          title: Wallet Address
+        signed_message:
+          type: string
+          title: Signed Message
+        message_nonce:
+          type: string
+          title: Message Nonce
+      type: object
+      required:
+      - wallet_address
+      - signed_message
+      - message_nonce
+      title: WalletAuthRequest
+    DetailResponse:
+      properties:
+        detail:
+          type: string
+          title: Detail
+      additionalProperties: true
+      type: object
+      required:
+      - detail
+      title: DetailResponse
+    LoginRequest:
+      properties:
+        email:
+          type: string
+          format: email
+          title: Email
+        password:
+          type: string
+          title: Password
+      type: object
+      required:
+      - email
+      - password
+      title: LoginRequest
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    AuthResponse:
+      properties:
+        token:
+          type: string
+          title: Token
+        user_id:
+          type: string
+          title: User Id
+        tier:
+          type: string
+          title: Tier
+        email:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Email
+        claims:
+          $ref: '#/components/schemas/EntitlementClaims'
+      type: object
+      required:
+      - token
+      - user_id
+      - tier
+      - email
+      - claims
+      title: AuthResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

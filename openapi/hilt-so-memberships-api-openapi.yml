@@ -400,14 +400,74 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    MembershipProfileRequest:
+    MembershipNotesRequest:
       properties:
-        platform_display:
+        notes:
           type: string
-          title: Platform Display
+          title: Notes
           default: ''
       type: object
-      title: MembershipProfileRequest
+      title: MembershipNotesRequest
+    MembershipListResponse:
+      properties:
+        items:
+          items:
+            $ref: '#/components/schemas/Membership'
+          type: array
+          title: Items
+        count:
+          type: integer
+          title: Count
+      additionalProperties: true
+      type: object
+      required:
+      - items
+      - count
+      title: MembershipListResponse
+    MembershipEvent:
+      properties:
+        id:
+          type: integer
+          title: Id
+        membership_id:
+          type: string
+          title: Membership Id
+        payment_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Payment Id
+        event_type:
+          type: string
+          title: Event Type
+        actor_type:
+          type: string
+          title: Actor Type
+        actor_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Actor Id
+        payload_json:
+          type: object
+          title: Payload Json
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+      additionalProperties: true
+      type: object
+      required:
+      - id
+      - membership_id
+      - payment_id
+      - event_type
+      - actor_type
+      - actor_id
+      - payload_json
+      - created_at
+      title: MembershipEvent
     MembershipDeliveryDiagnosticsResponse:
       properties:
         membership_id:
@@ -526,77 +586,38 @@ components:
       - actions
       - generated_at
       title: MembershipDeliveryDiagnosticsResponse
-    MembershipEvent:
+    MembershipRenewalIntelligenceResponse:
       properties:
-        id:
-          type: integer
-          title: Id
-        membership_id:
-          type: string
-          title: Membership Id
-        payment_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Payment Id
-        event_type:
-          type: string
-          title: Event Type
-        actor_type:
-          type: string
-          title: Actor Type
-        actor_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Actor Id
-        payload_json:
+        summary:
           type: object
-          title: Payload Json
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-      additionalProperties: true
-      type: object
-      required:
-      - id
-      - membership_id
-      - payment_id
-      - event_type
-      - actor_type
-      - actor_id
-      - payload_json
-      - created_at
-      title: MembershipEvent
-    MembershipDeliveryResponse:
-      properties:
-        membership:
-          $ref: '#/components/schemas/Membership'
-        delivery:
-          type: object
-          title: Delivery
-      additionalProperties: true
-      type: object
-      required:
-      - membership
-      - delivery
-      title: MembershipDeliveryResponse
-    MembershipSupportTicketResponse:
-      properties:
-        ticket_id:
+          title: Summary
+        expiring_memberships:
+          items:
+            type: object
+          type: array
+          title: Expiring Memberships
+        product_reports:
+          items:
+            type: object
+          type: array
+          title: Product Reports
+        recent_events:
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+          type: array
+          title: Recent Events
+        generated_at:
           type: string
-          title: Ticket Id
-        created:
-          type: boolean
-          title: Created
+          title: Generated At
       additionalProperties: true
       type: object
       required:
-      - ticket_id
-      - created
-      title: MembershipSupportTicketResponse
+      - summary
+      - expiring_memberships
+      - product_reports
+      - recent_events
+      - generated_at
+      title: MembershipRenewalIntelligenceResponse
     MembershipDetailResponse:
       properties:
         membership:
@@ -624,127 +645,6 @@ components:
       - events
       - auto_renew
       title: MembershipDetailResponse
-    MembershipGiftRequest:
-      properties:
-        days:
-          type: integer
-          title: Days
-        note:
-          type: string
-          title: Note
-          default: ''
-      type: object
-      required:
-      - days
-      title: MembershipGiftRequest
-    MembershipNotesRequest:
-      properties:
-        notes:
-          type: string
-          title: Notes
-          default: ''
-      type: object
-      title: MembershipNotesRequest
-    MembershipReactivationResponse:
-      properties:
-        membership_id:
-          type: string
-          title: Membership Id
-        product_title:
-          type: string
-          title: Product Title
-        product_slug:
-          type: string
-          title: Product Slug
-        amount_minor_units:
-          type: integer
-          title: Amount Minor Units
-        amount_display:
-          type: string
-          title: Amount Display
-        token_mint:
-          type: string
-          title: Token Mint
-        billing_interval_days:
-          type: integer
-          title: Billing Interval Days
-        access_period:
-          type: string
-          title: Access Period
-        membership_started_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Membership Started At
-        merchant_name:
-          type: string
-          title: Merchant Name
-        merchant_wallet_preview:
-          type: string
-          title: Merchant Wallet Preview
-        access_target_label:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Access Target Label
-        renewal_url:
-          type: string
-          title: Renewal Url
-        reactivation_url:
-          type: string
-          title: Reactivation Url
-        templates:
-          type: object
-          title: Templates
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - membership_id
-      - product_title
-      - product_slug
-      - amount_minor_units
-      - amount_display
-      - token_mint
-      - billing_interval_days
-      - access_period
-      - membership_started_at
-      - merchant_name
-      - merchant_wallet_preview
-      - access_target_label
-      - renewal_url
-      - reactivation_url
-      - templates
-      - generated_at
-      title: MembershipReactivationResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
     MembershipPeriod:
       properties:
         id:
@@ -813,6 +713,19 @@ components:
       - revoked_at
       - created_at
       title: MembershipPeriod
+    MembershipDeliveryResponse:
+      properties:
+        membership:
+          $ref: '#/components/schemas/Membership'
+        delivery:
+          type: object
+          title: Delivery
+      additionalProperties: true
+      type: object
+      required:
+      - membership
+      - delivery
+      title: MembershipDeliveryResponse
     HTTPValidationError:
       properties:
         detail:
@@ -822,54 +735,19 @@ components:
           title: Detail
       type: object
       title: HTTPValidationError
-    MembershipRenewalIntelligenceResponse:
+    MembershipGiftRequest:
       properties:
-        summary:
-          type: object
-          title: Summary
-        expiring_memberships:
-          items:
-            type: object
-          type: array
-          title: Expiring Memberships
-        product_reports:
-          items:
-            type: object
-          type: array
-          title: Product Reports
-        recent_events:
-          items:
-            $ref: '#/components/schemas/MembershipEvent'
-          type: array
-          title: Recent Events
-        generated_at:
-          type: string
-          title: Generated At
-      additionalProperties: true
-      type: object
-      required:
-      - summary
-      - expiring_memberships
-      - product_reports
-      - recent_events
-      - generated_at
-      title: MembershipRenewalIntelligenceResponse
-    MembershipListResponse:
-      properties:
-        items:
-          items:
-            $ref: '#/components/schemas/Membership'
-          type: array
-          title: Items
-        count:
+        days:
           type: integer
-          title: Count
-      additionalProperties: true
+          title: Days
+        note:
+          type: string
+          title: Note
+          default: ''
       type: object
       required:
-      - items
-      - count
-      title: MembershipListResponse
+      - days
+      title: MembershipGiftRequest
     Membership:
       properties:
         id:
@@ -986,6 +864,128 @@ components:
       - created_at
       - updated_at
       title: Membership
+    MembershipReactivationResponse:
+      properties:
+        membership_id:
+          type: string
+          title: Membership Id
+        product_title:
+          type: string
+          title: Product Title
+        product_slug:
+          type: string
+          title: Product Slug
+        amount_minor_units:
+          type: integer
+          title: Amount Minor Units
+        amount_display:
+          type: string
+          title: Amount Display
+        token_mint:
+          type: string
+          title: Token Mint
+        billing_interval_days:
+          type: integer
+          title: Billing Interval Days
+        access_period:
+          type: string
+          title: Access Period
+        membership_started_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Membership Started At
+        merchant_name:
+          type: string
+          title: Merchant Name
+        merchant_wallet_preview:
+          type: string
+          title: Merchant Wallet Preview
+        access_target_label:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Access Target Label
+        renewal_url:
+          type: string
+          title: Renewal Url
+        reactivation_url:
+          type: string
+          title: Reactivation Url
+        templates:
+          type: object
+          title: Templates
+        generated_at:
+          type: string
+          title: Generated At
+      additionalProperties: true
+      type: object
+      required:
+      - membership_id
+      - product_title
+      - product_slug
+      - amount_minor_units
+      - amount_display
+      - token_mint
+      - billing_interval_days
+      - access_period
+      - membership_started_at
+      - merchant_name
+      - merchant_wallet_preview
+      - access_target_label
+      - renewal_url
+      - reactivation_url
+      - templates
+      - generated_at
+      title: MembershipReactivationResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    MembershipSupportTicketResponse:
+      properties:
+        ticket_id:
+          type: string
+          title: Ticket Id
+        created:
+          type: boolean
+          title: Created
+      additionalProperties: true
+      type: object
+      required:
+      - ticket_id
+      - created
+      title: MembershipSupportTicketResponse
+    MembershipProfileRequest:
+      properties:
+        platform_display:
+          type: string
+          title: Platform Display
+          default: ''
+      type: object
+      title: MembershipProfileRequest
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

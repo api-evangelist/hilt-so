@@ -197,23 +197,23 @@ components:
       - id
       - name
       title: ConnectorClientSummary
-    ConnectorZeroCustodySummary:
+    ConnectorAuthorizationRedirectResponse:
       properties:
-        canPrepare:
-          type: boolean
-          title: Canprepare
-        canSign:
-          type: boolean
-          title: Cansign
-        walletApprovalRequired:
-          type: boolean
-          title: Walletapprovalrequired
+        redirectUrl:
+          type: string
+          title: Redirecturl
       type: object
       required:
-      - canPrepare
-      - canSign
-      - walletApprovalRequired
-      title: ConnectorZeroCustodySummary
+      - redirectUrl
+      title: ConnectorAuthorizationRedirectResponse
+    PaymentRequestEnvelope:
+      properties:
+        paymentRequest:
+          $ref: '#/components/schemas/PaymentRequestResponse'
+      type: object
+      required:
+      - paymentRequest
+      title: PaymentRequestEnvelope
     PaymentIntentResponse:
       properties:
         id:
@@ -280,127 +280,6 @@ components:
       - confirmedAt
       - walletApprovalRequired
       title: PaymentIntentResponse
-    ConnectorConnectionResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        client:
-          $ref: '#/components/schemas/ConnectorClientSummary'
-        scopes:
-          items:
-            type: string
-          type: array
-          title: Scopes
-        connectedAt:
-          type: string
-          title: Connectedat
-        lastUsedAt:
-          type: string
-          title: Lastusedat
-      type: object
-      required:
-      - id
-      - client
-      - scopes
-      - connectedAt
-      - lastUsedAt
-      title: ConnectorConnectionResponse
-    PaymentRequestAssetResponse:
-      properties:
-        mint:
-          type: string
-          title: Mint
-        symbol:
-          type: string
-          title: Symbol
-        name:
-          type: string
-          title: Name
-        decimals:
-          type: integer
-          title: Decimals
-      type: object
-      required:
-      - mint
-      - symbol
-      - name
-      - decimals
-      title: PaymentRequestAssetResponse
-    ConnectorConnectionListResponse:
-      properties:
-        connections:
-          items:
-            $ref: '#/components/schemas/ConnectorConnectionResponse'
-          type: array
-          title: Connections
-      type: object
-      required:
-      - connections
-      title: ConnectorConnectionListResponse
-    ConnectorAuthorizationRedirectResponse:
-      properties:
-        redirectUrl:
-          type: string
-          title: Redirecturl
-      type: object
-      required:
-      - redirectUrl
-      title: ConnectorAuthorizationRedirectResponse
-    PaymentIntentFeePreviewResponse:
-      properties:
-        hiltFeeAmount:
-          type: string
-          title: Hiltfeeamount
-        buyerTotal:
-          type: string
-          title: Buyertotal
-        platformFeePercent:
-          type: string
-          title: Platformfeepercent
-      type: object
-      required:
-      - hiltFeeAmount
-      - buyerTotal
-      - platformFeePercent
-      title: PaymentIntentFeePreviewResponse
-    PaymentRequestRecipientResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-        xHandle:
-          type: string
-          title: Xhandle
-        xProfileUrl:
-          type: string
-          title: Xprofileurl
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        identityVerified:
-          type: boolean
-          title: Identityverified
-        walletVerified:
-          type: boolean
-          title: Walletverified
-      type: object
-      required:
-      - name
-      - xHandle
-      - xProfileUrl
-      - recipientWallet
-      - identityVerified
-      - walletVerified
-      title: PaymentRequestRecipientResponse
-    PaymentIntentEnvelope:
-      properties:
-        payment:
-          $ref: '#/components/schemas/PaymentIntentResponse'
-      type: object
-      required:
-      - payment
-      title: PaymentIntentEnvelope
     PaymentRequestCreate:
       properties:
         amount:
@@ -433,32 +312,147 @@ components:
       required:
       - amount
       title: PaymentRequestCreate
-    ValidationError:
+    ConnectorAuthorizationResponse:
       properties:
-        loc:
+        client:
+          $ref: '#/components/schemas/ConnectorClientSummary'
+        scopes:
           items:
-            anyOf:
-            - type: string
-            - type: integer
+            type: string
           type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Scopes
+        requiresX:
+          type: boolean
+          title: Requiresx
+        requiresWallet:
+          type: boolean
+          title: Requireswallet
+        identity:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Identity
+        profile:
+          anyOf:
+          - type: object
+          - type: 'null'
+          title: Profile
+        zeroCustody:
+          $ref: '#/components/schemas/ConnectorZeroCustodySummary'
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
+      - client
+      - scopes
+      - requiresX
+      - requiresWallet
+      - identity
+      - profile
+      - zeroCustody
+      title: ConnectorAuthorizationResponse
+    PaymentRequestRecipientResponse:
+      properties:
+        name:
+          type: string
+          title: Name
+        xHandle:
+          type: string
+          title: Xhandle
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        identityVerified:
+          type: boolean
+          title: Identityverified
+        walletVerified:
+          type: boolean
+          title: Walletverified
+      type: object
+      required:
+      - name
+      - xHandle
+      - xProfileUrl
+      - recipientWallet
+      - identityVerified
+      - walletVerified
+      title: PaymentRequestRecipientResponse
+    PaymentIntentFeePreviewResponse:
+      properties:
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        buyerTotal:
+          type: string
+          title: Buyertotal
+        platformFeePercent:
+          type: string
+          title: Platformfeepercent
+      type: object
+      required:
+      - hiltFeeAmount
+      - buyerTotal
+      - platformFeePercent
+      title: PaymentIntentFeePreviewResponse
+    PaymentRequestAssetResponse:
+      properties:
+        mint:
+          type: string
+          title: Mint
+        symbol:
+          type: string
+          title: Symbol
+        name:
+          type: string
+          title: Name
+        decimals:
+          type: integer
+          title: Decimals
+      type: object
+      required:
+      - mint
+      - symbol
+      - name
+      - decimals
+      title: PaymentRequestAssetResponse
+    ConnectorConnectionListResponse:
+      properties:
+        connections:
+          items:
+            $ref: '#/components/schemas/ConnectorConnectionResponse'
+          type: array
+          title: Connections
+      type: object
+      required:
+      - connections
+      title: ConnectorConnectionListResponse
+    ConnectorConnectionResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        client:
+          $ref: '#/components/schemas/ConnectorClientSummary'
+        scopes:
+          items:
+            type: string
+          type: array
+          title: Scopes
+        connectedAt:
+          type: string
+          title: Connectedat
+        lastUsedAt:
+          type: string
+          title: Lastusedat
+      type: object
+      required:
+      - id
+      - client
+      - scopes
+      - connectedAt
+      - lastUsedAt
+      title: ConnectorConnectionResponse
     ConnectorAuthorizationComplete:
       properties:
         request:
@@ -538,51 +532,57 @@ components:
       - expiresAt
       - paidAt
       title: PaymentRequestResponse
-    ConnectorAuthorizationResponse:
+    ValidationError:
       properties:
-        client:
-          $ref: '#/components/schemas/ConnectorClientSummary'
-        scopes:
+        loc:
           items:
-            type: string
+            anyOf:
+            - type: string
+            - type: integer
           type: array
-          title: Scopes
-        requiresX:
-          type: boolean
-          title: Requiresx
-        requiresWallet:
-          type: boolean
-          title: Requireswallet
-        identity:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Identity
-        profile:
-          anyOf:
-          - type: object
-          - type: 'null'
-          title: Profile
-        zeroCustody:
-          $ref: '#/components/schemas/ConnectorZeroCustodySummary'
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - client
-      - scopes
-      - requiresX
-      - requiresWallet
-      - identity
-      - profile
-      - zeroCustody
-      title: ConnectorAuthorizationResponse
-    PaymentRequestEnvelope:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PaymentIntentEnvelope:
       properties:
-        paymentRequest:
-          $ref: '#/components/schemas/PaymentRequestResponse'
+        payment:
+          $ref: '#/components/schemas/PaymentIntentResponse'
       type: object
       required:
-      - paymentRequest
-      title: PaymentRequestEnvelope
+      - payment
+      title: PaymentIntentEnvelope
+    ConnectorZeroCustodySummary:
+      properties:
+        canPrepare:
+          type: boolean
+          title: Canprepare
+        canSign:
+          type: boolean
+          title: Cansign
+        walletApprovalRequired:
+          type: boolean
+          title: Walletapprovalrequired
+      type: object
+      required:
+      - canPrepare
+      - canSign
+      - walletApprovalRequired
+      title: ConnectorZeroCustodySummary
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

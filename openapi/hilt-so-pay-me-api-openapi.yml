@@ -577,460 +577,43 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    PayMeOrderRecipientResponse:
+    PayMeAgentRecipientResponse:
       properties:
-        receiptId:
-          type: string
-          title: Receiptid
-        xHandle:
-          type: string
-          title: Xhandle
-        recipientName:
-          type: string
-          title: Recipientname
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        recipientAmount:
-          type: string
-          title: Recipientamount
-        position:
-          type: integer
-          title: Position
-      type: object
-      required:
-      - receiptId
-      - xHandle
-      - recipientName
-      - recipientWallet
-      - recipientAmount
-      - position
-      title: PayMeOrderRecipientResponse
-    PayMeOrderConfirm:
-      properties:
-        payerWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Payerwallet
-        txSignature:
-          type: string
-          maxLength: 100
-          minLength: 64
-          title: Txsignature
-      type: object
-      required:
-      - payerWallet
-      - txSignature
-      title: PayMeOrderConfirm
-    PayMeWalletLinkSignature:
-      properties:
-        recipientWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Recipientwallet
-        setupMessage:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Setupmessage
-        setupSignature:
-          type: string
-          maxLength: 200
-          minLength: 32
-          title: Setupsignature
-      type: object
-      required:
-      - recipientWallet
-      - setupMessage
-      - setupSignature
-      title: PayMeWalletLinkSignature
-    PayMeSecurityStatusResponse:
-      properties:
-        authenticatorEnabled:
-          type: boolean
-          title: Authenticatorenabled
-        recoveryCodesRemaining:
-          type: integer
-          title: Recoverycodesremaining
-        walletChangeAllowed:
-          type: boolean
-          title: Walletchangeallowed
-        currentWallet:
-          type: string
-          title: Currentwallet
-      type: object
-      required:
-      - authenticatorEnabled
-      - recoveryCodesRemaining
-      - walletChangeAllowed
-      - currentWallet
-      title: PayMeSecurityStatusResponse
-    PayMeOrderCreate:
-      properties:
-        payerWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Payerwallet
-        recipients:
-          items:
-            $ref: '#/components/schemas/PayMeOrderRecipientCreate'
-          type: array
-          maxItems: 5
-          minItems: 1
-          title: Recipients
-        note:
-          type: string
-          maxLength: 240
-          title: Note
-          default: ''
-        source:
-          type: string
-          pattern: ^(web|solana_action)$
-          title: Source
-          default: web
-      type: object
-      required:
-      - payerWallet
-      - recipients
-      title: PayMeOrderCreate
-    PayMeWalletLinkPrepare:
-      properties:
-        recipientWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Recipientwallet
-      type: object
-      required:
-      - recipientWallet
-      title: PayMeWalletLinkPrepare
-    PayMeCheckoutCreate:
-      properties:
-        tokenMint:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Tokenmint
-        tokenSymbol:
-          type: string
-          maxLength: 24
-          minLength: 1
-          title: Tokensymbol
-        tokenName:
-          type: string
-          maxLength: 80
-          minLength: 1
-          title: Tokenname
-        tokenImageUrl:
-          type: string
-          maxLength: 500
-          title: Tokenimageurl
-          default: ''
-        tokenDecimals:
-          type: integer
-          maximum: 18
-          minimum: 0
-          title: Tokendecimals
-        recipientAmount:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Recipientamount
-        note:
-          type: string
-          maxLength: 240
-          title: Note
-          default: ''
-        payerWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Payerwallet
-        createdAt:
-          type: string
-          maxLength: 50
-          minLength: 10
-          title: Createdat
-        setupMessage:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Setupmessage
-        setupSignature:
-          type: string
-          maxLength: 200
-          minLength: 32
-          title: Setupsignature
-        paymentRequestId:
-          type: string
-          maxLength: 24
-          title: Paymentrequestid
-          default: ''
-        paymentIntentId:
-          type: string
-          maxLength: 24
-          title: Paymentintentid
-          default: ''
-      type: object
-      required:
-      - tokenMint
-      - tokenSymbol
-      - tokenName
-      - tokenDecimals
-      - recipientAmount
-      - payerWallet
-      - createdAt
-      - setupMessage
-      - setupSignature
-      title: PayMeCheckoutCreate
-    PayMeOrderAssetResponse:
-      properties:
-        mint:
-          type: string
-          title: Mint
-        symbol:
-          type: string
-          title: Symbol
         name:
           type: string
           title: Name
-        decimals:
-          type: integer
-          title: Decimals
-      type: object
-      required:
-      - mint
-      - symbol
-      - name
-      - decimals
-      title: PayMeOrderAssetResponse
-    PayMeAuthenticatorConfirm:
-      properties:
-        enrollmentId:
-          type: string
-          maxLength: 128
-          minLength: 32
-          title: Enrollmentid
-        code:
-          type: string
-          maxLength: 20
-          minLength: 6
-          title: Code
-        recipientWallet:
-          type: string
-          maxLength: 64
-          title: Recipientwallet
-          default: ''
-        setupMessage:
-          type: string
-          maxLength: 2000
-          title: Setupmessage
-          default: ''
-        setupSignature:
-          type: string
-          maxLength: 200
-          title: Setupsignature
-          default: ''
-      type: object
-      required:
-      - enrollmentId
-      - code
-      title: PayMeAuthenticatorConfirm
-    PayMeAgentQuoteResponse:
-      properties:
-        recipientAmount:
-          type: string
-          title: Recipientamount
-        hiltFeeAmount:
-          type: string
-          title: Hiltfeeamount
-        buyerAmount:
-          type: string
-          title: Buyeramount
-        platformFeeBps:
-          type: integer
-          title: Platformfeebps
-        feePaidBy:
-          type: string
-          title: Feepaidby
-      type: object
-      required:
-      - recipientAmount
-      - hiltFeeAmount
-      - buyerAmount
-      - platformFeeBps
-      - feePaidBy
-      title: PayMeAgentQuoteResponse
-    PayMeWalletLinkPublic:
-      properties:
-        walletLinkId:
-          type: string
-          title: Walletlinkid
-        status:
-          type: string
-          title: Status
-        recipientName:
-          type: string
-          title: Recipientname
         xHandle:
           type: string
           title: Xhandle
-        xAvatarUrl:
-          type: string
-          title: Xavatarurl
-        xProfileUrl:
-          type: string
-          title: Xprofileurl
-        message:
-          type: string
-          title: Message
-        expiresAt:
-          type: string
-          title: Expiresat
-        walletLinkUrl:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Walletlinkurl
-      type: object
-      required:
-      - walletLinkId
-      - status
-      - recipientName
-      - xHandle
-      - xAvatarUrl
-      - xProfileUrl
-      - message
-      - expiresAt
-      title: PayMeWalletLinkPublic
-    PayMeAuthenticatorWalletSignature:
-      properties:
-        recipientWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Recipientwallet
-        setupMessage:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Setupmessage
-        setupSignature:
-          type: string
-          maxLength: 200
-          minLength: 32
-          title: Setupsignature
-      type: object
-      required:
-      - recipientWallet
-      - setupMessage
-      - setupSignature
-      title: PayMeAuthenticatorWalletSignature
-    PayMeAuthenticatorConfirmResponse:
-      properties:
-        authenticatorEnabled:
-          type: boolean
-          title: Authenticatorenabled
-        recoveryCodes:
-          items:
-            type: string
-          type: array
-          title: Recoverycodes
-        recoveryCodesRemaining:
-          type: integer
-          title: Recoverycodesremaining
-      type: object
-      required:
-      - authenticatorEnabled
-      - recoveryCodes
-      - recoveryCodesRemaining
-      title: PayMeAuthenticatorConfirmResponse
-    PayMeProfileResponse:
-      properties:
-        slug:
-          type: string
-          title: Slug
-        url:
-          type: string
-          title: Url
-        version:
-          type: integer
-          title: Version
-        recipientName:
-          type: string
-          title: Recipientname
         recipientWallet:
           type: string
           title: Recipientwallet
-        xHandle:
-          type: string
-          title: Xhandle
-        xProfileUrl:
-          type: string
-          title: Xprofileurl
-        xAvatarUrl:
-          type: string
-          title: Xavatarurl
         identityVerified:
           type: boolean
           title: Identityverified
-        message:
-          type: string
-          title: Message
         walletVerified:
           type: boolean
           title: Walletverified
-        createdAt:
-          type: string
-          title: Createdat
       type: object
       required:
-      - slug
-      - url
-      - version
-      - recipientName
-      - recipientWallet
+      - name
       - xHandle
-      - xProfileUrl
-      - xAvatarUrl
+      - recipientWallet
       - identityVerified
-      - message
       - walletVerified
-      - createdAt
-      title: PayMeProfileResponse
-    PayMeOrderQuoteResponse:
+      title: PayMeAgentRecipientResponse
+    PayMeCheckoutEnvelope:
       properties:
-        recipientAmount:
+        checkout:
+          $ref: '#/components/schemas/PayMeCheckoutResponse'
+        url:
           type: string
-          title: Recipientamount
-        buyerAmount:
-          type: string
-          title: Buyeramount
-        hiltFeeAmount:
-          type: string
-          title: Hiltfeeamount
-        platformFeeBps:
-          type: integer
-          title: Platformfeebps
+          title: Url
       type: object
       required:
-      - recipientAmount
-      - buyerAmount
-      - hiltFeeAmount
-      - platformFeeBps
-      title: PayMeOrderQuoteResponse
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - checkout
+      - url
+      title: PayMeCheckoutEnvelope
     PayMeCheckoutQuoteResponse:
       properties:
         recipientAmount:
@@ -1060,586 +643,6 @@ components:
       - platformFeeBps
       - tokenSymbol
       title: PayMeCheckoutQuoteResponse
-    PayMeAgentPaymentEnvelope:
-      properties:
-        payment:
-          $ref: '#/components/schemas/PayMeAgentPaymentResponse'
-      type: object
-      required:
-      - payment
-      title: PayMeAgentPaymentEnvelope
-    PayMeAgentRecipientResponse:
-      properties:
-        name:
-          type: string
-          title: Name
-        xHandle:
-          type: string
-          title: Xhandle
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        identityVerified:
-          type: boolean
-          title: Identityverified
-        walletVerified:
-          type: boolean
-          title: Walletverified
-      type: object
-      required:
-      - name
-      - xHandle
-      - recipientWallet
-      - identityVerified
-      - walletVerified
-      title: PayMeAgentRecipientResponse
-    PayMeAgentPaymentResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        protocol:
-          type: string
-          title: Protocol
-        recipient:
-          $ref: '#/components/schemas/PayMeAgentRecipientResponse'
-        asset:
-          $ref: '#/components/schemas/PayMeAgentAssetResponse'
-        quote:
-          $ref: '#/components/schemas/PayMeAgentQuoteResponse'
-        note:
-          type: string
-          title: Note
-        expiresAt:
-          type: string
-          title: Expiresat
-        createdAt:
-          type: string
-          title: Createdat
-        receipt:
-          anyOf:
-          - $ref: '#/components/schemas/PayMeAgentReceiptResponse'
-          - type: 'null'
-      type: object
-      required:
-      - id
-      - status
-      - protocol
-      - recipient
-      - asset
-      - quote
-      - note
-      - expiresAt
-      - createdAt
-      - receipt
-      title: PayMeAgentPaymentResponse
-    PayMeWalletLinkEnvelope:
-      properties:
-        walletLink:
-          anyOf:
-          - $ref: '#/components/schemas/PayMeWalletLinkPublic'
-          - $ref: '#/components/schemas/PayMeWalletLinkStatus'
-          title: Walletlink
-      type: object
-      required:
-      - walletLink
-      title: PayMeWalletLinkEnvelope
-    PayMeProfileCreate:
-      properties:
-        version:
-          type: integer
-          maximum: 1
-          minimum: 1
-          title: Version
-          default: 1
-        recipientWallet:
-          type: string
-          maxLength: 64
-          minLength: 32
-          title: Recipientwallet
-        message:
-          type: string
-          maxLength: 240
-          title: Message
-          default: ''
-        createdAt:
-          type: string
-          maxLength: 50
-          minLength: 10
-          title: Createdat
-        setupMessage:
-          type: string
-          maxLength: 2000
-          minLength: 1
-          title: Setupmessage
-        setupSignature:
-          type: string
-          maxLength: 200
-          minLength: 32
-          title: Setupsignature
-      type: object
-      required:
-      - recipientWallet
-      - createdAt
-      - setupMessage
-      - setupSignature
-      title: PayMeProfileCreate
-    PayMeProfileEnvelope:
-      properties:
-        profile:
-          $ref: '#/components/schemas/PayMeProfileResponse'
-        url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Url
-      type: object
-      required:
-      - profile
-      title: PayMeProfileEnvelope
-    PayMeWalletPrepareResponse:
-      properties:
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        setupMessage:
-          type: string
-          title: Setupmessage
-        createdAt:
-          type: string
-          title: Createdat
-        expiresAt:
-          type: string
-          title: Expiresat
-      type: object
-      required:
-      - recipientWallet
-      - setupMessage
-      - createdAt
-      - expiresAt
-      title: PayMeWalletPrepareResponse
-    PayMeAgentPaymentRequiredResponse:
-      properties:
-        type:
-          type: string
-          title: Type
-        title:
-          type: string
-          title: Title
-        detail:
-          type: string
-          title: Detail
-        payment:
-          $ref: '#/components/schemas/PayMeAgentPaymentResponse'
-        challenge:
-          additionalProperties:
-            type: string
-          type: object
-          title: Challenge
-      type: object
-      required:
-      - type
-      - title
-      - detail
-      - payment
-      - challenge
-      title: PayMeAgentPaymentRequiredResponse
-    PayMeAgentPaymentCreate:
-      properties:
-        xHandle:
-          type: string
-          maxLength: 16
-          minLength: 1
-          title: Xhandle
-        amount:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Amount
-        asset:
-          type: string
-          pattern: ^(?i:USDC|SOL)$
-          title: Asset
-          default: USDC
-        note:
-          type: string
-          maxLength: 240
-          title: Note
-          default: ''
-        idempotencyKey:
-          type: string
-          maxLength: 128
-          title: Idempotencykey
-          default: ''
-      type: object
-      required:
-      - xHandle
-      - amount
-      title: PayMeAgentPaymentCreate
-    PayMeIdentityResponse:
-      properties:
-        xUserId:
-          type: string
-          title: Xuserid
-        xHandle:
-          type: string
-          title: Xhandle
-        recipientName:
-          type: string
-          title: Recipientname
-        xAvatarUrl:
-          type: string
-          title: Xavatarurl
-        xProfileUrl:
-          type: string
-          title: Xprofileurl
-      type: object
-      required:
-      - xUserId
-      - xHandle
-      - recipientName
-      - xAvatarUrl
-      - xProfileUrl
-      title: PayMeIdentityResponse
-    ValidationError:
-      properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
-          type: string
-          title: Message
-        type:
-          type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
-      type: object
-      required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    PayMeSessionResponse:
-      properties:
-        identity:
-          $ref: '#/components/schemas/PayMeIdentityResponse'
-        profile:
-          anyOf:
-          - $ref: '#/components/schemas/PayMeProfileResponse'
-          - type: 'null'
-      type: object
-      required:
-      - identity
-      - profile
-      title: PayMeSessionResponse
-    PayMeAuthenticatorEnrollmentResponse:
-      properties:
-        enrollmentId:
-          type: string
-          title: Enrollmentid
-        status:
-          type: string
-          title: Status
-        xHandle:
-          type: string
-          title: Xhandle
-        currentWallet:
-          type: string
-          title: Currentwallet
-        setupMessage:
-          type: string
-          title: Setupmessage
-        expiresAt:
-          type: string
-          title: Expiresat
-        walletApprovalUrl:
-          type: string
-          title: Walletapprovalurl
-      type: object
-      required:
-      - enrollmentId
-      - status
-      - xHandle
-      - currentWallet
-      - setupMessage
-      - expiresAt
-      - walletApprovalUrl
-      title: PayMeAuthenticatorEnrollmentResponse
-    PayMeOrderRecipientCreate:
-      properties:
-        xHandle:
-          type: string
-          maxLength: 16
-          minLength: 1
-          title: Xhandle
-        recipientAmount:
-          type: string
-          maxLength: 40
-          minLength: 1
-          title: Recipientamount
-      type: object
-      required:
-      - xHandle
-      - recipientAmount
-      title: PayMeOrderRecipientCreate
-    PayMeWalletSignatureResponse:
-      properties:
-        status:
-          type: string
-          title: Status
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-      type: object
-      required:
-      - status
-      - recipientWallet
-      title: PayMeWalletSignatureResponse
-    PayMeOrderEnvelope:
-      properties:
-        order:
-          $ref: '#/components/schemas/PayMeOrderResponse'
-      type: object
-      required:
-      - order
-      title: PayMeOrderEnvelope
-    PayMeOrderResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        payerWallet:
-          type: string
-          title: Payerwallet
-        asset:
-          $ref: '#/components/schemas/PayMeOrderAssetResponse'
-        recipients:
-          items:
-            $ref: '#/components/schemas/PayMeOrderRecipientResponse'
-          type: array
-          title: Recipients
-        quote:
-          $ref: '#/components/schemas/PayMeOrderQuoteResponse'
-        feeWallet:
-          type: string
-          title: Feewallet
-        memo:
-          type: string
-          title: Memo
-        note:
-          type: string
-          title: Note
-        source:
-          type: string
-          title: Source
-        txSignature:
-          type: string
-          title: Txsignature
-        solscanUrl:
-          type: string
-          title: Solscanurl
-        createdAt:
-          type: string
-          title: Createdat
-        expiresAt:
-          type: string
-          title: Expiresat
-        completedAt:
-          type: string
-          title: Completedat
-      type: object
-      required:
-      - id
-      - status
-      - payerWallet
-      - asset
-      - recipients
-      - quote
-      - feeWallet
-      - memo
-      - note
-      - source
-      - txSignature
-      - solscanUrl
-      - createdAt
-      - expiresAt
-      - completedAt
-      title: PayMeOrderResponse
-    PayMeAuthenticatorSetupResponse:
-      properties:
-        enrollmentId:
-          type: string
-          title: Enrollmentid
-        otpauthUri:
-          type: string
-          title: Otpauthuri
-        manualKey:
-          type: string
-          title: Manualkey
-        currentWallet:
-          type: string
-          title: Currentwallet
-        setupMessage:
-          type: string
-          title: Setupmessage
-        expiresAt:
-          type: string
-          title: Expiresat
-        walletApprovalUrl:
-          type: string
-          title: Walletapprovalurl
-      type: object
-      required:
-      - enrollmentId
-      - otpauthUri
-      - manualKey
-      - currentWallet
-      - setupMessage
-      - expiresAt
-      - walletApprovalUrl
-      title: PayMeAuthenticatorSetupResponse
-    PayMeAgentAssetResponse:
-      properties:
-        mint:
-          type: string
-          title: Mint
-        symbol:
-          type: string
-          title: Symbol
-        name:
-          type: string
-          title: Name
-        decimals:
-          type: integer
-          title: Decimals
-      type: object
-      required:
-      - mint
-      - symbol
-      - name
-      - decimals
-      title: PayMeAgentAssetResponse
-    PayMeCheckoutEnvelope:
-      properties:
-        checkout:
-          $ref: '#/components/schemas/PayMeCheckoutResponse'
-        url:
-          type: string
-          title: Url
-      type: object
-      required:
-      - checkout
-      - url
-      title: PayMeCheckoutEnvelope
-    PayMeWalletLinkCreate:
-      properties:
-        message:
-          type: string
-          maxLength: 240
-          title: Message
-          default: ''
-        securityCode:
-          type: string
-          maxLength: 20
-          title: Securitycode
-          default: ''
-      type: object
-      title: PayMeWalletLinkCreate
-    PayMeAuthenticatorEnrollmentStatusResponse:
-      properties:
-        enrollmentId:
-          type: string
-          title: Enrollmentid
-        status:
-          type: string
-          title: Status
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        expiresAt:
-          type: string
-          title: Expiresat
-      type: object
-      required:
-      - enrollmentId
-      - status
-      - recipientWallet
-      - expiresAt
-      title: PayMeAuthenticatorEnrollmentStatusResponse
-    PayMeWalletLinkStatus:
-      properties:
-        walletLinkId:
-          type: string
-          title: Walletlinkid
-        status:
-          type: string
-          title: Status
-        recipientWallet:
-          type: string
-          title: Recipientwallet
-        expiresAt:
-          type: string
-          title: Expiresat
-      type: object
-      required:
-      - walletLinkId
-      - status
-      - recipientWallet
-      - expiresAt
-      title: PayMeWalletLinkStatus
-    PayMeCheckoutResponse:
-      properties:
-        id:
-          type: string
-          title: Id
-        status:
-          type: string
-          title: Status
-        payPost:
-          $ref: '#/components/schemas/PayMeProfileResponse'
-        link:
-          type: object
-          title: Link
-        url:
-          type: string
-          title: Url
-        quote:
-          $ref: '#/components/schemas/PayMeCheckoutQuoteResponse'
-        createdAt:
-          type: string
-          title: Createdat
-        paymentRequestId:
-          type: string
-          title: Paymentrequestid
-        paymentIntentId:
-          type: string
-          title: Paymentintentid
-      type: object
-      required:
-      - id
-      - status
-      - payPost
-      - link
-      - url
-      - quote
-      - createdAt
-      - paymentRequestId
-      - paymentIntentId
-      title: PayMeCheckoutResponse
     PayMeAgentReceiptResponse:
       properties:
         id:
@@ -1721,6 +724,1003 @@ components:
       - solscanUrl
       - completedAt
       title: PayMeAgentReceiptResponse
+    PayMeAgentPaymentResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        protocol:
+          type: string
+          title: Protocol
+        recipient:
+          $ref: '#/components/schemas/PayMeAgentRecipientResponse'
+        asset:
+          $ref: '#/components/schemas/PayMeAgentAssetResponse'
+        quote:
+          $ref: '#/components/schemas/PayMeAgentQuoteResponse'
+        note:
+          type: string
+          title: Note
+        expiresAt:
+          type: string
+          title: Expiresat
+        createdAt:
+          type: string
+          title: Createdat
+        receipt:
+          anyOf:
+          - $ref: '#/components/schemas/PayMeAgentReceiptResponse'
+          - type: 'null'
+      type: object
+      required:
+      - id
+      - status
+      - protocol
+      - recipient
+      - asset
+      - quote
+      - note
+      - expiresAt
+      - createdAt
+      - receipt
+      title: PayMeAgentPaymentResponse
+    PayMeIdentityResponse:
+      properties:
+        xUserId:
+          type: string
+          title: Xuserid
+        xHandle:
+          type: string
+          title: Xhandle
+        recipientName:
+          type: string
+          title: Recipientname
+        xAvatarUrl:
+          type: string
+          title: Xavatarurl
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+      type: object
+      required:
+      - xUserId
+      - xHandle
+      - recipientName
+      - xAvatarUrl
+      - xProfileUrl
+      title: PayMeIdentityResponse
+    PayMeWalletLinkStatus:
+      properties:
+        walletLinkId:
+          type: string
+          title: Walletlinkid
+        status:
+          type: string
+          title: Status
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        expiresAt:
+          type: string
+          title: Expiresat
+      type: object
+      required:
+      - walletLinkId
+      - status
+      - recipientWallet
+      - expiresAt
+      title: PayMeWalletLinkStatus
+    PayMeAgentAssetResponse:
+      properties:
+        mint:
+          type: string
+          title: Mint
+        symbol:
+          type: string
+          title: Symbol
+        name:
+          type: string
+          title: Name
+        decimals:
+          type: integer
+          title: Decimals
+      type: object
+      required:
+      - mint
+      - symbol
+      - name
+      - decimals
+      title: PayMeAgentAssetResponse
+    PayMeAgentPaymentEnvelope:
+      properties:
+        payment:
+          $ref: '#/components/schemas/PayMeAgentPaymentResponse'
+      type: object
+      required:
+      - payment
+      title: PayMeAgentPaymentEnvelope
+    PayMeOrderRecipientCreate:
+      properties:
+        xHandle:
+          type: string
+          maxLength: 16
+          minLength: 1
+          title: Xhandle
+        recipientAmount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Recipientamount
+      type: object
+      required:
+      - xHandle
+      - recipientAmount
+      title: PayMeOrderRecipientCreate
+    PayMeWalletLinkEnvelope:
+      properties:
+        walletLink:
+          anyOf:
+          - $ref: '#/components/schemas/PayMeWalletLinkPublic'
+          - $ref: '#/components/schemas/PayMeWalletLinkStatus'
+          title: Walletlink
+      type: object
+      required:
+      - walletLink
+      title: PayMeWalletLinkEnvelope
+    PayMeAuthenticatorWalletSignature:
+      properties:
+        recipientWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Recipientwallet
+        setupMessage:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Setupmessage
+        setupSignature:
+          type: string
+          maxLength: 200
+          minLength: 32
+          title: Setupsignature
+      type: object
+      required:
+      - recipientWallet
+      - setupMessage
+      - setupSignature
+      title: PayMeAuthenticatorWalletSignature
+    PayMeOrderQuoteResponse:
+      properties:
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        buyerAmount:
+          type: string
+          title: Buyeramount
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        platformFeeBps:
+          type: integer
+          title: Platformfeebps
+      type: object
+      required:
+      - recipientAmount
+      - buyerAmount
+      - hiltFeeAmount
+      - platformFeeBps
+      title: PayMeOrderQuoteResponse
+    PayMeWalletPrepareResponse:
+      properties:
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        setupMessage:
+          type: string
+          title: Setupmessage
+        createdAt:
+          type: string
+          title: Createdat
+        expiresAt:
+          type: string
+          title: Expiresat
+      type: object
+      required:
+      - recipientWallet
+      - setupMessage
+      - createdAt
+      - expiresAt
+      title: PayMeWalletPrepareResponse
+    PayMeAgentPaymentCreate:
+      properties:
+        xHandle:
+          type: string
+          maxLength: 16
+          minLength: 1
+          title: Xhandle
+        amount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Amount
+        asset:
+          type: string
+          pattern: ^(?i:USDC|SOL)$
+          title: Asset
+          default: USDC
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        idempotencyKey:
+          type: string
+          maxLength: 128
+          title: Idempotencykey
+          default: ''
+      type: object
+      required:
+      - xHandle
+      - amount
+      title: PayMeAgentPaymentCreate
+    PayMeOrderConfirm:
+      properties:
+        payerWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Payerwallet
+        txSignature:
+          type: string
+          maxLength: 100
+          minLength: 64
+          title: Txsignature
+      type: object
+      required:
+      - payerWallet
+      - txSignature
+      title: PayMeOrderConfirm
+    PayMeWalletLinkPrepare:
+      properties:
+        recipientWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Recipientwallet
+      type: object
+      required:
+      - recipientWallet
+      title: PayMeWalletLinkPrepare
+    PayMeProfileEnvelope:
+      properties:
+        profile:
+          $ref: '#/components/schemas/PayMeProfileResponse'
+        url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Url
+      type: object
+      required:
+      - profile
+      title: PayMeProfileEnvelope
+    PayMeProfileCreate:
+      properties:
+        version:
+          type: integer
+          maximum: 1
+          minimum: 1
+          title: Version
+          default: 1
+        recipientWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Recipientwallet
+        message:
+          type: string
+          maxLength: 240
+          title: Message
+          default: ''
+        createdAt:
+          type: string
+          maxLength: 50
+          minLength: 10
+          title: Createdat
+        setupMessage:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Setupmessage
+        setupSignature:
+          type: string
+          maxLength: 200
+          minLength: 32
+          title: Setupsignature
+      type: object
+      required:
+      - recipientWallet
+      - createdAt
+      - setupMessage
+      - setupSignature
+      title: PayMeProfileCreate
+    PayMeOrderEnvelope:
+      properties:
+        order:
+          $ref: '#/components/schemas/PayMeOrderResponse'
+      type: object
+      required:
+      - order
+      title: PayMeOrderEnvelope
+    PayMeAuthenticatorEnrollmentResponse:
+      properties:
+        enrollmentId:
+          type: string
+          title: Enrollmentid
+        status:
+          type: string
+          title: Status
+        xHandle:
+          type: string
+          title: Xhandle
+        currentWallet:
+          type: string
+          title: Currentwallet
+        setupMessage:
+          type: string
+          title: Setupmessage
+        expiresAt:
+          type: string
+          title: Expiresat
+        walletApprovalUrl:
+          type: string
+          title: Walletapprovalurl
+      type: object
+      required:
+      - enrollmentId
+      - status
+      - xHandle
+      - currentWallet
+      - setupMessage
+      - expiresAt
+      - walletApprovalUrl
+      title: PayMeAuthenticatorEnrollmentResponse
+    PayMeOrderResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        payerWallet:
+          type: string
+          title: Payerwallet
+        asset:
+          $ref: '#/components/schemas/PayMeOrderAssetResponse'
+        recipients:
+          items:
+            $ref: '#/components/schemas/PayMeOrderRecipientResponse'
+          type: array
+          title: Recipients
+        quote:
+          $ref: '#/components/schemas/PayMeOrderQuoteResponse'
+        feeWallet:
+          type: string
+          title: Feewallet
+        memo:
+          type: string
+          title: Memo
+        note:
+          type: string
+          title: Note
+        source:
+          type: string
+          title: Source
+        txSignature:
+          type: string
+          title: Txsignature
+        solscanUrl:
+          type: string
+          title: Solscanurl
+        createdAt:
+          type: string
+          title: Createdat
+        expiresAt:
+          type: string
+          title: Expiresat
+        completedAt:
+          type: string
+          title: Completedat
+      type: object
+      required:
+      - id
+      - status
+      - payerWallet
+      - asset
+      - recipients
+      - quote
+      - feeWallet
+      - memo
+      - note
+      - source
+      - txSignature
+      - solscanUrl
+      - createdAt
+      - expiresAt
+      - completedAt
+      title: PayMeOrderResponse
+    PayMeAuthenticatorEnrollmentStatusResponse:
+      properties:
+        enrollmentId:
+          type: string
+          title: Enrollmentid
+        status:
+          type: string
+          title: Status
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        expiresAt:
+          type: string
+          title: Expiresat
+      type: object
+      required:
+      - enrollmentId
+      - status
+      - recipientWallet
+      - expiresAt
+      title: PayMeAuthenticatorEnrollmentStatusResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    PayMeOrderAssetResponse:
+      properties:
+        mint:
+          type: string
+          title: Mint
+        symbol:
+          type: string
+          title: Symbol
+        name:
+          type: string
+          title: Name
+        decimals:
+          type: integer
+          title: Decimals
+      type: object
+      required:
+      - mint
+      - symbol
+      - name
+      - decimals
+      title: PayMeOrderAssetResponse
+    PayMeOrderCreate:
+      properties:
+        payerWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Payerwallet
+        recipients:
+          items:
+            $ref: '#/components/schemas/PayMeOrderRecipientCreate'
+          type: array
+          maxItems: 5
+          minItems: 1
+          title: Recipients
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        source:
+          type: string
+          pattern: ^(web|solana_action)$
+          title: Source
+          default: web
+      type: object
+      required:
+      - payerWallet
+      - recipients
+      title: PayMeOrderCreate
+    PayMeProfileResponse:
+      properties:
+        slug:
+          type: string
+          title: Slug
+        url:
+          type: string
+          title: Url
+        version:
+          type: integer
+          title: Version
+        recipientName:
+          type: string
+          title: Recipientname
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        xHandle:
+          type: string
+          title: Xhandle
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+        xAvatarUrl:
+          type: string
+          title: Xavatarurl
+        identityVerified:
+          type: boolean
+          title: Identityverified
+        message:
+          type: string
+          title: Message
+        walletVerified:
+          type: boolean
+          title: Walletverified
+        createdAt:
+          type: string
+          title: Createdat
+      type: object
+      required:
+      - slug
+      - url
+      - version
+      - recipientName
+      - recipientWallet
+      - xHandle
+      - xProfileUrl
+      - xAvatarUrl
+      - identityVerified
+      - message
+      - walletVerified
+      - createdAt
+      title: PayMeProfileResponse
+    PayMeCheckoutCreate:
+      properties:
+        tokenMint:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Tokenmint
+        tokenSymbol:
+          type: string
+          maxLength: 24
+          minLength: 1
+          title: Tokensymbol
+        tokenName:
+          type: string
+          maxLength: 80
+          minLength: 1
+          title: Tokenname
+        tokenImageUrl:
+          type: string
+          maxLength: 500
+          title: Tokenimageurl
+          default: ''
+        tokenDecimals:
+          type: integer
+          maximum: 18
+          minimum: 0
+          title: Tokendecimals
+        recipientAmount:
+          type: string
+          maxLength: 40
+          minLength: 1
+          title: Recipientamount
+        note:
+          type: string
+          maxLength: 240
+          title: Note
+          default: ''
+        payerWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Payerwallet
+        createdAt:
+          type: string
+          maxLength: 50
+          minLength: 10
+          title: Createdat
+        setupMessage:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Setupmessage
+        setupSignature:
+          type: string
+          maxLength: 200
+          minLength: 32
+          title: Setupsignature
+        paymentRequestId:
+          type: string
+          maxLength: 24
+          title: Paymentrequestid
+          default: ''
+        paymentIntentId:
+          type: string
+          maxLength: 24
+          title: Paymentintentid
+          default: ''
+      type: object
+      required:
+      - tokenMint
+      - tokenSymbol
+      - tokenName
+      - tokenDecimals
+      - recipientAmount
+      - payerWallet
+      - createdAt
+      - setupMessage
+      - setupSignature
+      title: PayMeCheckoutCreate
+    PayMeOrderRecipientResponse:
+      properties:
+        receiptId:
+          type: string
+          title: Receiptid
+        xHandle:
+          type: string
+          title: Xhandle
+        recipientName:
+          type: string
+          title: Recipientname
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        position:
+          type: integer
+          title: Position
+      type: object
+      required:
+      - receiptId
+      - xHandle
+      - recipientName
+      - recipientWallet
+      - recipientAmount
+      - position
+      title: PayMeOrderRecipientResponse
+    PayMeWalletLinkCreate:
+      properties:
+        message:
+          type: string
+          maxLength: 240
+          title: Message
+          default: ''
+        securityCode:
+          type: string
+          maxLength: 20
+          title: Securitycode
+          default: ''
+      type: object
+      title: PayMeWalletLinkCreate
+    PayMeAuthenticatorConfirm:
+      properties:
+        enrollmentId:
+          type: string
+          maxLength: 128
+          minLength: 32
+          title: Enrollmentid
+        code:
+          type: string
+          maxLength: 20
+          minLength: 6
+          title: Code
+        recipientWallet:
+          type: string
+          maxLength: 64
+          title: Recipientwallet
+          default: ''
+        setupMessage:
+          type: string
+          maxLength: 2000
+          title: Setupmessage
+          default: ''
+        setupSignature:
+          type: string
+          maxLength: 200
+          title: Setupsignature
+          default: ''
+      type: object
+      required:
+      - enrollmentId
+      - code
+      title: PayMeAuthenticatorConfirm
+    PayMeAuthenticatorSetupResponse:
+      properties:
+        enrollmentId:
+          type: string
+          title: Enrollmentid
+        otpauthUri:
+          type: string
+          title: Otpauthuri
+        manualKey:
+          type: string
+          title: Manualkey
+        currentWallet:
+          type: string
+          title: Currentwallet
+        setupMessage:
+          type: string
+          title: Setupmessage
+        expiresAt:
+          type: string
+          title: Expiresat
+        walletApprovalUrl:
+          type: string
+          title: Walletapprovalurl
+      type: object
+      required:
+      - enrollmentId
+      - otpauthUri
+      - manualKey
+      - currentWallet
+      - setupMessage
+      - expiresAt
+      - walletApprovalUrl
+      title: PayMeAuthenticatorSetupResponse
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
+      type: object
+      required:
+      - loc
+      - msg
+      - type
+      title: ValidationError
+    PayMeWalletSignatureResponse:
+      properties:
+        status:
+          type: string
+          title: Status
+        recipientWallet:
+          type: string
+          title: Recipientwallet
+      type: object
+      required:
+      - status
+      - recipientWallet
+      title: PayMeWalletSignatureResponse
+    PayMeWalletLinkSignature:
+      properties:
+        recipientWallet:
+          type: string
+          maxLength: 64
+          minLength: 32
+          title: Recipientwallet
+        setupMessage:
+          type: string
+          maxLength: 2000
+          minLength: 1
+          title: Setupmessage
+        setupSignature:
+          type: string
+          maxLength: 200
+          minLength: 32
+          title: Setupsignature
+      type: object
+      required:
+      - recipientWallet
+      - setupMessage
+      - setupSignature
+      title: PayMeWalletLinkSignature
+    PayMeCheckoutResponse:
+      properties:
+        id:
+          type: string
+          title: Id
+        status:
+          type: string
+          title: Status
+        payPost:
+          $ref: '#/components/schemas/PayMeProfileResponse'
+        link:
+          type: object
+          title: Link
+        url:
+          type: string
+          title: Url
+        quote:
+          $ref: '#/components/schemas/PayMeCheckoutQuoteResponse'
+        createdAt:
+          type: string
+          title: Createdat
+        paymentRequestId:
+          type: string
+          title: Paymentrequestid
+        paymentIntentId:
+          type: string
+          title: Paymentintentid
+      type: object
+      required:
+      - id
+      - status
+      - payPost
+      - link
+      - url
+      - quote
+      - createdAt
+      - paymentRequestId
+      - paymentIntentId
+      title: PayMeCheckoutResponse
+    PayMeAgentQuoteResponse:
+      properties:
+        recipientAmount:
+          type: string
+          title: Recipientamount
+        hiltFeeAmount:
+          type: string
+          title: Hiltfeeamount
+        buyerAmount:
+          type: string
+          title: Buyeramount
+        platformFeeBps:
+          type: integer
+          title: Platformfeebps
+        feePaidBy:
+          type: string
+          title: Feepaidby
+      type: object
+      required:
+      - recipientAmount
+      - hiltFeeAmount
+      - buyerAmount
+      - platformFeeBps
+      - feePaidBy
+      title: PayMeAgentQuoteResponse
+    PayMeAuthenticatorConfirmResponse:
+      properties:
+        authenticatorEnabled:
+          type: boolean
+          title: Authenticatorenabled
+        recoveryCodes:
+          items:
+            type: string
+          type: array
+          title: Recoverycodes
+        recoveryCodesRemaining:
+          type: integer
+          title: Recoverycodesremaining
+      type: object
+      required:
+      - authenticatorEnabled
+      - recoveryCodes
+      - recoveryCodesRemaining
+      title: PayMeAuthenticatorConfirmResponse
+    PayMeSecurityStatusResponse:
+      properties:
+        authenticatorEnabled:
+          type: boolean
+          title: Authenticatorenabled
+        recoveryCodesRemaining:
+          type: integer
+          title: Recoverycodesremaining
+        walletChangeAllowed:
+          type: boolean
+          title: Walletchangeallowed
+        currentWallet:
+          type: string
+          title: Currentwallet
+      type: object
+      required:
+      - authenticatorEnabled
+      - recoveryCodesRemaining
+      - walletChangeAllowed
+      - currentWallet
+      title: PayMeSecurityStatusResponse
+    PayMeAgentPaymentRequiredResponse:
+      properties:
+        type:
+          type: string
+          title: Type
+        title:
+          type: string
+          title: Title
+        detail:
+          type: string
+          title: Detail
+        payment:
+          $ref: '#/components/schemas/PayMeAgentPaymentResponse'
+        challenge:
+          additionalProperties:
+            type: string
+          type: object
+          title: Challenge
+      type: object
+      required:
+      - type
+      - title
+      - detail
+      - payment
+      - challenge
+      title: PayMeAgentPaymentRequiredResponse
+    PayMeSessionResponse:
+      properties:
+        identity:
+          $ref: '#/components/schemas/PayMeIdentityResponse'
+        profile:
+          anyOf:
+          - $ref: '#/components/schemas/PayMeProfileResponse'
+          - type: 'null'
+      type: object
+      required:
+      - identity
+      - profile
+      title: PayMeSessionResponse
+    PayMeWalletLinkPublic:
+      properties:
+        walletLinkId:
+          type: string
+          title: Walletlinkid
+        status:
+          type: string
+          title: Status
+        recipientName:
+          type: string
+          title: Recipientname
+        xHandle:
+          type: string
+          title: Xhandle
+        xAvatarUrl:
+          type: string
+          title: Xavatarurl
+        xProfileUrl:
+          type: string
+          title: Xprofileurl
+        message:
+          type: string
+          title: Message
+        expiresAt:
+          type: string
+          title: Expiresat
+        walletLinkUrl:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Walletlinkurl
+      type: object
+      required:
+      - walletLinkId
+      - status
+      - recipientName
+      - xHandle
+      - xAvatarUrl
+      - xProfileUrl
+      - message
+      - expiresAt
+      title: PayMeWalletLinkPublic
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

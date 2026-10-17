@@ -56,6 +56,18 @@ components:
       required:
       - status
       title: HealthCheck
+    HealthChecks:
+      properties:
+        database:
+          $ref: '#/components/schemas/HealthCheck'
+        redis:
+          $ref: '#/components/schemas/HealthCheck'
+      additionalProperties: true
+      type: object
+      required:
+      - database
+      - redis
+      title: HealthChecks
     HealthResponse:
       properties:
         status:
@@ -77,18 +89,6 @@ components:
       - version
       - checks
       title: HealthResponse
-    HealthChecks:
-      properties:
-        database:
-          $ref: '#/components/schemas/HealthCheck'
-        redis:
-          $ref: '#/components/schemas/HealthCheck'
-      additionalProperties: true
-      type: object
-      required:
-      - database
-      - redis
-      title: HealthChecks
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json

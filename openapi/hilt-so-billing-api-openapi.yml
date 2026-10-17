@@ -119,17 +119,62 @@ paths:
                 $ref: '#/components/schemas/HTTPValidationError'
 components:
   schemas:
-    StripePortalRequest:
+    StripeInvoiceHistoryResponse:
       properties:
-        return_url:
+        invoice_id:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Id
+        invoice_number:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Number
+        status:
           type: string
-          maxLength: 2048
-          minLength: 8
-          title: Return Url
+          title: Status
+        billing_reason:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Billing Reason
+        currency:
+          type: string
+          title: Currency
+        amount_due_minor_units:
+          type: integer
+          title: Amount Due Minor Units
+        amount_paid_minor_units:
+          type: integer
+          title: Amount Paid Minor Units
+        created_at:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Created At
+        hosted_invoice_url:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Hosted Invoice Url
+        invoice_pdf:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Invoice Pdf
+        description:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Description
       type: object
       required:
-      - return_url
-      title: StripePortalRequest
+      - status
+      - currency
+      - amount_due_minor_units
+      - amount_paid_minor_units
+      title: StripeInvoiceHistoryResponse
     StripeCheckoutRequest:
       properties:
         plan:
@@ -162,6 +207,73 @@ components:
       - success_url
       - cancel_url
       title: StripeCheckoutRequest
+    StripePortalRequest:
+      properties:
+        return_url:
+          type: string
+          maxLength: 2048
+          minLength: 8
+          title: Return Url
+      type: object
+      required:
+      - return_url
+      title: StripePortalRequest
+    BillingAssetSummaryResponse:
+      properties:
+        token_mint:
+          anyOf:
+          - type: string
+          - type: 'null'
+          title: Token Mint
+        asset_symbol:
+          type: string
+          title: Asset Symbol
+        asset_decimals:
+          type: integer
+          title: Asset Decimals
+        confirmed_payments:
+          type: integer
+          title: Confirmed Payments
+        gross_minor_units:
+          type: integer
+          title: Gross Minor Units
+        net_minor_units:
+          type: integer
+          title: Net Minor Units
+        fee_minor_units:
+          type: integer
+          title: Fee Minor Units
+      type: object
+      required:
+      - asset_symbol
+      - asset_decimals
+      - confirmed_payments
+      - gross_minor_units
+      - net_minor_units
+      - fee_minor_units
+      title: BillingAssetSummaryResponse
+    StripeCheckoutResponse:
+      properties:
+        session_id:
+          type: string
+          title: Session Id
+        checkout_url:
+          type: string
+          title: Checkout Url
+      type: object
+      required:
+      - session_id
+      - checkout_url
+      title: StripeCheckoutResponse
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
     StripePortalResponse:
       properties:
         portal_url:
@@ -203,134 +315,32 @@ components:
       - tier
       - billing_status
       title: StripeRefreshResponse
-    BillingPlanCardResponse:
+    ValidationError:
       properties:
-        slug:
+        loc:
+          items:
+            anyOf:
+            - type: string
+            - type: integer
+          type: array
+          title: Location
+        msg:
           type: string
-          title: Slug
-        label:
+          title: Message
+        type:
           type: string
-          title: Label
-        description:
-          type: string
-          title: Description
-        monthly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Monthly Price Usd
-        yearly_price_usd:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Yearly Price Usd
-        annual_discount_pct:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Annual Discount Pct
-        transaction_fee_pct:
-          type: number
-          title: Transaction Fee Pct
-        transaction_fee_flat_usd_cents:
-          type: integer
-          title: Transaction Fee Flat Usd Cents
-        live_link_limit:
-          anyOf:
-          - type: integer
-          - type: 'null'
-          title: Live Link Limit
-        seats_included:
-          type: integer
-          title: Seats Included
-        manual_renewals:
-          type: boolean
-          title: Manual Renewals
-        automatic_renewals:
-          type: boolean
-          title: Automatic Renewals
-        merchant_analytics:
-          type: boolean
-          title: Merchant Analytics
-        buy_notifications:
-          type: boolean
-          title: Buy Notifications
-        receipt_exports:
-          type: boolean
-          title: Receipt Exports
-        tax_exports:
-          type: boolean
-          title: Tax Exports
-        custom_checkout_domains:
-          type: boolean
-          title: Custom Checkout Domains
+          title: Error Type
+        input:
+          title: Input
+        ctx:
+          type: object
+          title: Context
       type: object
       required:
-      - slug
-      - label
-      - description
-      - monthly_price_usd
-      - yearly_price_usd
-      - annual_discount_pct
-      - transaction_fee_pct
-      - transaction_fee_flat_usd_cents
-      - live_link_limit
-      - seats_included
-      - manual_renewals
-      - automatic_renewals
-      - merchant_analytics
-      - buy_notifications
-      - receipt_exports
-      - tax_exports
-      - custom_checkout_domains
-      title: BillingPlanCardResponse
-    StripeCheckoutResponse:
-      properties:
-        session_id:
-          type: string
-          title: Session Id
-        checkout_url:
-          type: string
-          title: Checkout Url
-      type: object
-      required:
-      - session_id
-      - checkout_url
-      title: StripeCheckoutResponse
-    BillingAssetSummaryResponse:
-      properties:
-        token_mint:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Token Mint
-        asset_symbol:
-          type: string
-          title: Asset Symbol
-        asset_decimals:
-          type: integer
-          title: Asset Decimals
-        confirmed_payments:
-          type: integer
-          title: Confirmed Payments
-        gross_minor_units:
-          type: integer
-          title: Gross Minor Units
-        net_minor_units:
-          type: integer
-          title: Net Minor Units
-        fee_minor_units:
-          type: integer
-          title: Fee Minor Units
-      type: object
-      required:
-      - asset_symbol
-      - asset_decimals
-      - confirmed_payments
-      - gross_minor_units
-      - net_minor_units
-      - fee_minor_units
-      title: BillingAssetSummaryResponse
+      - loc
+      - msg
+      - type
+      title: ValidationError
     BillingSummaryResponse:
       properties:
         tier:
@@ -478,41 +488,87 @@ components:
       - gross_sol_equivalent
       - stripe_history
       title: BillingSummaryResponse
-    ValidationError:
+    BillingPlanCardResponse:
       properties:
-        loc:
-          items:
-            anyOf:
-            - type: string
-            - type: integer
-          type: array
-          title: Location
-        msg:
+        slug:
           type: string
-          title: Message
-        type:
+          title: Slug
+        label:
           type: string
-          title: Error Type
-        input:
-          title: Input
-        ctx:
-          type: object
-          title: Context
+          title: Label
+        description:
+          type: string
+          title: Description
+        monthly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Monthly Price Usd
+        yearly_price_usd:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Yearly Price Usd
+        annual_discount_pct:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Annual Discount Pct
+        transaction_fee_pct:
+          type: number
+          title: Transaction Fee Pct
+        transaction_fee_flat_usd_cents:
+          type: integer
+          title: Transaction Fee Flat Usd Cents
+        live_link_limit:
+          anyOf:
+          - type: integer
+          - type: 'null'
+          title: Live Link Limit
+        seats_included:
+          type: integer
+          title: Seats Included
+        manual_renewals:
+          type: boolean
+          title: Manual Renewals
+        automatic_renewals:
+          type: boolean
+          title: Automatic Renewals
+        merchant_analytics:
+          type: boolean
+          title: Merchant Analytics
+        buy_notifications:
+          type: boolean
+          title: Buy Notifications
+        receipt_exports:
+          type: boolean
+          title: Receipt Exports
+        tax_exports:
+          type: boolean
+          title: Tax Exports
+        custom_checkout_domains:
+          type: boolean
+          title: Custom Checkout Domains
       type: object
       required:
-      - loc
-      - msg
-      - type
-      title: ValidationError
-    HTTPValidationError:
-      properties:
-        detail:
-          items:
-            $ref: '#/components/schemas/ValidationError'
-          type: array
-          title: Detail
-      type: object
-      title: HTTPValidationError
+      - slug
+      - label
+      - description
+      - monthly_price_usd
+      - yearly_price_usd
+      - annual_discount_pct
+      - transaction_fee_pct
+      - transaction_fee_flat_usd_cents
+      - live_link_limit
+      - seats_included
+      - manual_renewals
+      - automatic_renewals
+      - merchant_analytics
+      - buy_notifications
+      - receipt_exports
+      - tax_exports
+      - custom_checkout_domains
+      title: BillingPlanCardResponse
     StripeWebhookResponse:
       properties:
         received:
@@ -538,62 +594,6 @@ components:
       required:
       - received
       title: StripeWebhookResponse
-    StripeInvoiceHistoryResponse:
-      properties:
-        invoice_id:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Id
-        invoice_number:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Number
-        status:
-          type: string
-          title: Status
-        billing_reason:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Billing Reason
-        currency:
-          type: string
-          title: Currency
-        amount_due_minor_units:
-          type: integer
-          title: Amount Due Minor Units
-        amount_paid_minor_units:
-          type: integer
-          title: Amount Paid Minor Units
-        created_at:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Created At
-        hosted_invoice_url:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Hosted Invoice Url
-        invoice_pdf:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Invoice Pdf
-        description:
-          anyOf:
-          - type: string
-          - type: 'null'
-          title: Description
-      type: object
-      required:
-      - status
-      - currency
-      - amount_due_minor_units
-      - amount_paid_minor_units
-      title: StripeInvoiceHistoryResponse
 x-hilt-agent-commerce:
   offer: https://api.hilt.so/v1/agent-commerce/offer
   catalog: https://api.hilt.so/agent-catalog.json
