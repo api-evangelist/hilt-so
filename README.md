@@ -66,11 +66,187 @@
 
 Hilt is a zero-custody Solana payments company operated in the United Kingdom by Paul Wild trading as Hilt (London). It ships four connected products: PayMe (a free receiving link and QR for an OAuth-verified X handle, sender pays a flat 2% fee), Direct Checkout (a no-account SOL / USDC / single-token checkout link), Hilt Pay Workspace (the merchant dashboard for hosted checkout, embeds, WooCommerce, receipts, memberships, native Solana USDC subscriptions and signed webhooks) and Hilt Pay API, the developer and agent product under /v1/access that turns an HTTP 402 into an operating record: x402 V2 payment requirement, Solana USDC or native SOL settlement, receipt, entitlement, atomic metered usage consumption, MPP payment channels and webhook trail. Hilt publishes an OpenAPI 3.1 contract (165 operations on api.hilt.so), a hosted MCP gateway and an OAuth-gated PayMe MCP connector, an A2A agent card, llms.txt on three hosts, TypeScript and Python SDKs, a CLI, Postman assets and a documented sandbox. Live pricing is $0/month plus 1% per successful settlement.
 
-- Website: https://www.hilt.so/
-- Docs: https://docs.hilt.so/developers
-- OpenAPI: https://api.hilt.so/openapi.json (saved at openapi/hilt-so-openapi.yml)
-- MCP gateway: https://api.hilt.so/mcp · PayMe MCP connector: https://api.hilt.so/mcp/pay-me
-- A2A agent card: https://api.hilt.so/.well-known/agent-card.json
-- llms.txt: https://www.hilt.so/llms.txt
+**Areas:** Payments · Solana · Stablecoins · USDC · Crypto Payments · Agentic Payments · x402 · Checkout · Subscription · Webhook · MCP · Entitlements
 
-Enriched 2026-09-19 (local pass). Artifacts under openapi/, mcp/, a2a/, well-known/, llms/, skills/, conventions/, errors/, lifecycle/, authentication/, scopes/, conformance/, sandbox/, packages/, cli/, components/, changelog/, plans/, rate-limits/, asyncapi/, data-model/, overlays/, regulatory/, security/, postman/.
+## Hilt on APIs.io
+
+Everything profiled for Hilt is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/hilt-so/](https://apis.io/providers/hilt-so/)** — or go straight to one of the APIs or properties below.
+
+### APIs (21)
+
+- [Hilt Pay Agent Gateway (MCP + A2A)](https://apis.io/apis/hilt-so/agent-gateway/) — Hosted MCP server at https://api.hilt.so/mcp (streamable HTTP, protocol 2025-06-18, server Hilt Pay Agent Gateway 1.1.0) exposing nine tools: free…
+- [Hilt PayMe MCP Connector](https://apis.io/apis/hilt-so/payme-mcp/) — OAuth-gated remote MCP resource at https://api.hilt.so/mcp/pay-me for compatible AI clients: resolve a verified PayMe handle, start a wallet-approved SOL or…
+- [Hilt Account API](https://apis.io/apis/hilt-so/hilt-so-account-api/) — The account API from Hilt — 7 operation(s) for account.
+- [Hilt Agent Commerce API](https://apis.io/apis/hilt-so/hilt-so-agent-commerce-api/) — The Agent Commerce API from Hilt — 4 operation(s) for agent commerce.
+- [Hilt API Keys API](https://apis.io/apis/hilt-so/hilt-so-api-keys-api/) — The api-keys API from Hilt — 2 operation(s) for api-keys.
+- [Hilt Auth API](https://apis.io/apis/hilt-so/hilt-so-auth-api/) — The auth API from Hilt — 8 operation(s) for auth.
+- [Hilt Billing API](https://apis.io/apis/hilt-so/hilt-so-billing-api/) — The billing API from Hilt — 5 operation(s) for billing.
+- [Hilt Checkout API](https://apis.io/apis/hilt-so/hilt-so-checkout-api/) — The checkout API from Hilt — 12 operation(s) for checkout.
+- [Hilt Checkout Domains API](https://apis.io/apis/hilt-so/hilt-so-checkout-domains-api/) — The checkout-domains API from Hilt — 1 operation(s) for checkout-domains.
+- [Hilt Hilt Pay API](https://apis.io/apis/hilt-so/hilt-so-hilt-pay-api-api/) — The Hilt Pay API API from Hilt — 39 operation(s) for hilt pay api.
+- [Hilt Hilt PayMe Connector API](https://apis.io/apis/hilt-so/hilt-so-hilt-payme-connector-api/) — The Hilt PayMe Connector API from Hilt — 6 operation(s) for hilt payme connector.
+- [Hilt Integrations API](https://apis.io/apis/hilt-so/hilt-so-integrations-api/) — The integrations API from Hilt — 4 operation(s) for integrations.
+- [Hilt Memberships API](https://apis.io/apis/hilt-so/hilt-so-memberships-api/) — The memberships API from Hilt — 11 operation(s) for memberships.
+- [Hilt Pay Me API](https://apis.io/apis/hilt-so/hilt-so-pay-me-api/) — The pay-me API from Hilt — 21 operation(s) for pay-me.
+- [Hilt Products API](https://apis.io/apis/hilt-so/hilt-so-products-api/) — The products API from Hilt — 9 operation(s) for products.
+- [Hilt Receipt API](https://apis.io/apis/hilt-so/hilt-so-receipt-api/) — The Receipt API from Hilt — 10 operation(s) for receipt.
+- [Hilt Solana API](https://apis.io/apis/hilt-so/hilt-so-solana-api/) — The Solana API from Hilt — 1 operation(s) for solana.
+- [Hilt Support API](https://apis.io/apis/hilt-so/hilt-so-support-api/) — The Support API from Hilt — 3 operation(s) for support.
+- [Hilt System API](https://apis.io/apis/hilt-so/hilt-so-system-api/) — The system API from Hilt — 2 operation(s) for system.
+- [Hilt Testing API](https://apis.io/apis/hilt-so/hilt-so-testing-api/) — The testing API from Hilt — 3 operation(s) for testing.
+- [Hilt Webhooks API](https://apis.io/apis/hilt-so/hilt-so-webhooks-api/) — The webhooks API from Hilt — 7 operation(s) for webhooks.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Hilt Webhooks](https://apis.io/asyncapis/hilt-so/hilt-so-webhooks-asyncapi/)
+
+#### Event channels (10)
+
+Individual events and webhooks the provider emits.
+
+- [delivery.failed](https://apis.io/channels/hilt-so/delivery-failed/)
+- [membership.activated](https://apis.io/channels/hilt-so/membership-activated/)
+- [membership.entered_grace](https://apis.io/channels/hilt-so/membership-entered-grace/)
+- [membership.expired](https://apis.io/channels/hilt-so/membership-expired/)
+- [membership.reapproval_required](https://apis.io/channels/hilt-so/membership-reapproval-required/)
+- [membership.renewed](https://apis.io/channels/hilt-so/membership-renewed/)
+- [payment.confirmed](https://apis.io/channels/hilt-so/payment-confirmed/)
+- [payment.failed](https://apis.io/channels/hilt-so/payment-failed/)
+- [receipt.created](https://apis.io/channels/hilt-so/receipt-created/)
+- [support.ticket.created](https://apis.io/channels/hilt-so/support-ticket-created/)
+
+#### MCP servers (2)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [Hilt Pay Agent Gateway](https://apis.io/servers/hilt-so/hilt-pay-agent-gateway/)
+- [Hilt PayMe](https://apis.io/servers/hilt-so/hilt-payme/)
+
+#### Overlays (20)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Hilt So Account Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-account-api-phrasing-overlay/)
+- [Hilt So Agent Commerce Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-agent-commerce-api-phrasing-overlay/)
+- [Hilt So Api Keys Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-api-keys-api-phrasing-overlay/)
+- [Hilt So Auth Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-auth-api-phrasing-overlay/)
+- [Hilt So Billing Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-billing-api-phrasing-overlay/)
+- [Hilt So Checkout Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-checkout-api-phrasing-overlay/)
+- [Hilt So Checkout Domains Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-checkout-domains-api-phrasing-overlay/)
+- [Hilt So Hilt Pay Api Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-hilt-pay-api-api-phrasing-overlay/)
+- [Hilt So Hilt Payme Connector Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-hilt-payme-connector-api-phrasing-overlay/)
+- [Hilt So Integrations Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-integrations-api-phrasing-overlay/)
+- [Hilt So Memberships Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-memberships-api-phrasing-overlay/)
+- [Hilt So Openapi Overlay](https://apis.io/overlays/hilt-so/hilt-so-openapi-overlay/)
+- [Hilt So Pay Me Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-pay-me-api-phrasing-overlay/)
+- [Hilt So Products Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-products-api-phrasing-overlay/)
+- [Hilt So Receipt Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-receipt-api-phrasing-overlay/)
+- [Hilt So Solana Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-solana-api-phrasing-overlay/)
+- [Hilt So Support Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-support-api-phrasing-overlay/)
+- [Hilt So System Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-system-api-phrasing-overlay/)
+- [Hilt So Testing Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-testing-api-phrasing-overlay/)
+- [Hilt So Webhooks Api Phrasing Overlay](https://apis.io/overlays/hilt-so/hilt-so-webhooks-api-phrasing-overlay/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Hilt So Authentication](https://apis.io/security/hilt-so/hilt-so-authentication/)
+- [Hilt So Domain Security](https://apis.io/security/hilt-so/hilt-so-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Hilt So Scopes](https://apis.io/scopes/hilt-so/hilt-so-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Hilt So Plans Pricing](https://apis.io/plans/hilt-so/hilt-so-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Hilt So Rate Limits](https://apis.io/rate-limits/hilt-so/hilt-so-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.hilt.so/)
+- [Documentation](https://docs.hilt.so/developers)
+- [Getting started](https://docs.hilt.so/developers/quickstart)
+- [API reference](https://api.hilt.so/v1/docs)
+- [Pricing](https://www.hilt.so/developers/pricing)
+- [Sign up](https://app.hilt.so/register)
+- [Support](https://docs.hilt.so/merchant/support)
+- [Changelog](https://www.hilt.so/updates)
+- [Blog](https://www.hilt.so/articles)
+- [Terms of service](https://www.hilt.so/legal/terms)
+- [Privacy policy](https://www.hilt.so/legal/privacy)
+- [GitHub](https://github.com/Hiltpay)
+- [Status](https://www.hilt.so/status)
+
+## API Evangelist rating
+
+**Kin Score 72.4** — exemplar · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 75.0 |
+| Contract quality | 52.6 |
+| Contract governance | 18.2 |
+| Operational transparency | 65.8 |
+| Developer ergonomics | 90.5 |
+| Access clarity | 76.3 |
+
+**Agent readiness 61.8** — agent-native
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | verified |
+| MCP Server | documented (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | verified |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | derived (partial credit) |
+| Agent Skills | yes |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | partial |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 34.8** — Payments
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/hilt-so/](https://apis.io/providers/hilt-so/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Hilt: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/hilt-so/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
